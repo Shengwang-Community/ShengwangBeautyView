@@ -1,0 +1,17 @@
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+
+# ============ #
+# android gradle #
+# ============ #
+**/.gradle/*
+**/.idea/*
+
+**/jniLibs/*
+**/src/libs/*
+
+local.properties
+/release/
