@@ -8,5 +8,5 @@ Podfile.lock
 **/Pods/*
 **/xcuserdata/*
 
-sdk.podspec
+AgoraRtcEngine_Special_iOS.podspec
 libs/

@@ -11,6 +11,6 @@ target 'BeautyView' do
 
   pod 'ShengwangBeautyView', :path => './ShengwangBeautyView'
   
-  #   pod 'sdk', :path => 'sdk.podspec'
+#  pod 'AgoraRtcEngine_Special_iOS', :path => 'AgoraRtcEngine_Special_iOS.podspec'
 
 end
