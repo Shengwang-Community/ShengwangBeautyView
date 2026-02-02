@@ -177,8 +177,11 @@ class ExampleViewController: UIViewController {
             videoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
         ])
         
-        // Initialize beauty SDK
-        ShengwangBeautySDK.shared.initBeautySDK(rtcEngine: rtcEngine)
+        guard let materialPath = Bundle.main.path(forResource: "AgoraBeautyMaterial", ofType: "bundle") else {
+            print("❌ AgoraBeautyMaterial.bundle not found. Please place the material bundle in the Example folder and add it to your project. To obtain the bundle, contact technical support.")
+            return
+        }
+        ShengwangBeautySDK.shared.initBeautySDK(rtcEngine: rtcEngine, materialBundlePath: materialPath)
         ShengwangBeautySDK.shared.enable(enable)
         
         let canvas = AgoraRtcVideoCanvas()

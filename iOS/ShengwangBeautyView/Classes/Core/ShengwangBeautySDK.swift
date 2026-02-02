@@ -823,32 +823,22 @@ import AgoraRtcKit
     
     // MARK: - Public Methods
     
-    /// Get AgoraBeautyMaterial.bundle path
-    /// - Returns: Bundle path string, or nil if not found
-    public static func getAgoraBeautyMaterialBundlePath() -> String? {
-        let frameworkBundle = Bundle(for: ShengwangBeautySDK.self)
-        if let resourceBundlePath = frameworkBundle.path(forResource: "BeautyView", ofType: "bundle"),
-           let resourceBundle = Bundle(path: resourceBundlePath),
-           let bundlePath = resourceBundle.path(forResource: "AgoraBeautyMaterial", ofType: "bundle") {
-            return bundlePath
-        }
-        return nil
-    }
-    
-    /// Initialize beauty SDK with AgoraBeautyMaterial.bundle
-    /// Automatically finds and uses AgoraBeautyMaterial.bundle from Resources
-    /// - Parameter rtcEngine: Agora RTC Engine instance
+    /// Initialize beauty SDK with external AgoraBeautyMaterial.bundle path
+    /// Caller must provide the path to AgoraBeautyMaterial.bundle (obtain from technical support).
+    /// - Parameters:
+    ///   - rtcEngine: Agora RTC Engine instance
+    ///   - materialBundlePath: Full path to AgoraBeautyMaterial.bundle (e.g. from Bundle.main or app sandbox)
     /// - Returns: Whether initialization succeeded
     @discardableResult
-    @objc public func initBeautySDK(rtcEngine: AgoraRtcEngineKit) -> Bool {
-        guard let bundlePath = Self.getAgoraBeautyMaterialBundlePath() else {
-            print("[BeautySDK] ERROR: Cannot find AgoraBeautyMaterial.bundle")
+    @objc public func initBeautySDK(rtcEngine: AgoraRtcEngineKit, materialBundlePath: String) -> Bool {
+        guard !materialBundlePath.isEmpty, FileManager.default.fileExists(atPath: materialBundlePath) else {
+            print("[BeautySDK] ERROR: Invalid or missing material bundle path: \(materialBundlePath)")
             return false
         }
         
         // Check if beauty_material_functional directory exists
-        let functionalPath = (bundlePath as NSString).appendingPathComponent("beauty_material_functional")
-        let materialPath = FileManager.default.fileExists(atPath: functionalPath) ? functionalPath : bundlePath
+        let functionalPath = (materialBundlePath as NSString).appendingPathComponent("beauty_material_functional")
+        let materialPath = FileManager.default.fileExists(atPath: functionalPath) ? functionalPath : materialBundlePath
         
         if !FileManager.default.fileExists(atPath: functionalPath) {
             print("[BeautySDK] beauty_material_functional not found, using bundle path directly")

@@ -47,7 +47,14 @@ static let AppId: String = "your_actual_app_id_here"
 
 保存后再次编译并运行即可。
 
-### 3. 运行 Demo
+### 3. 美颜材料包
+
+使用美颜功能需单独提供 **AgoraBeautyMaterial.bundle** 材料包，组件不包含该资源。
+
+- **获取方式**：联系声网技术支持获取 AgoraBeautyMaterial.bundle。
+- **放置方式**：将材料包加入 App 的 **Copy Bundle Resources**，Demo 运行时从 Main Bundle 读取并传入 SDK。
+
+### 4. 运行 Demo
 
 选择目标设备，点击 Run（▶️）运行。
 
@@ -65,6 +72,8 @@ pod 'ShengwangBeautyView', :path => './ShengwangBeautyView'
 ```
 
 3. **安装依赖**：在 Podfile 所在目录执行 `pod install`，之后使用 **`.xcworkspace`** 打开工程。
+
+4. **美颜材料包**：将 **AgoraBeautyMaterial.bundle** 加入 Copy Bundle Resources 或置于沙盒可访问路径，初始化时取路径传入 `initBeautySDK(rtcEngine:materialBundlePath:)`。
 
 ---
 
