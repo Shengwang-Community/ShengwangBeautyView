@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">声网美颜 View</string>
+
+    <!-- Button Text -->
+    <string name="beauty_button_text">美颜</string>
+    <string name="switch_camera_button_text">切换摄像头</string>
+    <string name="save_beauty_config">保存配置</string>
+    <string name="reset_beauty_config">重置配置</string>
+
+    <!-- MainActivity -->
+    <string name="channel_name_label">频道名称</string>
+    <string name="channel_name_hint">请输入频道名称</string>
+    <string name="join_channel_button">加入频道</string>
+</resources>

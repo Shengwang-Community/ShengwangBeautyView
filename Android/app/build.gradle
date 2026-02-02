@@ -1,0 +1,95 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+final def USE_LOCAL_SDK = (project.findProperty("USE_LOCAL_SDK") ?: "false").toBoolean()
+def localSdkPath = "agora-sdk"
+
+android {
+    flavorDimensions "default"
+    namespace 'cn.shengwang.videobeauty'
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+    defaultConfig {
+        applicationId "cn.shengwang.videobeauty"
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "App_ID", "\"${project.findProperty("appId") ?: ""}\"")
+    }
+
+    signingConfigs {
+        myConfig {
+            storeFile new File(rootProject.rootDir.absolutePath + "/keystore.key")
+            storePassword "965606"
+            keyAlias "agora"
+            keyPassword "965606"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myConfig
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    if (USE_LOCAL_SDK) {
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ["${localSdkPath}"]
+            }
+        }
+    }
+
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all { output ->
+                outputFileName = new File(rootProject.name + "_" +
+                        project.name + "_" +
+                        "v" + defaultConfig.versionName + "_" +
+                        new Date().format("yyyyMMddHHmm") + "_" +
+                        buildType.name + ".apk")
+            }
+    }
+}
+
+dependencies {
+    implementation(project(":lib"))
+//                implementation(files("../release/shengwang-beauty-view-1.0.0.aar"))
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
+    if (USE_LOCAL_SDK) {
+        implementation fileTree(dir: "${localSdkPath}", include: ['*.jar', '*.aar'])
+    } else {
+        implementation('io.agora.rtc:agora-special-full:4.5.2.8') {
+            exclude group: 'io.agora.rtc', module: 'full-screen-sharing'
+        }
+    }
+}
