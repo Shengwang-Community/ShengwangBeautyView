@@ -1,0 +1,26 @@
+//
+//  KeyCenter.swift.example
+//  BeautyView
+//
+//  Created on 2026/1/22
+//
+//  IMPORTANT: This file will be automatically copied to KeyCenter.swift
+//  DO NOT commit KeyCenter.swift to git, only commit this example file
+//
+
+import Foundation
+
+/// KeyCenter for Agora SDK
+/// Configuration file template for Agora App ID and credentials
+/// Copy this file to KeyCenter.swift and fill in your App ID
+class KeyCenter {
+    
+    /**
+     Agora APP ID.
+     Agora assigns App IDs to app developers to identify projects and organizations.
+     To get the APP ID, you can open the Agora console (https://console.shengwang.cn/) to create a project,
+     then the APP ID can be found in the project detail page.
+     */
+    static let AppId: String = <#YOUR_APP_ID_HERE #>
+    
+}
