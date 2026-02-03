@@ -32,7 +32,7 @@ iOS/
 pod install
 ```
 
-然后用 Xcode 打开 **`BeautyView.xcworkspace`**（勿打开 `.xcodeproj`）。此时即可在 Xcode 中看到完整工程结构及后续需要配置的 KeyCenter。
+然后用 Xcode 打开 **`BeautyView.xcworkspace`**（勿打开 `.xcodeproj`）。
 
 ### 2. 配置 App ID
 
@@ -52,7 +52,7 @@ static let AppId: String = "your_actual_app_id_here"
 使用美颜功能需单独提供 **AgoraBeautyMaterial.bundle** 材料包，组件不包含该资源。
 
 - **获取方式**：联系声网技术支持获取 AgoraBeautyMaterial.bundle。
-- **放置方式**：将材料包加入 App 的 **Copy Bundle Resources**，Demo 运行时从 Main Bundle 读取并传入 SDK。
+- **放置方式**：将 **AgoraBeautyMaterial.bundle** 拖入 Demo 工程（如 `BeautyView/Example` 目录），按 Xcode 提示勾选 Target 即可。
 
 ### 4. 运行 Demo
 
@@ -73,7 +73,12 @@ pod 'ShengwangBeautyView', :path => './ShengwangBeautyView'
 
 3. **安装依赖**：在 Podfile 所在目录执行 `pod install`，之后使用 **`.xcworkspace`** 打开工程。
 
-4. **美颜材料包**：将 **AgoraBeautyMaterial.bundle** 加入 Copy Bundle Resources 或置于沙盒可访问路径，初始化时取路径传入 `initBeautySDK(rtcEngine:materialBundlePath:)`。
+4. **美颜材料包**：
+   - 材料包需置于 App 沙盒可访问路径。
+   - 初始化时传入**沙盒路径**给 `initBeautySDK(rtcEngine:materialBundlePath:)`。
+   - 若传入只读路径（如 Main Bundle），美颜参数将无法持久保存。
+   - 材料包如何进入沙盒由业务自行决定（如拷贝、下载等）。
+   - 可参考 Demo 中 `prepareBeautyResources()` 及 extension 内实现。
 
 ---
 
@@ -127,11 +132,8 @@ ShengwangBeautyView/
 
 ---
 
-## 版本
+## 💡 问题反馈
 
-- 0.1.0 - 初始版本
+如果您在集成过程中遇到任何问题或有改进建议：
 
-## 要求
-
-- iOS 11.0+
-- Swift 5.0+
+- 🤖 可通过 [声网支持](https://ticket.shengwang.cn/form) 联系技术支持人员

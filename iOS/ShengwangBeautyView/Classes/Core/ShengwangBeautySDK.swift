@@ -9,7 +9,7 @@ import Foundation
 import AgoraRtcKit
 
 /// Shengwang Beauty SDK
-/// 
+///
 /// Resource update instructions:
 /// If beauty resource files are updated, you need to clear the app's UserDefaults data
 /// or uninstall and reinstall the app, otherwise the SDK will think the resources have been copied
@@ -1074,8 +1074,6 @@ import AgoraRtcKit
         if enable {
             if let stickerName = beautyConfig.stickerName {
                 effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: stickerName)
-            } else {
-                print("[BeautySDK] enableSticker(true) but stickerName is nil, skipping")
             }
         } else {
             effect.removeVideoEffect(nodeId: BeautyModule.sticker.rawValue)

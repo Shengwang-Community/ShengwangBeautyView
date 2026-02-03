@@ -20,6 +20,9 @@ class ExampleViewController: UIViewController {
     private let videoView = UIView()
     private var beautyView: ShengwangBeautyView?
     
+    /// Prepared beauty material path (set by prepareBeautyResources(), used by initializeBeauty).
+    private var preparedBeautyMaterialPath: String?
+    
     var enable: Bool = false {
         didSet {
             ShengwangBeautySDK.shared.enable(enable)
@@ -88,6 +91,7 @@ class ExampleViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+        prepareBeautyResources()
         initializeBeauty()
     }
     
@@ -149,10 +153,24 @@ class ExampleViewController: UIViewController {
         ])
     }
     
+    /// Prepare beauty resources (copy to sandbox). Call before initializeBeauty.
+    private func prepareBeautyResources() {
+        guard let bundlePath = Bundle.main.path(forResource: "AgoraBeautyMaterial", ofType: "bundle") else {
+            print("❌ AgoraBeautyMaterial.bundle not found. Please place the material bundle in the Example folder and add it to your project. To obtain the bundle, contact technical support.")
+            return
+        }
+        preparedBeautyMaterialPath = Self.effectiveBeautyMaterialPath(bundlePath: bundlePath)
+    }
+    
     /// Initialize beauty features
     private func initializeBeauty() {
         // Prevent duplicate initialization
         guard rtcEngine == nil else { return }
+        
+        guard let materialPath = preparedBeautyMaterialPath else {
+            print("❌ Beauty resources not prepared. Ensure prepareBeautyResources() was called")
+            return
+        }
         
         // Create RTC Engine
         let appId = KeyCenter.AppId
@@ -177,10 +195,6 @@ class ExampleViewController: UIViewController {
             videoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
         ])
         
-        guard let materialPath = Bundle.main.path(forResource: "AgoraBeautyMaterial", ofType: "bundle") else {
-            print("❌ AgoraBeautyMaterial.bundle not found. Please place the material bundle in the Example folder and add it to your project. To obtain the bundle, contact technical support.")
-            return
-        }
         ShengwangBeautySDK.shared.initBeautySDK(rtcEngine: rtcEngine, materialBundlePath: materialPath)
         ShengwangBeautySDK.shared.enable(enable)
         
@@ -358,5 +372,69 @@ class VerticalButton: UIButton {
     /// - Parameter font: Title font
     func setTitleFont(_ font: UIFont) {
         customTitleLabel.font = font
+    }
+}
+
+// MARK: - Beauty Resource Sandbox
+
+private extension ExampleViewController {
+    static let beautyResourceSandboxSubpath = "AgoraBeautyMaterial.bundle"
+    static let beautyMaterialFunctionalName = "beauty_material_functional"
+    
+    /// Returns the full sandbox path for beauty resources (Application Support). Creates parent directory if needed. Returns nil if base directory is unavailable.
+    static func beautyResourceSandboxPath() -> String? {
+        let base: URL?
+        if let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            base = appSupport
+        } else if let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            base = caches
+        } else {
+            return nil
+        }
+        let sandboxURL = base!.appendingPathComponent(beautyResourceSandboxSubpath)
+        let parent = sandboxURL.deletingLastPathComponent()
+        if !FileManager.default.fileExists(atPath: parent.path) {
+            try? FileManager.default.createDirectory(at: parent, withIntermediateDirectories: true)
+        }
+        return sandboxURL.path
+    }
+    
+    static func hasValidBeautyResources(atBundlePath bundlePath: String) -> Bool {
+        let functionalPath = (bundlePath as NSString).appendingPathComponent(beautyMaterialFunctionalName)
+        return FileManager.default.fileExists(atPath: functionalPath)
+    }
+    
+    /// Copies the bundle at sourcePath to sandboxPath. If sandboxPath already exists, removes it first. Returns true on success.
+    static func copyBeautyBundle(from sourcePath: String, to sandboxPath: String) -> Bool {
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: sandboxPath) {
+            do {
+                try fileManager.removeItem(atPath: sandboxPath)
+            } catch {
+                print("[Example] Failed to remove existing sandbox path before copy: \(error)")
+                return false
+            }
+        }
+        do {
+            let sandboxURL = URL(fileURLWithPath: sandboxPath)
+            try fileManager.createDirectory(at: sandboxURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try fileManager.copyItem(atPath: sourcePath, toPath: sandboxPath)
+            return true
+        } catch {
+            print("[Example] Failed to copy beauty bundle to sandbox: \(error)")
+            return false
+        }
+    }
+    
+    /// Resolves the path to use for beauty SDK: sandbox if it has valid resources, else copy from bundlePath to sandbox, or fallback to bundlePath.
+    static func effectiveBeautyMaterialPath(bundlePath: String) -> String {
+        guard let sandboxPath = beautyResourceSandboxPath() else { return bundlePath }
+        if hasValidBeautyResources(atBundlePath: sandboxPath) {
+            return sandboxPath
+        }
+        if copyBeautyBundle(from: bundlePath, to: sandboxPath) {
+            return sandboxPath
+        }
+        return bundlePath
     }
 }
