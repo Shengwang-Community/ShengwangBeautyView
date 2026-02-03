@@ -97,8 +97,6 @@ class ExampleViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // Save beauty settings
-        beautyView?.saveBeauty()
         // Stop preview
         rtcEngine?.stopPreview()
     }
