@@ -2,271 +2,167 @@ package cn.shengwang.videobeauty
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import cn.shengwang.beauty.demo.utils.PermissionHelp
 import cn.shengwang.videobeauty.databinding.ActivityBeautyMainBinding
 import cn.shengwang.videobeauty.utils.FileUtil
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.File
-import java.util.Random
+import androidx.core.content.edit
 
-/**
- * 主界面 Activity
- * 提供频道名称输入和加入频道功能
- */
 class BeautyMainActivity : BaseActivity<ActivityBeautyMainBinding>() {
 
     companion object {
         private const val TAG = "BeautyMainActivity"
-        private const val PREFS_NAME = "agora_beauty_sdk_prefs"
-        private const val KEY_MATERIAL_COPIED = "material_copied"
-        private const val KEY_MATERIAL_PATH = "material_path"
-        private const val ZIP_FILE_NAME = "AgoraBeautyMaterial.zip"
-        private const val MATERIAL_DIR_NAME = "AgoraBeautyMaterial"
-        private const val MATERIAL_FUNCTIONAL_DIR = "beauty_material_functional"
-        private const val CLICK_THROTTLE_MS = 2000L
-
+        private const val MATERIAL = "AgoraBeautyMaterial"
+        private const val FUNCTIONAL = "beauty_material_functional"
         const val EXTRA_CHANNEL_NAME = "channel_name"
         const val EXTRA_MATERIAL_PATH = "material_path"
     }
 
     private lateinit var permissionHelp: PermissionHelp
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var materialPath = ""
+    private var isLoaded = false
+    private var lastClickTime = 0L
 
-    private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
-    private var materialPath: String = ""
-    private var isResourceLoaded = false
-    private var lastJoinClickTime = 0L
-    private var navigatingToExample = false
-
-    override fun getViewBinding(): ActivityBeautyMainBinding = ActivityBeautyMainBinding.inflate(layoutInflater)
+    override fun getViewBinding() = ActivityBeautyMainBinding.inflate(layoutInflater)
 
     override fun initView() {
         permissionHelp = PermissionHelp(this)
-        val binding = mBinding?:return
+        val binding = mBinding ?: return
 
-        // 初始状态：禁用按钮，显示 loading
-        setJoinButtonEnabled(false)
-        showLoading(true)
+        setButtonEnabled(false)
+        showLoading(true, "正在检查资源...", 0)
+        loadResource()
 
-        // 直接加载美颜资源
-        loadBeautyResource()
+        // 随机频道名
+        val channel = "shengwang_beauty_${(10000..99999).random()}"
+        binding.etChannelName.setText(channel)
+        binding.etChannelName.setSelection(channel.length)
 
-        // 生成默认随机频道名称
-        val defaultChannelName = generateRandomChannelName()
-        binding.etChannelName.setText(defaultChannelName)
-        binding.etChannelName.setSelection(defaultChannelName.length)
-
-        // 设置加入频道按钮点击事件（防暴力点击）
         binding.btnJoinChannel.setOnClickListener {
-            val now = System.currentTimeMillis()
-            if (now - lastJoinClickTime < CLICK_THROTTLE_MS) return@setOnClickListener
-            lastJoinClickTime = now
+            if (System.currentTimeMillis() - lastClickTime < 2000) return@setOnClickListener
+            lastClickTime = System.currentTimeMillis()
 
-            if (!isResourceLoaded || materialPath.isEmpty()) {
-                showToast("美颜资源未加载完成，请稍候", Toast.LENGTH_SHORT)
+            if (!isLoaded) {
+                showToast("美颜资源未加载完成", Toast.LENGTH_SHORT)
                 return@setOnClickListener
             }
 
-            val channelName = binding.etChannelName.text.toString().trim()
-            if (channelName.isEmpty()) {
+            val name = binding.etChannelName.text.toString().trim()
+            if (name.isEmpty()) {
                 showToast("请输入频道名称")
                 return@setOnClickListener
             }
 
-            // 申请权限
             permissionHelp.checkCameraAndMicPerms(
                 granted = {
-                    navigatingToExample = true
-                    mBinding?.tvLoading?.text = "加载中..."
-                    setJoinButtonEnabled(false)
-                    showLoading(true)
-                    navigateToBeautyExample(channelName)
+                    startActivity(Intent(this, BeautyExampleActivity::class.java).apply {
+                        putExtra(EXTRA_CHANNEL_NAME, name)
+                        putExtra(EXTRA_MATERIAL_PATH, materialPath)
+                    })
                 },
-                unGranted = {
-                    // 权限被拒绝
-                    showToast("需要摄像头和麦克风权限才能使用美颜功能", Toast.LENGTH_LONG)
-                },
+                unGranted = { showToast("需要摄像头和麦克风权限", Toast.LENGTH_LONG) },
                 force = false
             )
         }
     }
 
-    /**
-     * 生成随机频道名称
-     * 格式：shengwang_beauty_xxxxx（10000～99999）
-     */
-    private fun generateRandomChannelName(): String {
-        val randomNumber = Random().nextInt(90000) + 10000 // 10000 到 99999
-        return "shengwang_beauty_$randomNumber"
-    }
-
-    /**
-     * 跳转到 BeautyExampleActivity
-     */
-    private fun navigateToBeautyExample(channelName: String) {
-        val intent = Intent(this, BeautyExampleActivity::class.java).apply {
-            putExtra(EXTRA_CHANNEL_NAME, channelName)
-            putExtra(EXTRA_MATERIAL_PATH, materialPath)
-        }
-        startActivity(intent)
-    }
-
-    private fun showLoading(show: Boolean) {
-        val binding = mBinding ?: return
-        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
-        binding.tvLoading.visibility = if (show) View.VISIBLE else View.GONE
-    }
-
-    private fun setJoinButtonEnabled(enabled: Boolean) {
-        val btn = mBinding?.btnJoinChannel ?: return
-        btn.isEnabled = enabled
-        btn.isClickable = enabled
-        btn.alpha = if (enabled) 1.0f else 0.5f
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (navigatingToExample) {
-            navigatingToExample = false
-            showLoading(false)
-            if (isResourceLoaded) setJoinButtonEnabled(true)
-        }
-    }
-
-    private fun loadBeautyResource() {
+    private fun loadResource() {
         scope.launch {
-            try {
-                // Execute initialization on IO dispatcher
-                withContext(Dispatchers.IO) {
-                    val materialDir = getOrCopyMaterialDirectory(this@BeautyMainActivity)
-                        ?: run {
-                            Log.e(TAG, "Failed to get material directory, cannot initialize beauty SDK")
-                            withContext(Dispatchers.Main) {
-                                showLoading(false)
-                                showToast("美颜资源加载失败", Toast.LENGTH_LONG)
-                                setJoinButtonEnabled(false)
-                            }
-                            return@withContext
-                        }
-
-                    materialPath = "$materialDir/${MATERIAL_FUNCTIONAL_DIR}"
-                    Log.d(TAG, "Beauty material loaded successfully, path: $materialPath")
-                    
-                    // 切换到主线程更新 UI
-                    withContext(Dispatchers.Main) {
-                        isResourceLoaded = true
-                        showLoading(false)
-                        setJoinButtonEnabled(true)
-                        showToast("美颜资源加载完成", Toast.LENGTH_SHORT)
-                    }
-                }
-
-            } catch (e: CancellationException) {
-                // 协程被取消，正常情况，不需要处理
-                Log.d(TAG, "Beauty initialization cancelled")
-                withContext(Dispatchers.Main) {
-                    showLoading(false)
-                    setJoinButtonEnabled(false)
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during beauty initialization", e)
-                withContext(Dispatchers.Main) {
-                    showLoading(false)
-                    setJoinButtonEnabled(false)
-                    showToast("美颜资源加载失败: ${e.message}", Toast.LENGTH_LONG)
-                }
+            val result = withContext(Dispatchers.IO) { prepareMaterial() }
+            if (result != null) {
+                materialPath = "$result/$FUNCTIONAL"
+                isLoaded = true
+                showLoading(false)
+                setButtonEnabled(true)
+                showToast("美颜资源加载完成", Toast.LENGTH_SHORT)
+            } else {
+                showLoading(false)
+                showToast("美颜资源加载失败", Toast.LENGTH_LONG)
             }
         }
     }
 
-    /**
-     * 获取或复制美颜素材目录
-     * 统一使用固定路径，保存路径和默认路径保持一致
-     *
-     * @param context Android context
-     * @return 素材目录路径，失败返回 null
-     */
-    private fun getOrCopyMaterialDirectory(context: Context): String? {
-        val cacheDir = context.externalCacheDir?.absolutePath ?: run {
-            Log.e(TAG, "External cache directory is null")
+    private fun prepareMaterial(): String? {
+        val cacheDir = cacheDir.absolutePath
+        val materialDir = "$cacheDir/$MATERIAL"
+        val functionalDir = "$materialDir/$FUNCTIONAL"
+
+        val expectedMd5 = FileUtil.readMd5FromAssets(this, "${MATERIAL}Md5.txt") ?: return copyAll(cacheDir, materialDir, null)
+        val savedMd5 = prefs.getString("md5", null)
+        val dirExists = File(functionalDir).isDirectory
+
+        Log.d(TAG, "MD5 - expected: $expectedMd5, saved: $savedMd5, dirExists: $dirExists")
+
+        return when {
+            dirExists && savedMd5 == expectedMd5 -> {
+                updateUI(100, "资源已就绪")
+                materialDir
+            }
+            dirExists && savedMd5 != null -> updateFilterAndSticker(cacheDir, materialDir, expectedMd5)
+            else -> copyAll(cacheDir, materialDir, expectedMd5)
+        }
+    }
+
+    private fun copyAll(cacheDir: String, materialDir: String, md5: String?): String? {
+        updateUI(0, "正在准备美颜资源...")
+        File(materialDir).takeIf { it.exists() }?.let { FileUtil.deleteRecursively(it) }
+
+        val result = FileUtil.copyAndUnzip(this, "$MATERIAL.zip", cacheDir) { p, m -> updateUI(p, m) }
+        if (result != null && md5 != null) prefs.edit { putString("md5", md5) }
+        return result
+    }
+
+    private fun updateFilterAndSticker(cacheDir: String, materialDir: String, md5: String): String? {
+        updateUI(5, "检测到资源更新...")
+        
+        // 删除旧的 filter 和 sticker
+        FileUtil.deleteByPrefix(File("$materialDir/$FUNCTIONAL"), "filter_", "sticker_")
+        updateUI(10, "正在拷贝资源...")
+
+        // 拷贝 zip
+        val zipPath = "$cacheDir/$MATERIAL.zip"
+        if (!FileUtil.copyFileFromAssets(this, "$MATERIAL.zip", zipPath) { p, _ -> updateUI(10 + p * 40 / 100, "正在拷贝...") }) {
             return null
         }
 
-        // 统一使用固定路径
-        val materialDir = "$cacheDir/$MATERIAL_DIR_NAME"
-
-        // 如果路径已存在，直接返回
-        if (File(materialDir).exists()) {
-            Log.d(TAG, "Material directory already exists: $materialDir")
-            // 确保标记和路径一致
-            if (!isMaterialCopied(context)) {
-                setMaterialCopied(context, true)
-            }
-            // 统一保存为固定路径
-            saveMaterialPath(context, materialDir)
-            return materialDir
+        // 只解压 filter 和 sticker
+        updateUI(50, "正在解压更新...")
+        if (!FileUtil.unzipWithProgress(zipPath, materialDir, { p, _ -> updateUI(50 + p / 2, "正在解压...") }, true)) {
+            return null
         }
 
-        // 如果标记为已复制但路径不存在，清除标记（可能被删除了）
-        if (isMaterialCopied(context)) {
-            Log.w(TAG, "Material directory does not exist but marked as copied, will re-copy")
-            setMaterialCopied(context, false)
-        }
+        prefs.edit { putString("md5", md5) }
+        return materialDir
+    }
 
-        // 需要复制资源
-        Log.d(TAG, "Copying beauty materials from assets...")
-        val copiedPath = FileUtil.copyFileAndUnzipFromAssets(
-            context,
-            ZIP_FILE_NAME,
-            cacheDir
-        )
-
-        return if (!copiedPath.isNullOrEmpty() && File(copiedPath).exists()) {
-            setMaterialCopied(context, true)
-            // 统一保存为固定路径（保存路径和默认路径保持一致）
-            saveMaterialPath(context, materialDir)
-            Log.d(TAG, "Beauty materials copied successfully to: $copiedPath")
-            // 返回实际复制路径（FileUtil 返回的路径）
-            copiedPath
-        } else {
-            Log.e(TAG, "Failed to copy beauty materials")
-            null
+    private fun updateUI(progress: Int, message: String) {
+        runOnUiThread {
+            mBinding?.tvProgress?.text = "$progress%"
+            mBinding?.tvLoading?.text = message
         }
     }
 
-    private fun getSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private fun showLoading(show: Boolean, message: String = "", progress: Int = 0) {
+        mBinding?.apply {
+            cardLoading.visibility = if (show) View.VISIBLE else View.GONE
+            tvLoading.text = message
+            tvProgress.text = "$progress%"
+        }
     }
 
-    /**
-     * 检查素材是否已复制
-     * 注意：如果使用美颜 SDK 的保存功能，不能每次都复制资源，否则美颜配置会被覆盖
-     */
-    private fun isMaterialCopied(context: Context): Boolean {
-        return getSharedPreferences(context).getBoolean(KEY_MATERIAL_COPIED, false)
+    private fun setButtonEnabled(enabled: Boolean) {
+        mBinding?.btnJoinChannel?.apply {
+            isEnabled = enabled
+            alpha = if (enabled) 1f else 0.5f
+        }
     }
 
-    private fun setMaterialCopied(context: Context, copied: Boolean) {
-        getSharedPreferences(context).edit()
-            .putBoolean(KEY_MATERIAL_COPIED, copied)
-            .apply()
-    }
-
-    private fun saveMaterialPath(context: Context, path: String) {
-        getSharedPreferences(context).edit()
-            .putString(KEY_MATERIAL_PATH, path)
-            .apply()
-    }
+    private val prefs by lazy { getSharedPreferences("beauty_prefs", Context.MODE_PRIVATE) }
 
     override fun onDestroy() {
         scope.cancel()

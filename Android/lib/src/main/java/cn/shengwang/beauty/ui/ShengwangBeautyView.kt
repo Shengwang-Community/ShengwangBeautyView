@@ -327,8 +327,9 @@ class ShengwangBeautyView : android.widget.FrameLayout {
             if (selectedItemIndex >= 0) {
                 onSelectedChanged(pageIndex, selectedItemIndex)
             } else {
-                // 如果没有选中项，隐藏滑动条
-                viewBinding.slider.visibility = INVISIBLE
+                // 如果没有选中项，隐藏滑动条容器和 label
+                viewBinding.slider.labelBehavior = com.google.android.material.slider.LabelFormatter.LABEL_GONE
+                viewBinding.sliderContainer.visibility = GONE
             }
         } finally {
             // 重置标志位，允许下次更新
@@ -354,9 +355,11 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         // 根据是否需要显示滑动条来设置UI
         if (itemInfo.showSlider) {
             setupSlider(itemInfo)
-            viewBinding.slider.visibility = VISIBLE
+            viewBinding.sliderContainer.visibility = VISIBLE
+            viewBinding.slider.labelBehavior = com.google.android.material.slider.LabelFormatter.LABEL_VISIBLE
         } else {
-            viewBinding.slider.visibility = INVISIBLE
+            viewBinding.slider.labelBehavior = com.google.android.material.slider.LabelFormatter.LABEL_GONE
+            viewBinding.sliderContainer.visibility = GONE
         }
     }
 

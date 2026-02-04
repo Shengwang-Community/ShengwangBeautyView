@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/sliderContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -42,6 +43,7 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:background="@android:color/transparent"
             app:tabIndicatorAnimationMode="linear"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorFullWidth="false"

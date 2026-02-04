@@ -89,12 +89,6 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             }
         }
 
-        binding.tvResetBeauty.setOnClickListener {
-            if (isInitialized) {
-                binding.beautyControlView.resetBeauty(BeautyModule.BEAUTY)
-            }
-        }
-
         initializeBeauty()
         joinChannel()
     }

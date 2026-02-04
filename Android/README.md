@@ -1,4 +1,4 @@
-# Agora-Beauty Android
+# Shengwang-Beauty Android
 
 Demo 展示如何快速集成声网美颜功能。
 
@@ -18,10 +18,25 @@ Demo 展示如何快速集成声网美颜功能。
 - 资源包名称：`AgoraBeautyMaterial.zip`
 - 获取方式：联系声网技术支持团队
 - 放置位置：`app/src/main/assets/AgoraBeautyMaterial.zip`
+- MD5 校验：将资源包的 MD5 值写入 `app/src/main/assets/AgoraBeautyMaterialMd5.txt`
 
 > ⚠️ 注意：没有美颜资源包，应用将无法正常运行美颜功能。
 
-### 2. 配置 Agora SDK 依赖
+### 2. MD5 校验机制
+
+应用启动时会自动进行资源校验：
+- 读取 `AgoraBeautyMaterialMd5.txt` 中的 MD5 值
+- 与本地已解压资源的 MD5 对比
+- MD5 不匹配时自动更新 `filter_xxx` 和 `sticker_xxx` 目录
+
+生成 MD5 值：
+```bash
+md5 app/src/main/assets/AgoraBeautyMaterial.zip
+# 或
+md5sum app/src/main/assets/AgoraBeautyMaterial.zip
+```
+
+### 3. 配置 Agora SDK 依赖
 
 项目支持两种方式集成 Agora RTC SDK：
 
