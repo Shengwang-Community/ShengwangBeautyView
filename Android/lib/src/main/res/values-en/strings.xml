@@ -1,0 +1,124 @@
+<resources>
+    <!-- Beauty Groups -->
+    <string name="beauty_group_beauty">Beauty</string>
+    <string name="beauty_group_filter">Filter</string>
+    <string name="beauty_group_makeup">Makeup</string>
+    <string name="beauty_group_sticker">Sticker</string>
+
+    <string name="beauty_effect_none">None</string>
+    <string name="beauty_effect_enable">Enable</string>
+    <string name="beauty_effect_disable">Disable</string>
+    <string name="beauty_effect_save">Save</string>
+    <string name="beauty_effect_reset">Reset</string>
+
+    <!-- Beauty Items -->
+    <string name="beauty_effect_smoothness">Smooth</string>
+    <string name="beauty_effect_lightness">Whiten</string>
+    <string name="beauty_effect_redness">Rosy</string>
+    <string name="beauty_effect_contrast_strength">Clarity</string>
+    <string name="beauty_effect_sharpness">Sharpen</string>
+    <string name="beauty_effect_eye_pouch">Dark\nCircles</string>
+    <string name="beauty_effect_brighten_eye">Eye\nBrighten</string>
+    <string name="beauty_effect_whiten_teeth">Teeth\nWhitening</string>
+    <string name="beauty_effect_nasolabial_fold">Smile\nLines</string>
+    <string name="beauty_effect_temperature">Temp</string>
+    <string name="beauty_effect_hue">Tint</string>
+    <string name="beauty_effect_saturation">Saturation</string>
+    <string name="beauty_effect_brightness">Brightness</string>
+
+    <!-- FaceShape Items -->
+    <string name="beauty_face_shape_face_contour">Face\nSlim</string>
+    <string name="beauty_face_shape_mandible">V-Face</string>
+    <string name="beauty_face_shape_chin">Chin</string>
+    <string name="beauty_face_shape_cheek">Jaw</string>
+    <string name="beauty_face_shape_cheekbone">Cheek\nBones</string>
+    <string name="beauty_face_shape_face_length">Face\nLength</string>
+    <string name="beauty_face_shape_face_width">Face\nWidth</string>
+    <string name="beauty_face_shape_fore_head">Hairline</string>
+    <string name="beauty_face_shape_head_scale">Head\nSize</string>
+    <string name="beauty_face_shape_nose_width">Nose\nSlim</string>
+    <string name="beauty_face_shape_nose_root">Radix</string>
+    <string name="beauty_face_shape_nose_bridge">Nose\nBridge</string>
+    <string name="beauty_face_shape_nose_tip">Nose\nTip</string>
+    <string name="beauty_face_shape_nose_wing">Nose\nWing</string>
+    <string name="beauty_face_shape_nose_length">Nose\nLength</string>
+    <string name="beauty_face_shape_nose_general">Nose\nSize</string>
+    <string name="beauty_face_shape_eye_scale">Eye\nSize</string>
+    <string name="beauty_face_shape_eye_distance">Eye\nDist</string>
+    <string name="beauty_face_shape_eye_lid">Lower\nEyelid</string>
+    <string name="beauty_face_shape_inner_corner">Inner\nCorner</string>
+    <string name="beauty_face_shape_outer_corner">Outer\nCorner</string>
+    <string name="beauty_face_shape_eye_position">Eye\nPos</string>
+    <string name="beauty_face_shape_eye_pupils">Pupil</string>
+    <string name="beauty_face_shape_mouth_smile">Smile</string>
+    <string name="beauty_face_shape_mouth_lip">Lip\nThick</string>
+    <string name="beauty_face_shape_mouth_scale">Mouth\nSize</string>
+    <string name="beauty_face_shape_mouth_position">Philtrum</string>
+    <string name="beauty_face_shape_eyebrow_thickness">Brow\nThick</string>
+    <string name="beauty_face_shape_eyebrow_position">Brow\nLift</string>
+
+    <!-- Filter Items -->
+    <string name="beauty_filter_serene">Serene</string>
+    <string name="beauty_filter_urban">Urban</string>
+    <string name="beauty_filter_glow">Glow</string>
+    <string name="beauty_filter_gilt">Gilt</string>
+    <string name="beauty_filter_cream">Cream</string>
+    <string name="beauty_filter_latte">Latte</string>
+    <string name="beauty_filter_summer">Summer</string>
+    <string name="beauty_filter_daily">Daily</string>
+    <string name="beauty_filter_gentleman">Gentleman</string>
+    <string name="beauty_filter_vanilla">Vanilla</string>
+    <string name="beauty_filter_bright">Bright</string>
+    <string name="beauty_filter_peach">Peach</string>
+    <string name="beauty_filter_ink">Ink</string>
+    <string name="beauty_filter_film">Film</string>
+    <string name="beauty_filter_sunny">Sunny</string>
+    <string name="beauty_filter_comic">Comic</string>
+    <string name="beauty_filter_dreamy">Dreamy</string>
+    <string name="beauty_filter_cotton">Cotton</string>
+    <string name="beauty_filter_soda">Soda</string>
+    <string name="beauty_filter_moonlight">Moonlight</string>
+    <string name="beauty_filter_white_tea">White\nTea</string>
+    <string name="beauty_filter_tranquil">Tranquil</string>
+    <string name="beauty_filter_insta_style">Ins</string>
+    <string name="beauty_filter_street">Street</string>
+    <string name="beauty_filter_puff">Puff</string>
+    <string name="beauty_filter_collection">Collection</string>
+    <string name="beauty_filter_salty">Salty</string>
+    <string name="beauty_filter_texture">Texture</string>
+    <string name="beauty_filter_colorful">Colorful</string>
+    <string name="beauty_filter_snow">Snow</string>
+    <string name="beauty_filter_blush">Blush</string>
+    <string name="beauty_filter_nostalgia">Nostalgia</string>
+    <string name="beauty_filter_caramel">Caramel</string>
+    <string name="beauty_filter_tipsy">Tipsy</string>
+    <string name="beauty_filter_lavender">Lavender</string>
+    <string name="beauty_filter_rouge">Rouge</string>
+    <string name="beauty_filter_misty">Misty</string>
+
+    <!-- Makeup Items -->
+    <string name="beauty_makeup_young">Young</string>
+    <string name="beauty_makeup_mature">Mature</string>
+    <string name="beauty_makeup_aura">Aura</string>
+    <string name="beauty_makeup_natural">Natural</string>
+    <string name="beauty_makeup_graceful">Graceful</string>
+    <string name="beauty_makeup_charm">Charm</string>
+    <string name="beauty_makeup_perky">Perky</string>
+    <string name="beauty_makeup_maiden">Maiden</string>
+    <string name="beauty_makeup_insight">Insight</string>
+    <string name="beauty_makeup_misty">Misty</string>
+
+    <!-- Sticker Items -->
+    <string name="beauty_sticker_christmas">Christmas</string>
+    <string name="beauty_sticker_squid">Squid</string>
+    <string name="beauty_sticker_piggy">Piggy</string>
+    <string name="beauty_sticker_long_cat">Long Cat</string>
+    <string name="beauty_sticker_hairhoop">Hairhoop</string>
+    <string name="beauty_sticker_relax_time">Relax</string>
+    <string name="beauty_sticker_cartoon_cat">Cartoon Cat</string>
+    <string name="beauty_sticker_butterfly">Butterfly</string>
+    <string name="beauty_sticker_brush">Brush</string>
+    <string name="beauty_sticker_cyber_glass">Cyber Glass</string>
+    <string name="beauty_sticker_neon_tiara">Neon Tiara</string>
+    <string name="beauty_sticker_love_glass">Love Glass</string>
+</resources>

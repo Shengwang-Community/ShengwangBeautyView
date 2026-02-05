@@ -45,7 +45,7 @@ dependencies {
     implementation(name: 'shengwang-beauty-view-1.0.0', ext: 'aar')
     
     // Agora RTC SDK（必需）
-    implementation 'io.agora.rtc:agora-special-full:4.5.2.8'
+    implementation 'io.agora.rtc:agora-special-full:4.5.2.9'
 }
 ```
 
@@ -104,7 +104,7 @@ dependencies {
     implementation(project(":lib"))
     
     // Agora RTC SDK（必需）
-    implementation 'io.agora.rtc:agora-special-full:4.5.2.8'
+    implementation 'io.agora.rtc:agora-special-full:4.5.2.9'
     
     // 其他依赖...
 }

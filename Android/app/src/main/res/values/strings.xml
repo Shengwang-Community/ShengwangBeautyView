@@ -5,7 +5,7 @@
     <string name="beauty_button_text">美颜</string>
     <string name="switch_camera_button_text">切换摄像头</string>
     <string name="save_beauty_config">保存</string>
-    <string name="reset_beauty_config">重置配置</string>
+    <string name="reset_beauty_config">重置</string>
 
     <!-- MainActivity -->
     <string name="channel_name_label">频道名称</string>

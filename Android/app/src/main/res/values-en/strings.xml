@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">声网美颜 View</string>
+
+    <!-- Button Text -->
+    <string name="beauty_button_text">Beauty</string>
+    <string name="switch_camera_button_text">Switch</string>
+
+    <string name="save_beauty_config">Save</string>
+    <string name="reset_beauty_config">Reset</string>
+
+    <!-- MainActivity -->
+    <string name="channel_name_label">Channel</string>
+    <string name="channel_name_hint">Input channel</string>
+    <string name="join_channel_button">Join Channel</string>
+    <string name="loading_beauty_resources">Loading beauty resources…</string>
+</resources>

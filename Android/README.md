@@ -49,7 +49,7 @@ USE_LOCAL_SDK=false
 
 SDK 版本在 `app/build.gradle` 中配置：
 ```gradle
-implementation('io.agora.rtc:agora-special-full:4.5.2.8') {
+implementation('io.agora.rtc:agora-special-full:4.5.2.9') {
     exclude group: 'io.agora.rtc', module: 'full-screen-sharing'
 }
 ```
