@@ -5,14 +5,15 @@ import android.view.TextureView
 import android.view.View
 import cn.shengwang.beauty.core.ShengwangBeautyManager
 import cn.shengwang.beauty.ui.model.BeautyModule
+import cn.shengwang.videobeauty.databinding.ActivityBeautyExampleBinding
+import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineConfig
 import io.agora.rtc2.RtcEngineEx
-import cn.shengwang.videobeauty.databinding.ActivityBeautyExampleBinding
-import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.video.VideoCanvas
+import io.agora.rtc2.video.VideoEncoderConfiguration
 
 /**
  * 美颜功能使用示例 Activity
@@ -172,6 +173,12 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             mBinding?.flVideoContainer?.addView(this)
         }
         rtcEngine?.setupLocalVideo(VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, 0))
+        
+        // 切换视频分辨率帧率，默认540P30FPS 
+        val encoderConfig = VideoEncoderConfiguration()
+        encoderConfig.dimensions = VideoEncoderConfiguration.VD_960x540
+        encoderConfig.frameRate = 30
+        rtcEngine?.setVideoEncoderConfiguration(encoderConfig)
     }
 
 
