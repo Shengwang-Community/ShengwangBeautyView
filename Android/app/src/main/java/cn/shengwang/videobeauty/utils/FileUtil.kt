@@ -37,6 +37,16 @@ object FileUtil {
     }.getOrNull()
 
     /**
+     * 获取 assets 文件大小
+     * @param context 上下文
+     * @param path assets 文件路径
+     * @return 文件大小（字节），失败返回 -1
+     */
+    fun getAssetFileSize(context: Context, path: String): Long = runCatching {
+        context.assets.open(path).use { it.available().toLong() }
+    }.getOrDefault(-1L)
+
+    /**
      * 从 assets 目录拷贝文件到目标路径
      * @param context 上下文
      * @param assetsPath assets 中的文件路径
