@@ -121,8 +121,6 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         val config = RtcEngineConfig()
         config.mContext = App.instance()
         config.mAppId = BuildConfig.App_ID
-        config.addExtension("agora_ai_echo_cancellation_extension")
-        config.addExtension("agora_ai_noise_suppression_extension")
         config.mEventHandler = object : IRtcEngineEventHandler() {
             override fun onError(err: Int) {
                 super.onError(err)
