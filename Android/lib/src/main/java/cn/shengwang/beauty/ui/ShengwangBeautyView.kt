@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.os.Build
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -407,32 +408,45 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         }
 
         // 设置值后再添加监听器，避免初始化时触发回调
-        viewBinding.slider.addOnChangeListener { _, value, _ ->
-            // Only update itemInfo.value during sliding, don't call callback
-            if (isIntegerType) {
-                itemInfo.value = value.toInt().toFloat()
-            } else {
-                itemInfo.value = value
+        var lastUpdateTime = 0L
+        val throttleInterval = 50L // 节流间隔：50ms，平衡流畅度和性能
+        
+        // 滑动过程中实时回调（带节流）
+        viewBinding.slider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastUpdateTime >= throttleInterval) {
+                    lastUpdateTime = currentTime
+                    
+                    // 如果需要整数类型，进行转换
+                    val finalValue = if (isIntegerType) {
+                        value.toInt().toFloat()
+                    } else {
+                        value
+                    }
+                    itemInfo.value = finalValue
+                    itemInfo.onValueChanged?.invoke(finalValue)
+                }
             }
         }
-
+        
+        // 滑动结束时确保最终值准确
         viewBinding.slider.addOnSliderTouchListener(object :
             com.google.android.material.slider.Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: com.google.android.material.slider.Slider) {
-                // Do nothing when start tracking
+                // 开始滑动时重置节流计时器
+                lastUpdateTime = 0L
             }
 
             override fun onStopTrackingTouch(slider: com.google.android.material.slider.Slider) {
-                // Call callback only when user releases the slider
-                val value = slider.value
-                if (isIntegerType) {
-                    val intValue = value.toInt()
-                    itemInfo.value = intValue.toFloat()
-                    itemInfo.onValueChanged?.invoke(intValue.toFloat())
+                // 滑动结束时确保最终值回调
+                val finalValue = if (isIntegerType) {
+                    slider.value.toInt().toFloat()
                 } else {
-                    itemInfo.value = value
-                    itemInfo.onValueChanged?.invoke(value)
+                    slider.value
                 }
+                itemInfo.value = finalValue
+                itemInfo.onValueChanged?.invoke(finalValue)
             }
         })
     }

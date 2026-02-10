@@ -13,6 +13,7 @@ import io.agora.rtc2.RtcEngineEx
 import cn.shengwang.videobeauty.databinding.ActivityBeautyExampleBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.video.VideoCanvas
+import io.agora.rtc2.video.VideoEncoderConfiguration
 
 /**
  * 美颜功能使用示例 Activity
@@ -121,8 +122,6 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         val config = RtcEngineConfig()
         config.mContext = App.instance()
         config.mAppId = BuildConfig.App_ID
-        config.addExtension("agora_ai_echo_cancellation_extension")
-        config.addExtension("agora_ai_noise_suppression_extension")
         config.mEventHandler = object : IRtcEngineEventHandler() {
             override fun onError(err: Int) {
                 super.onError(err)
@@ -174,6 +173,12 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             mBinding?.flVideoContainer?.addView(this)
         }
         rtcEngine?.setupLocalVideo(VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, 0))
+
+        val encoderConfig = VideoEncoderConfiguration().apply {
+            dimensions = VideoEncoderConfiguration.VD_960x540
+            frameRate = 30
+        }
+        rtcEngine?.setVideoEncoderConfiguration(encoderConfig)
     }
 
 
