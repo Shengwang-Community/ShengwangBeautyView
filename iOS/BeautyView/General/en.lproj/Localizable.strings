@@ -1,11 +1,15 @@
 /* Beauty Button */
-"Beauty" = "美颜";
+"Beauty" = "Beauty";
 
 /* Switch Camera Button */
-"Switch Camera" = "切换";
+"Switch Camera" = "Switch Camera";
 
 /* Save Button */
-"Save" = "保存";
+"Save" = "Save";
 
 /* Reset Button */
-"Reset" = "重置";
+"Reset" = "Reset";
+
+/* Main View Controller */
+"Start Preview" = "Start Preview";
+"Beauty View Example" = "Beauty View Example";

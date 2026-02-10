@@ -17,7 +17,7 @@ class MainViewController: UIViewController {
     
     private lazy var startPreviewButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("开启预览", for: .normal)
+        button.setTitle(NSLocalizedString("Start Preview", comment: ""), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
@@ -30,7 +30,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "美颜视图示例"
+        title = NSLocalizedString("Beauty View Example", comment: "")
         navigationController?.navigationBar.prefersLargeTitles = false
         
         setupUI()

@@ -9,3 +9,7 @@
 
 /* Reset Button */
 "Reset" = "重置";
+
+/* Main View Controller */
+"Start Preview" = "开启预览";
+"Beauty View Example" = "美颜视图示例";
