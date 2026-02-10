@@ -22,14 +22,33 @@ Demo 展示如何快速集成声网美颜功能。
 
 > ⚠️ 注意：没有美颜资源包，应用将无法正常运行美颜功能。
 
-### 2. MD5 校验机制
+### 2. 资源校验机制
 
-应用启动时会自动进行资源校验：
+应用启动时会自动进行资源校验，支持两种模式：
+
+#### 开发模式（默认）- 文件大小检查
+- 比较 assets 中 `AgoraBeautyMaterial.zip` 的文件大小
+- 大小不匹配时自动删除旧资源并重新解压
+- **适用场景**：开发阶段频繁更新资源包时使用，校验速度快
+
+#### 生产模式 - MD5 校验
 - 读取 `AgoraBeautyMaterialMd5.txt` 中的 MD5 值
 - 与本地已解压资源的 MD5 对比
 - MD5 不匹配时自动更新 `filter_xxx` 和 `sticker_xxx` 目录
+- **适用场景**：生产环境，需要精确校验资源完整性
 
-生成 MD5 值：
+**切换校验模式**：
+
+在 `BeautyMainActivity.kt` 中修改：
+```kotlin
+companion object {
+    // 是否检查 MD5，默认 false（文件大小检查）
+    // 设置为 true 启用 MD5 校验（需要 AgoraBeautyMaterialMd5.txt 文件）
+    private const val IS_CHECK_MD5 = false
+}
+```
+
+生成 MD5 值（仅生产模式需要）：
 ```bash
 md5 app/src/main/assets/AgoraBeautyMaterial.zip
 # 或
