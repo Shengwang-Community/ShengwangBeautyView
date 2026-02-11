@@ -201,6 +201,13 @@ class ExampleViewController: UIViewController {
         canvas.renderMode = .hidden
         canvas.mirrorMode = .auto
         rtcEngine.setupLocalVideo(canvas)
+        
+        // Switch VideoEncoder config
+        let encoderConfig = AgoraVideoEncoderConfiguration()
+        encoderConfig.dimensions = CGSize(width: 540, height: 960)
+        encoderConfig.frameRate = 30
+        rtcEngine.setVideoEncoderConfiguration(encoderConfig)
+        
         rtcEngine.startPreview()
         
         // Setup beauty control view
