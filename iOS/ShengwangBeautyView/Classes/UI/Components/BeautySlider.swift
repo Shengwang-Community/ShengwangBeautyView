@@ -44,13 +44,19 @@ public class BeautySlider: UIView {
         }
     }
     
-    /// Value change callback (triggered only when user releases the slider)
+    /// Value change callback (triggered during sliding every 50ms and when released)
     public var onValueChanged: ((Float) -> Void)?
     
     /// Whether the value range is integer (for formatting)
     private var isIntegerRange: Bool {
         return maximumValue > 1.0
     }
+    
+    /// Last callback timestamp for throttling
+    private var lastCallbackTime: TimeInterval = 0
+    
+    /// Throttle interval in seconds (50ms)
+    private let throttleInterval: TimeInterval = 0.05
     
     // MARK: - UI Components
     
@@ -135,28 +141,45 @@ public class BeautySlider: UIView {
     
     @objc private func sliderTouchDown(_ sender: UISlider) {
         isTracking = true
+        lastCallbackTime = 0
     }
     
     @objc private func sliderValueChanged(_ sender: UISlider) {
-        // Only update label during tracking, don't call callback
+        // Update label during tracking
         updateValueLabel()
         updateSliderLabelPosition()
+        
+        // Throttle callback during sliding
+        if isTracking {
+            let currentTime = Date().timeIntervalSince1970
+            if currentTime - lastCallbackTime >= throttleInterval {
+                lastCallbackTime = currentTime
+                triggerValueCallback()
+            }
+        }
     }
     
     @objc private func sliderTouchUp(_ sender: UISlider) {
         isTracking = false
-        // Call callback only when user releases the slider
+        
+        // Call callback when user releases the slider
         let finalValue = sender.value
         if isIntegerRange {
             let intValue = Int(finalValue)
             sender.value = Float(intValue)
             updateValueLabel()
             updateSliderLabelPosition()
-            onValueChanged?(Float(intValue))
+            triggerValueCallback(Float(intValue))
         } else {
             updateSliderLabelPosition()
-            onValueChanged?(finalValue)
+            triggerValueCallback(finalValue)
         }
+    }
+    
+    /// Trigger value change callback with current slider value
+    private func triggerValueCallback(_ value: Float? = nil) {
+        let currentValue = value ?? (isIntegerRange ? Float(Int(slider.value)) : slider.value)
+        onValueChanged?(currentValue)
     }
     
     // MARK: - Helper Methods
@@ -184,6 +207,7 @@ public class BeautySlider: UIView {
     public func configure(with itemInfo: BeautyItemInfo) {
         // Clear previous callbacks
         onValueChanged = nil
+        lastCallbackTime = 0
         
         // Set range
         minimumValue = itemInfo.valueRange.lowerBound
