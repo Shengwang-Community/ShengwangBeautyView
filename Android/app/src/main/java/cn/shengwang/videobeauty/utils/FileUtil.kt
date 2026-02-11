@@ -27,24 +27,43 @@ object FileUtil {
     }
 
     /**
-     * 从 assets 目录读取 MD5 值
-     * @param context 上下文
-     * @param path assets 文件路径
-     * @return MD5 字符串，读取失败返回 null
-     */
-    fun readMd5FromAssets(context: Context, path: String): String? = runCatching {
-        context.assets.open(path).bufferedReader().use { it.readLine()?.trim() }
-    }.getOrNull()
-
-    /**
      * 获取 assets 文件大小
      * @param context 上下文
      * @param path assets 文件路径
      * @return 文件大小（字节），失败返回 -1
      */
     fun getAssetFileSize(context: Context, path: String): Long = runCatching {
-        context.assets.open(path).use { it.available().toLong() }
+        val startTime = System.currentTimeMillis()
+        val size = context.assets.open(path).use { it.available().toLong() }
+        val elapsed = System.currentTimeMillis() - startTime
+        Log.d(TAG, "getAssetFileSize: $path, size=${size / 1024}KB, time=${elapsed}ms")
+        size
     }.getOrDefault(-1L)
+
+    /**
+     * 计算 assets 文件的 MD5 值
+     * 性能参考：300-500 MB/s，50MB 文件约 100-150ms
+     * @param context 上下文
+     * @param path assets 文件路径
+     * @return MD5 字符串（32位小写），失败返回 null
+     */
+    fun calculateAssetMd5(context: Context, path: String): String? = runCatching {
+        val startTime = System.currentTimeMillis()
+        val md = java.security.MessageDigest.getInstance("MD5")
+        var totalBytes = 0L
+        context.assets.open(path).use { input ->
+            val buffer = ByteArray(BUFFER_SIZE)
+            generateSequence { input.read(buffer).takeIf { it != -1 } }
+                .forEach { 
+                    md.update(buffer, 0, it)
+                    totalBytes += it
+                }
+        }
+        val result = md.digest().joinToString("") { "%02x".format(it) }
+        val elapsed = System.currentTimeMillis() - startTime
+        Log.d(TAG, "calculateAssetMd5: $path, size=${totalBytes / 1024}KB, time=${elapsed}ms, md5=$result")
+        result
+    }.onFailure { Log.e(TAG, "calculateAssetMd5: ${it.message}") }.getOrNull()
 
     /**
      * 从 assets 目录拷贝文件到目标路径

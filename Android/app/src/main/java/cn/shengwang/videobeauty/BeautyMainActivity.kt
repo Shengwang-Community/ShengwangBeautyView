@@ -20,10 +20,6 @@ class BeautyMainActivity : BaseActivity<ActivityBeautyMainBinding>() {
         private const val FUNCTIONAL = "beauty_material_functional"
         const val EXTRA_CHANNEL_NAME = "channel_name"
         const val EXTRA_MATERIAL_PATH = "material_path"
-        
-        // 是否检查 MD5，默认不检查（用户集成初期会频繁更新资源包）
-        // 改为检查文件大小，不一致时重新解压
-        private const val IS_CHECK_MD5 = false
     }
 
     private lateinit var permissionHelp: PermissionHelp
@@ -96,63 +92,30 @@ class BeautyMainActivity : BaseActivity<ActivityBeautyMainBinding>() {
         val materialDir = "$cacheDir/$MATERIAL"
         val functionalDir = "$materialDir/$FUNCTIONAL"
 
-        if (IS_CHECK_MD5) {
-            // MD5 检查模式（适用于生产环境）
-            val expectedMd5 = FileUtil.readMd5FromAssets(this, "${MATERIAL}Md5.txt") ?: return copyAll(cacheDir, materialDir, null)
-            val savedMd5 = prefs.getString("md5", null)
-            val dirExists = File(functionalDir).isDirectory
+        // 直接计算 assets 中 ZIP 包的 MD5，无需维护额外的 MD5 文件
+        val expectedMd5 = FileUtil.calculateAssetMd5(this, "$MATERIAL.zip") ?: return copyAll(cacheDir, materialDir, null)
+        val savedMd5 = prefs.getString("md5", null)
+        val dirExists = File(functionalDir).isDirectory
 
-            Log.d(TAG, "MD5 检查模式 - expected: $expectedMd5, saved: $savedMd5, dirExists: $dirExists")
+        Log.d(TAG, "MD5 检查 - expected: $expectedMd5, saved: $savedMd5, dirExists: $dirExists")
 
-            return when {
-                dirExists && savedMd5 == expectedMd5 -> {
-                    updateUI(100, "资源已就绪")
-                    materialDir
-                }
-                dirExists && savedMd5 != null -> updateFilterAndSticker(cacheDir, materialDir, expectedMd5)
-                else -> copyAll(cacheDir, materialDir, expectedMd5)
+        return when {
+            dirExists && savedMd5 == expectedMd5 -> {
+                updateUI(100, "资源已就绪")
+                materialDir
             }
-        } else {
-            // 文件大小检查模式（适用于开发阶段，频繁更新资源包）
-            val expectedSize = FileUtil.getAssetFileSize(this, "$MATERIAL.zip")
-            val savedSize = prefs.getLong("asset_size", -1L)
-            val dirExists = File(functionalDir).isDirectory
-
-            Log.d(TAG, "文件大小检查模式 - expectedSize: $expectedSize, savedSize: $savedSize, dirExists: $dirExists")
-
-            return when {
-                // 目录存在且 ZIP 文件大小匹配，直接使用
-                dirExists && savedSize == expectedSize && expectedSize > 0 -> {
-                    updateUI(100, "资源已就绪")
-                    materialDir
-                }
-                // ZIP 文件大小不匹配，删除旧资源重新解压
-                else -> {
-                    if (dirExists && savedSize != expectedSize) {
-                        Log.d(TAG, "ZIP 文件大小不匹配（saved: $savedSize, expected: $expectedSize），删除旧资源重新解压")
-                    }
-                    copyAll(cacheDir, materialDir, null, expectedSize)
-                }
-            }
+            dirExists && savedMd5 != null -> updateFilterAndSticker(cacheDir, materialDir, expectedMd5)
+            else -> copyAll(cacheDir, materialDir, expectedMd5)
         }
     }
 
-    private fun copyAll(cacheDir: String, materialDir: String, md5: String?, assetSize: Long = -1L): String? {
+    private fun copyAll(cacheDir: String, materialDir: String, md5: String?): String? {
         updateUI(0, "正在准备美颜资源...")
         File(materialDir).takeIf { it.exists() }?.let { FileUtil.deleteRecursively(it) }
 
         val result = FileUtil.copyAndUnzip(this, "$MATERIAL.zip", cacheDir) { p, m -> updateUI(p, m) }
-        
-        if (result != null) {
-            // 保存 MD5 或文件大小
-            prefs.edit {
-                if (md5 != null) {
-                    putString("md5", md5)
-                }
-                if (assetSize > 0) {
-                    putLong("asset_size", assetSize)
-                }
-            }
+        if (result != null && md5 != null) {
+            prefs.edit { putString("md5", md5) }
         }
         return result
     }

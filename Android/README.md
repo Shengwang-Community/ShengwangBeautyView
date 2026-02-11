@@ -18,42 +18,16 @@ Demo 展示如何快速集成声网美颜功能。
 - 资源包名称：`AgoraBeautyMaterial.zip`
 - 获取方式：联系声网技术支持团队
 - 放置位置：`app/src/main/assets/AgoraBeautyMaterial.zip`
-- MD5 校验：将资源包的 MD5 值写入 `app/src/main/assets/AgoraBeautyMaterialMd5.txt`
 
 > ⚠️ 注意：没有美颜资源包，应用将无法正常运行美颜功能。
 
 ### 2. 资源校验机制
 
-应用启动时会自动进行资源校验，支持两种模式：
-
-#### 开发模式（默认）- 文件大小检查
-- 比较 assets 中 `AgoraBeautyMaterial.zip` 的文件大小
-- 大小不匹配时自动删除旧资源并重新解压
-- **适用场景**：开发阶段频繁更新资源包时使用，校验速度快
-
-#### 生产模式 - MD5 校验
-- 读取 `AgoraBeautyMaterialMd5.txt` 中的 MD5 值
-- 与本地已解压资源的 MD5 对比
+应用启动时会自动进行资源校验：
+- 直接计算 assets 中 ZIP 包的 MD5 值（无需额外维护 MD5 文件）
+- 与本地保存的 MD5 对比（上次成功加载时保存在 SharedPreferences 中）
 - MD5 不匹配时自动更新 `filter_xxx` 和 `sticker_xxx` 目录
-- **适用场景**：生产环境，需要精确校验资源完整性
-
-**切换校验模式**：
-
-在 `BeautyMainActivity.kt` 中修改：
-```kotlin
-companion object {
-    // 是否检查 MD5，默认 false（文件大小检查）
-    // 设置为 true 启用 MD5 校验（需要 AgoraBeautyMaterialMd5.txt 文件）
-    private const val IS_CHECK_MD5 = false
-}
-```
-
-生成 MD5 值（仅生产模式需要）：
-```bash
-md5 app/src/main/assets/AgoraBeautyMaterial.zip
-# 或
-md5sum app/src/main/assets/AgoraBeautyMaterial.zip
-```
+- **性能**：50MB 文件约 100-150ms
 
 ### 3. 配置 Agora SDK 依赖
 
