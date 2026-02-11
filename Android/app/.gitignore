@@ -1,4 +1,5 @@
 /build
-*-sdk/
+*-sdk/*
+!*-sdk/Placeholder
 /src/main/assets/AgoraBeautyMaterial.zip
 /src/main/assets/AgoraBeautyMaterialMd5.txt
