@@ -93,11 +93,11 @@
 			buildConfigurationList = AB011ADD2F22053700E5522C /* Build configuration list for PBXNativeTarget "BeautyView" */;
 			buildPhases = (
 				DED6862BA80CA88616E89A42 /* [CP] Check Pods Manifest.lock */,
+				AB3FFBC92F22439400B0AC6D /* ShellScript */,
 				AB011AC62F22053500E5522C /* Sources */,
 				AB011AC72F22053500E5522C /* Frameworks */,
 				AB011AC82F22053500E5522C /* Resources */,
 				BD6D4DAE726113B66E8A2A51 /* [CP] Embed Pods Frameworks */,
-				AB3FFBC92F22439400B0AC6D /* ShellScript */,
 			);
 			buildRules = (
 			);
