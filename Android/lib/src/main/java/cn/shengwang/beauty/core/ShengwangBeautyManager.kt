@@ -131,9 +131,11 @@ object ShengwangBeautyManager {
         val effect = beautyEffect ?: return
         if (enable == beautyEnable) return
         if (enable) {
-            effect.addOrUpdateVideoEffect(
-                IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value, beautyConfig.beautyName
-            )
+            if (beautyConfig.beautyName != null) {
+                effect.addOrUpdateVideoEffect(
+                    IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value, beautyConfig.beautyName
+                )
+            }
             beautyConfig.beautyEnable = true
             beautyConfig.faceShapeEnable = true
         } else {

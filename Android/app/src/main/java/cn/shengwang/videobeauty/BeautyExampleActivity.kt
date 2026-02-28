@@ -186,11 +186,11 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         super.onDestroy()
         if (isInitialized && rtcEngine != null) {
             isInitialized = false
-            rtcEngine?.stopPreview()
-            rtcEngine?.leaveChannel()
-
             // 销毁美颜 SDK
             ShengwangBeautyManager.unInitBeautySDK()
+            rtcEngine?.stopPreview()
+            rtcEngine?.leaveChannel()
+            
             rtcEngine = null
             RtcEngine.destroy()
         }
