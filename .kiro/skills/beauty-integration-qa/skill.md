@@ -18,8 +18,10 @@ Demo 工程是最佳参考，用户遇到不确定的集成问题时，优先对
 - Android 集成说明：#[[file:Android/README.md]]
 - Android 库说明：#[[file:Android/lib/README.md]]
 - iOS 集成说明：#[[file:iOS/README.md]]
+- Flutter 集成说明：#[[file:Flutter/README.md]]
 - Android Demo 核心示例：#[[file:Android/app/src/main/java/cn/shengwang/videobeauty/BeautyExampleActivity.kt]]
 - iOS Demo 核心示例：#[[file:iOS/BeautyView/Example/ExampleViewController.swift]]
+- Flutter Demo 核心示例：#[[file:Flutter/lib/Example/example_page.dart]]
 
 ## 知识库
 
@@ -50,6 +52,136 @@ Demo 工程是最佳参考，用户遇到不确定的集成问题时，优先对
 
 ### 优先使用封装好的组件
 如果用户使用的是本仓库的 lib 模块（Android）或 ShengwangBeautyView pod（iOS），优先引导使用封装好的 `ShengwangBeautyManager` / `ShengwangBeautySDK` 和 `ShengwangBeautyView`，而不是直接操作底层 API，除非用户有定制需求。
+
+### 打包交付
+
+当用户说"整理完了，帮我打包""帮我构建产物"或类似表述时：
+
+**Android**：执行 AAR 构建脚本，完成后告知产物路径。
+
+```bash
+# 在 Android 目录下执行
+./lib/build-aar.sh
+```
+
+产物位置：`Android/release/shengwang-beauty-view-1.0.0.aar`
+
+**iOS**：不需要构建，直接告知用户将 `iOS/ShengwangBeautyView` 目录拷贝到自己工程，通过本地 CocoaPods 依赖：
+
+```ruby
+pod 'ShengwangBeautyView', :path => './ShengwangBeautyView'
+```
+
+详细集成步骤参考 `iOS/README.md`。
+
+**Flutter**：Flutter 没有二进制产物的概念，交付形式取决于用户目的：
+
+1. **交付组件源码**（最常见）：直接将 `Flutter/lib/BeautyView/` 目录拷贝到用户工程，无需构建。告知用户在 `pubspec.yaml` 中添加以下依赖后执行 `flutter pub get`：
+
+```yaml
+dependencies:
+  agora_rtc_engine:
+    git:
+      url: https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK.git
+      ref: 6.5.2-sp.4529.b.1
+  path_provider: ^2.0.8
+  archive: ^3.4.10
+```
+
+2. **构建 Android APK/AAB**：
+
+```bash
+# 在 Flutter 目录下执行
+flutter build apk --release          # APK
+flutter build appbundle --release    # AAB（推荐上架 Google Play）
+```
+
+产物位置：`Flutter/build/app/outputs/`
+
+3. **构建 iOS IPA**：
+
+```bash
+# 在 Flutter 目录下执行
+flutter build ios --release
+```
+
+构建完成后需用 Xcode 打开 `Flutter/ios/Runner.xcworkspace`，通过 **Product → Archive** 导出 IPA。需要配置好 Apple Developer 账号、Bundle ID 和 Provisioning Profile。
+
+> 注意：Flutter 构建 iOS 时需要 macOS 环境，Android 构建无此限制。
+
+### 小语种翻译
+
+当用户需要适配小语种时，以英文文案为基准进行翻译，直接帮用户创建对应语言的文案文件。
+
+**Android 文案位置**：
+- 英文（基准）：`Android/lib/src/main/res/values-en/strings.xml`
+- 新语言：`Android/lib/src/main/res/values-<语言代码>/strings.xml`
+  - 日语 `values-ja`，韩语 `values-ko`，阿拉伯语 `values-ar`，法语 `values-fr`，西班牙语 `values-es`
+
+**iOS 文案位置**：
+- 英文（基准）：`iOS/ShengwangBeautyView/Resources/Localizations/en.lproj/Localizable.strings`
+- 新语言：`iOS/ShengwangBeautyView/Resources/Localizations/<语言代码>.lproj/Localizable.strings`
+  - 日语 `ja.lproj`，韩语 `ko.lproj`，阿拉伯语 `ar.lproj`，法语 `fr.lproj`，西班牙语 `es.lproj`
+
+**翻译规则**：
+1. 以英文文案为基准翻译，保持 key 不变，只翻译 value
+2. 美颜功能词（Smooth、Whiten、V-Face 等）优先使用目标语言的美妆行业通用术语
+3. 滤镜和贴纸名称（Serene、Latte、Christmas 等）可保留英文或意译，以自然为准
+4. Android 中 `\n` 是换行符，翻译时保留换行逻辑（短词可不换行）
+5. 翻译完成后告知用户：iOS 还需在 Xcode 的 Project > Info > Localizations 中手动添加对应语言
+
+**Flutter 文案位置**：
+- Flutter 的文案硬编码在 `Flutter/lib/Utils/beauty_localizer.dart` 的 Map 中，不是独立文件
+- 英文（基准）：`_enStrings` Map
+- 新语言：在 `beauty_localizer.dart` 中新增对应语言的 Map，并在 `beautyLocalized()` 函数里添加分支
+
+**Flutter 翻译步骤**：
+1. 在 `beauty_localizer.dart` 中参照 `_enStrings` 新增语言 Map，例如日语 `_jaStrings`
+2. 在 `beautyLocalized()` 函数中添加对应分支：
+```dart
+if (lang == 'ja') {
+  map = _jaStrings;
+}
+```
+3. 翻译时保持 key 不变，只翻译 value；`\n` 换行符按需保留
+
+**强制设置默认语言**：
+
+当用户说"把美颜 UI 默认语言改为 xx 语"时，除了创建文案文件，还需要修改代码中的强制语言设置：
+
+Android — 在初始化 `ShengwangBeautyView` 之前设置（通常在 `BeautyExampleActivity` 或 Application 里）：
+```kotlin
+// 强制日语（在 ShengwangBeautyView 初始化前调用）
+ShengwangBeautyManager.forcedLanguage = "ja"
+// 恢复跟随系统
+ShengwangBeautyManager.forcedLanguage = null
+```
+
+iOS — 在初始化 `ShengwangBeautyView` 之前设置（通常在 `ExampleViewController` 或 AppDelegate 里）：
+```swift
+// 强制日语（在 ShengwangBeautyView 初始化前调用）
+String.beautyForcedLanguage = "ja"
+// 恢复跟随系统
+String.beautyForcedLanguage = nil
+```
+
+常用语言代码：`ja`（日语）、`ko`（韩语）、`fr`（法语）、`ar`（阿拉伯语）、`es`（西班牙语）、`de`（德语）、`pt`（葡萄牙语）
+
+Flutter — 在创建 `ExamplePage` 时通过 `lang` 参数传入，或直接调用 `BeautyLocalizer.setLang()`：
+```dart
+// 方式一：通过 ExamplePage 的 lang 参数（推荐）
+ExamplePage(
+  materialBundlePath: destPath,
+  lang: 'ja',  // 传入语言代码
+)
+
+// 方式二：直接设置（在 ShengwangBeautyView 显示前调用）
+BeautyLocalizer.setLang('ja');
+// 恢复英文
+BeautyLocalizer.setLang('en');
+```
+
+Flutter 的语言设置是运行时切换，不需要重启 App，但需要在 `ShengwangBeautyView` 渲染前设置好。
 
 ### 回答语言
 使用中文回答。

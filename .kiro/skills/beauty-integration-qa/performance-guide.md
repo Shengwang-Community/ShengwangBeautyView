@@ -13,8 +13,10 @@
 **原理**：声网 SDK 内置设备打分，分数越低代表设备越弱。默认推荐策略：
 - Android机型打分 < 65：隐藏整个美颜入口，不初始化美颜 SDK
 - iOS机型打分 < 65：隐藏整个美颜入口，不初始化美颜 SDK
+- Flutter机型打分 < 65：隐藏整个美颜入口，不初始化美颜 SDK
 - Android机型打分 < 75：隐藏美妆和贴纸 tab（即使素材包里有这些模板也隐藏），只保留美颜和滤镜
 - iOS机型打分 < 80：隐藏美妆和贴纸 tab（即使素材包里有这些模板也隐藏），只保留美颜和滤镜
+- Flutter机型打分 < 75：隐藏美妆和贴纸 tab，只保留美颜和滤镜
 
 **提出建议时的交互流程**：
 
@@ -26,6 +28,7 @@
 **代码改动位置**：
 - Android：`BeautyExampleActivity.kt` 的 `initializeBeauty()` 方法 + `ShengwangBeautyView` 的 `onPageListCreate()`
 - iOS：`ExampleViewController.swift` 的 `initializeBeauty()` 方法 + `ShengwangBeautyView` 的 `onPageListCreate()`
+- Flutter：`example_page.dart` 的 `_initEngine()` 方法 + `ShengwangBeautyView` 的 `pageListBuilder` 参数
 
 **Android 示例**（以默认阈值 65 / 75 为例）：
 
@@ -136,6 +139,45 @@ internal func onPageListCreate() -> [BeautyPageInfo] {
 ```
 
 > 注意：以上示例中的 tab 显示逻辑需结合当前素材包的实际内容（即 `onPageListCreate` 里已有的注释/启用状态），打分判断叠加在素材包判断之上，两者都满足才显示对应 tab。
+
+**Flutter 示例**（以默认阈值 65 / 75 为例）：
+
+```dart
+// example_page.dart
+Future<void> _initEngine() async {
+  _engine = createAgoraRtcEngine();
+  await _engine.initialize(RtcEngineContext(appId: config.appId));
+
+  // 获取设备打分
+  final deviceScore = await _engine.queryDeviceScore();
+
+  // < 65 分：设备太弱，不初始化美颜，隐藏美颜入口
+  if (deviceScore < 65) {
+    setState(() => _beautySupported = false);
+    return;
+  }
+
+  await ShengwangBeautySDK.instance.initBeautySDK(
+    rtcEngine: _engine,
+    materialBundlePath: widget.materialBundlePath,
+  );
+
+  setState(() => _deviceScore = deviceScore);
+}
+```
+
+```dart
+// 在 ShengwangBeautyView 的 pageListBuilder 参数中按打分过滤 tab
+ShengwangBeautyView(
+  beautyConfig: _beautyConfig,
+  pageListBuilder: (config) async => [
+    await BeautyPageBuilder(beautyConfig: config).buildPage(),
+    if (_deviceScore >= 75) await MakeupPageBuilder(beautyConfig: config).buildPage(),
+    await FilterPageBuilder(beautyConfig: config).buildPage(),
+    if (_deviceScore >= 75) await StickerPageBuilder(beautyConfig: config).buildPage(),
+  ],
+)
+```
 
 ### 建议 2：裁剪美颜 tab 下非必要子功能
 
