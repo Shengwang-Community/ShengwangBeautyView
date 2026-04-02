@@ -119,6 +119,13 @@ class _ExamplePageState extends State<ExamplePage> {
 
     _engine.registerEventHandler(_rtcEngineEventHandler);
     await _engine.enableVideo();
+    await _engine.setVideoEncoderConfiguration(
+      const VideoEncoderConfiguration(
+        dimensions: VideoDimensions(width: 960, height: 540),
+        frameRate: 30,
+        bitrate: 0,
+      ),
+    );
     await _engine.startPreview();
 
     // Initialize beauty SDK

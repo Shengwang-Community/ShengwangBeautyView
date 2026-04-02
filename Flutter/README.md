@@ -98,8 +98,6 @@ dependencies:
 final destPath = await _prepareBundle(); // 解压并返回沙盒路径
 ```
 
-> 若传入只读路径（如 Flutter assets 原始路径），美颜参数将无法持久保存。
-
 ---
 
 ## 🔧 使用方法
