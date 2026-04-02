@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'UIKit', 'Foundation'
 
-  s.dependency 'AgoraVideo_Special_iOS'
+  s.dependency 'AgoraRtcEngine_iOS/RtcBasic'
+  s.dependency 'AgoraRtcEngine_iOS/ClearVision'
   
 end
