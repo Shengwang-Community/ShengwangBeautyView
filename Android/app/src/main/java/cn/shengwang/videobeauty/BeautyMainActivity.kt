@@ -91,9 +91,10 @@ class BeautyMainActivity : BaseActivity<ActivityBeautyMainBinding>() {
         val cacheDir = cacheDir.absolutePath
         val materialDir = "$cacheDir/$MATERIAL"
         val functionalDir = "$materialDir/$FUNCTIONAL"
-
-        // 直接计算 assets 中 ZIP 包的 MD5，无需维护额外的 MD5 文件
-        val expectedMd5 = FileUtil.calculateAssetMd5(this, "$MATERIAL.zip") ?: return copyAll(cacheDir, materialDir, null)
+        
+        val expectedMd5 = runCatching {
+            assets.open("zip.md5").bufferedReader().readText().trim()
+        }.getOrNull() ?: return copyAll(cacheDir, materialDir, null)
         val savedMd5 = prefs.getString("md5", null)
         val dirExists = File(functionalDir).isDirectory
 
