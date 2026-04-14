@@ -1,8 +1,11 @@
 package cn.shengwang.videobeauty
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.TextureView
 import android.view.View
+import android.widget.Toast
 import cn.shengwang.beauty.core.ShengwangBeautyManager
 import cn.shengwang.beauty.ui.model.BeautyModule
 import io.agora.rtc2.Constants
@@ -94,12 +97,14 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         binding.tvSaveBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.saveBeauty(BeautyModule.BEAUTY)
+                showToast(getString(R.string.beauty_setting_saved_info))
             }
         }
 
         binding.tvResetBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.resetBeauty(BeautyModule.BEAUTY)
+                showToast(getString(R.string.beauty_setting_reseted_info))
             }
         }
 
@@ -194,6 +199,12 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         rtcEngine?.setVideoEncoderConfiguration(encoderConfig)
     }
 
+
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        toast.show()
+        Handler(Looper.getMainLooper()).postDelayed({ toast.cancel() }, 500)
+    }
 
     override fun onDestroy() {
         super.onDestroy()

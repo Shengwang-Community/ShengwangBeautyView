@@ -2,7 +2,7 @@
 "Beauty" = "Beauty";
 
 /* Switch Camera Button */
-"Switch Camera" = "Switch Camera";
+"Switch Camera" = "Switch";
 
 /* Save Button */
 "Save" = "Save";
@@ -13,3 +13,7 @@
 /* Main View Controller */
 "Start Preview" = "Start Preview";
 "Beauty View Example" = "Beauty View Example";
+
+/* Alert */
+"beauty_setting_saved_info" = "Beauty settings saved";
+"beauty_setting_reseted_info" = "Beauty settings reseted";

@@ -128,6 +128,8 @@ class ExampleViewController: UIViewController {
             videoContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             videoContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        let tap = UITapGestureRecognizer(target: self, action: #selector(videoContainerTapped))
+        videoContainerView.addGestureRecognizer(tap)
         
         let controlBarStackView = UIStackView(arrangedSubviews: [
             beautyButton,
@@ -136,7 +138,7 @@ class ExampleViewController: UIViewController {
             resetBeautyButton
         ])
         controlBarStackView.axis = .vertical
-        controlBarStackView.alignment = .trailing
+        controlBarStackView.alignment = .center
         controlBarStackView.distribution = .fillEqually
         controlBarStackView.spacing = 20
         controlBarStackView.backgroundColor = .clear
@@ -225,6 +227,11 @@ class ExampleViewController: UIViewController {
         beautyView?.isHidden.toggle()
     }
     
+    @objc private func videoContainerTapped() {
+        guard let beautyView = beautyView, !beautyView.isHidden else { return }
+        beautyView.isHidden = true
+    }
+    
     @objc private func switchCameraButtonTapped() {
         rtcEngine?.switchCamera()
     }
@@ -232,11 +239,21 @@ class ExampleViewController: UIViewController {
     @objc private func saveBeautyButtonTapped() {
         guard let beautyView = beautyView else { return }
         beautyView.saveBeauty()
+        showAutoAlert(message: NSLocalizedString("beauty_setting_saved_info", comment: ""))
     }
     
     @objc private func resetBeautyButtonTapped() {
         guard let beautyView = beautyView else { return }
         beautyView.resetBeauty()
+        showAutoAlert(message: NSLocalizedString("beauty_setting_reseted_info", comment: ""))
+    }
+    
+    private func showAutoAlert(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        present(alert, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak alert] in
+            alert?.dismiss(animated: true)
+        }
     }
     
     // MARK: - Cleanup
