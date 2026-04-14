@@ -50,6 +50,7 @@ class _ExamplePageState extends State<ExamplePage> {
 
   // ── UI ───────────────────────────────────────────────────────────────────
   bool _beautyPanelVisible = false;
+  bool _disposed = false;
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -136,6 +137,8 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   Future<void> _disposeEngine() async {
+    if (_disposed) return;
+    _disposed = true;
     await ShengwangBeautySDK.instance.unInitBeautySDK();
     _engine.unregisterEventHandler(_rtcEngineEventHandler);
     await _engine.leaveChannel();
@@ -216,7 +219,26 @@ class _ExamplePageState extends State<ExamplePage> {
             ),
           ),
 
-          // 2. Right-side control bar — vertically centered
+          // 2. Back button — top-left
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 16,
+            child: GestureDetector(
+              onTap: () async {
+                await _disposeEngine();
+                if (mounted) Navigator.of(context).pop();
+              },
+              behavior: HitTestBehavior.opaque,
+              child: Image.asset(
+                'assets/Icons/ic_back.png',
+                width: 24,
+                height: 24,
+                color: Colors.white,
+              ),
+            ),
+          ),
+
+          // 3. Right-side control bar — vertically centered
           BeautyControlBar(
             onBeautyTap: _toggleBeautyPanel,
             onSwitchCamera: _switchCamera,
