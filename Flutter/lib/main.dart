@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
           builder: (_) => ExamplePage(
             materialBundlePath: destPath + _materialRoot,
-            lang: 'zh',
+            lang: View.of(context).platformDispatcher.locale.languageCode,
           ),
         ),
       );
