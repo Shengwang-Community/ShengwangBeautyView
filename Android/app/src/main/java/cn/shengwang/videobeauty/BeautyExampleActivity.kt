@@ -66,6 +66,13 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             finish()
         }
 
+        // 点击视频区域隐藏美颜面板
+        binding.flVideoContainer.setOnClickListener {
+            if (binding.beautyControlView.visibility == View.VISIBLE) {
+                binding.beautyControlView.visibility = View.GONE
+            }
+        }
+
         // 设置美颜按钮点击事件 - 直接显示/隐藏 View
         binding.tvBeauty.setOnClickListener {
             val beautyView = binding.beautyControlView
@@ -87,6 +94,12 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         binding.tvSaveBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.saveBeauty(BeautyModule.BEAUTY)
+            }
+        }
+
+        binding.tvResetBeauty.setOnClickListener {
+            if (isInitialized) {
+                binding.beautyControlView.resetBeauty(BeautyModule.BEAUTY)
             }
         }
 

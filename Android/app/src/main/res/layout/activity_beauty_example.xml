@@ -48,33 +48,79 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tvBeauty"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/beauty_button_text"
+            android:textColor="@android:color/white"
             app:icon="@drawable/ic_beauty"
+            app:iconGravity="top"
             app:iconSize="24dp"
-            app:iconTint="@android:color/white" />
+            app:iconTint="@android:color/white"
+            app:iconPadding="2dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tvSwitchCamera"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/switch_camera_button_text"
+            android:textColor="@android:color/white"
             app:icon="@drawable/ic_camera"
+            app:iconGravity="top"
             app:iconSize="24dp"
-            app:iconTint="@android:color/white" />
+            app:iconTint="@android:color/white"
+            app:iconPadding="2dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tvSaveBeauty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:drawableTop="@drawable/ic_save"
-            android:gravity="center"
-            android:textColor="@color/white"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:text="@string/save_beauty_config"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_save"
+            app:iconGravity="top"
             app:iconSize="24dp"
-            app:iconTint="@android:color/white" />
+            app:iconTint="@android:color/white"
+            app:iconPadding="2dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tvResetBeauty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/reset_beauty_config"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_reset"
+            app:iconGravity="top"
+            app:iconSize="24dp"
+            app:iconTint="@android:color/white"
+            app:iconPadding="2dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
