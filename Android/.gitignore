@@ -12,6 +12,7 @@
 
 **/jniLibs/*
 **/src/libs/*
+**/assets/*
 
 local.properties
 /release/

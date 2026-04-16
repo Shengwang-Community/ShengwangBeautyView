@@ -16,7 +16,7 @@ public struct MakeupNames {
     public static let natural = "Makeup-Natural"       // Natural makeup
     public static let graceful = "Makeup-Graceful"     // Graceful makeup
     public static let charm = "Makeup-Charm"           // Charming makeup
-    public static let perky = "Makeup-Perky"           // Perky makeup
+    public static let perky = "Makeup-Perkey"          // Perky makeup
     public static let maiden = "Makeup-Maiden"         // Maiden makeup
     public static let insight = "Makeup-Insight"        // Insightful makeup
     public static let misty = "Makeup-Misty"           // Misty makeup
@@ -67,16 +67,28 @@ public struct FilterNames {
 /// Sticker name constants
 /// Used for sticker (STICKER) module
 public struct StickerNames {
-    public static let christmas = "Sticker-Christmas"     // Christmas
-    public static let squid = "Sticker-Squid"             // Squid
-    public static let piggy = "Sticker-Piggy"            // Piggy
-    public static let longCat = "Sticker-Longcat"         // Long Cat
-    public static let hairhoop = "Sticker-Hairhoop"      // Hair Hoop
-    public static let relaxTime = "Sticker-Relax"         // Relax Time
-    public static let cartoonCat = "Sticker-Cartooncat"  // Cartoon Cat
-    public static let butterfly = "Sticker-Butterfly"      // Butterfly
-    public static let brush = "Sticker-Brush"             // Brush
-    public static let cyberGlass = "Sticker-Glass"        // Cyber Glass
-    public static let neonTiara = "Sticker-Tiara"         // Neon Tiara
-    public static let loveGlass = "Sticker-Love"          // Love Glass
+    public static let christmas = "Sticker-Christmas"         // Christmas (animated)
+    public static let christmasLite = "Sticker-Christmas-Lite" // Christmas (static)
+    public static let squid = "Sticker-Squid"                  // Squid (animated)
+    public static let squidLite = "Sticker-Squid-Lite"         // Squid (static)
+    public static let piggy = "Sticker-Piggy"                  // Piggy (animated)
+    public static let piggyLite = "Sticker-Piggy-Lite"         // Piggy (static)
+    public static let longCat = "Sticker-Longcat"              // Long Cat (animated)
+    public static let longCatLite = "Sticker-Longcat-Lite"     // Long Cat (static)
+    public static let hairhoop = "Sticker-Hairhoop"            // Hair Hoop (animated)
+    public static let hairhoopLite = "Sticker-Hairhoop-Lite"   // Hair Hoop (static)
+    public static let relaxTime = "Sticker-Relax"              // Relax Time (animated)
+    public static let relaxTimeLite = "Sticker-Relax-Lite"     // Relax Time (static)
+    public static let cartoonCat = "Sticker-Cartooncat"        // Cartoon Cat (animated)
+    public static let cartoonCatLite = "Sticker-Cartooncat-Lite" // Cartoon Cat (static)
+    public static let butterfly = "Sticker-Butterfly"          // Butterfly (animated)
+    public static let butterflyLite = "Sticker-Butterfly-Lite" // Butterfly (static)
+    public static let brush = "Sticker-Brush"                  // Brush (animated)
+    public static let brushLite = "Sticker-Brush-Lite"         // Brush (static)
+    public static let cyberGlass = "Sticker-Glass"             // Cyber Glass (animated)
+    public static let cyberGlassLite = "Sticker-Glass-Lite"    // Cyber Glass (static)
+    public static let neonTiara = "Sticker-Tiara"              // Neon Tiara (animated)
+    public static let neonTiaraLite = "Sticker-Tiara-Lite"     // Neon Tiara (static)
+    public static let loveGlass = "Sticker-Love"               // Love Glass (animated)
+    public static let loveGlassLite = "Sticker-Love-Lite"      // Love Glass (static)
 }

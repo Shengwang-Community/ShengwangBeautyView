@@ -13,3 +13,7 @@
 /* Main View Controller */
 "Start Preview" = "开启预览";
 "Beauty View Example" = "美颜视图示例";
+
+/* Alert */
+"beauty_setting_saved_info" = "已保存";
+"beauty_setting_reseted_info" = "已重置";

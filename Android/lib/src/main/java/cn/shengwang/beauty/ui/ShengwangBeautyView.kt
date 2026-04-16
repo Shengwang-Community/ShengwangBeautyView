@@ -22,6 +22,8 @@ import cn.shengwang.beauty.ui.model.BeautyItemInfo
 import cn.shengwang.beauty.ui.builder.MakeupPageBuilder
 import cn.shengwang.beauty.ui.builder.FilterPageBuilder
 import cn.shengwang.beauty.ui.builder.StickerPageBuilder
+import android.content.res.Configuration
+import java.util.Locale
 import cn.shengwang.beauty.ui.model.BeautyItemType
 import cn.shengwang.beauty.ui.model.BeautyModule
 
@@ -145,11 +147,24 @@ class ShengwangBeautyView : android.widget.FrameLayout {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: android.util.AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: android.util.AttributeSet?, defStyleAttr: Int) : super(
-        context,
+        localizedContext(context),
         attrs,
         defStyleAttr
     ) {
-        initView(context)
+        initView(localizedContext(context))
+    }
+
+    companion object {
+        /**
+         * 如果设置了 ShengwangBeautyManager.forcedLanguage，返回对应语言的 Context，否则返回原始 Context。
+         */
+        private fun localizedContext(context: Context): Context {
+            val lang = ShengwangBeautyManager.forcedLanguage ?: return context
+            val locale = Locale.forLanguageTag(lang)
+            val config = Configuration(context.resources.configuration)
+            config.setLocale(locale)
+            return context.createConfigurationContext(config)
+        }
     }
 
     override fun onAttachedToWindow() {

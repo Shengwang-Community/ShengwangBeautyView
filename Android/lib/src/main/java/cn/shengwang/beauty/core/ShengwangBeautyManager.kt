@@ -28,6 +28,17 @@ object ShengwangBeautyManager {
     var beautyStateListener: (() -> Unit)? = null
 
     /**
+     * 指定美颜 UI 的显示语言，覆盖系统语言。
+     * 设置为 BCP 47 语言标签（如 "ja"、"ko"、"fr"、"ar"），在初始化 ShengwangBeautyView 之前设置。
+     * 设置为 null（默认）则跟随系统语言。
+     *
+     * 示例：
+     *   ShengwangBeautyManager.forcedLanguage = "ja"  // 强制日语
+     *   ShengwangBeautyManager.forcedLanguage = null  // 跟随系统语言（默认）
+     */
+    var forcedLanguage: String? = null
+
+    /**
      * 通知监听器状态已变化
      */
     private fun notifyBeautyStateChanged() {

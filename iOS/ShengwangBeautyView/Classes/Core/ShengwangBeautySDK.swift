@@ -836,12 +836,17 @@ import AgoraRtcKit
             return false
         }
         
-        // Check if beauty_material_functional directory exists
+        // Check if beauty_material_encrypted or beauty_material_functional directory exists
+        let encryptedPath = (materialBundlePath as NSString).appendingPathComponent("beauty_material_encrypted")
         let functionalPath = (materialBundlePath as NSString).appendingPathComponent("beauty_material_functional")
-        let materialPath = FileManager.default.fileExists(atPath: functionalPath) ? functionalPath : materialBundlePath
-        
-        if !FileManager.default.fileExists(atPath: functionalPath) {
-            print("[BeautySDK] beauty_material_functional not found, using bundle path directly")
+        let materialPath: String
+        if FileManager.default.fileExists(atPath: encryptedPath) {
+            materialPath = encryptedPath
+        } else if FileManager.default.fileExists(atPath: functionalPath) {
+            materialPath = functionalPath
+        } else {
+            print("[BeautySDK] Neither beauty_material_encrypted nor beauty_material_functional found, using bundle path directly")
+            materialPath = materialBundlePath
         }
         
         return initBeautySDKInternal(materialPath: materialPath, rtcEngine: rtcEngine)

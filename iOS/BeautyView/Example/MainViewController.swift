@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CryptoKit
 
 /// Main view controller
 /// Provides entry point to beauty feature demo
@@ -140,17 +139,16 @@ private extension MainViewController {
             return true
         }
         
-        // Calculate and compare hashes
-        let startTime = CFAbsoluteTimeGetCurrent()
-        guard let bundleHash = calculateHash(atPath: bundlePath) else {
-            print("[Beauty] Failed to calculate bundle hash")
-            return false
+        // Read bundle.md5 from app bundle (no runtime hash calculation)
+        guard let md5FilePath = Bundle.main.path(forResource: "bundle", ofType: "md5"),
+              let bundleMd5 = try? String(contentsOfFile: md5FilePath, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines) else {
+            print("[Beauty] bundle.md5 not found, will re-copy resources")
+            return true
         }
-        let elapsed = CFAbsoluteTimeGetCurrent() - startTime
-        print("[Beauty] Hash calculated in \(String(format: "%.2f", elapsed))s")
         
-        let storedHash = UserDefaults.standard.string(forKey: hashStorageKey)
-        return storedHash != bundleHash
+        let storedMd5 = UserDefaults.standard.string(forKey: hashStorageKey)
+        print("[Beauty] MD5 check - bundleMd5: \(bundleMd5), storedMd5: \(storedMd5 ?? "nil")")
+        return storedMd5 != bundleMd5
     }
     
     func copyResources(from sourcePath: String, to destinationPath: String) {
@@ -168,9 +166,10 @@ private extension MainViewController {
             try fileManager.createDirectory(at: destinationURL.deletingLastPathComponent(), withIntermediateDirectories: true)
             try fileManager.copyItem(atPath: sourcePath, toPath: destinationPath)
             
-            // Save hash
-            if let hash = calculateHash(atPath: sourcePath) {
-                UserDefaults.standard.set(hash, forKey: hashStorageKey)
+            // Save md5 from bundle.md5 file
+            if let md5FilePath = Bundle.main.path(forResource: "bundle", ofType: "md5"),
+               let bundleMd5 = try? String(contentsOfFile: md5FilePath, encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines) {
+                UserDefaults.standard.set(bundleMd5, forKey: hashStorageKey)
             }
             
             let elapsed = CFAbsoluteTimeGetCurrent() - startTime
@@ -180,36 +179,7 @@ private extension MainViewController {
         }
     }
     
-    func calculateHash(atPath path: String) -> String? {
-        let fileManager = FileManager.default
-        guard let enumerator = fileManager.enumerator(atPath: path) else { return nil }
-        
-        var filePaths: [String] = []
-        while let relativePath = enumerator.nextObject() as? String {
-            let fullPath = (path as NSString).appendingPathComponent(relativePath)
-            var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory), !isDirectory.boolValue {
-                filePaths.append(relativePath)
-            }
-        }
-        
-        guard !filePaths.isEmpty else { return nil }
-        
-        filePaths.sort()
-        var hasher = SHA256()
-        
-        for relativePath in filePaths {
-            let fullPath = (path as NSString).appendingPathComponent(relativePath)
-            if let fileData = fileManager.contents(atPath: fullPath),
-               let pathData = relativePath.data(using: .utf8) {
-                hasher.update(data: pathData)
-                hasher.update(data: fileData)
-            }
-        }
-        
-        let digest = hasher.finalize()
-        return digest.map { String(format: "%02x", $0) }.joined()
-    }
+
     
     func getSandboxPath() -> String? {
         let base: URL?

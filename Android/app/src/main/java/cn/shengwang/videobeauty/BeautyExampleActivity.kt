@@ -1,8 +1,11 @@
 package cn.shengwang.videobeauty
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.TextureView
 import android.view.View
+import android.widget.Toast
 import cn.shengwang.beauty.core.ShengwangBeautyManager
 import cn.shengwang.beauty.ui.model.BeautyModule
 import io.agora.rtc2.Constants
@@ -66,6 +69,13 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             finish()
         }
 
+        // 点击视频区域隐藏美颜面板
+        binding.flVideoContainer.setOnClickListener {
+            if (binding.beautyControlView.visibility == View.VISIBLE) {
+                binding.beautyControlView.visibility = View.GONE
+            }
+        }
+
         // 设置美颜按钮点击事件 - 直接显示/隐藏 View
         binding.tvBeauty.setOnClickListener {
             val beautyView = binding.beautyControlView
@@ -87,6 +97,14 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         binding.tvSaveBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.saveBeauty(BeautyModule.BEAUTY)
+                showToast(getString(R.string.beauty_setting_saved_info))
+            }
+        }
+
+        binding.tvResetBeauty.setOnClickListener {
+            if (isInitialized) {
+                binding.beautyControlView.resetBeauty(BeautyModule.BEAUTY)
+                showToast(getString(R.string.beauty_setting_reseted_info))
             }
         }
 
@@ -175,12 +193,18 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         rtcEngine?.setupLocalVideo(VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, 0))
 
         val encoderConfig = VideoEncoderConfiguration().apply {
-            dimensions = VideoEncoderConfiguration.VD_960x540
-            frameRate = 30
+            dimensions = VideoEncoderConfiguration.VD_1280x720
+            frameRate = 24
         }
         rtcEngine?.setVideoEncoderConfiguration(encoderConfig)
     }
 
+
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        toast.show()
+        Handler(Looper.getMainLooper()).postDelayed({ toast.cancel() }, 500)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
