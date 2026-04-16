@@ -122,8 +122,8 @@ class _ExamplePageState extends State<ExamplePage> {
     await _engine.enableVideo();
     await _engine.setVideoEncoderConfiguration(
       const VideoEncoderConfiguration(
-        dimensions: VideoDimensions(width: 960, height: 540),
-        frameRate: 30,
+        dimensions: VideoDimensions(width: 1280, height: 720),
+        frameRate: 24,
         bitrate: 0,
       ),
     );

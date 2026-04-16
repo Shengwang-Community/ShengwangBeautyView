@@ -196,8 +196,8 @@ class ExampleViewController: UIViewController {
         
         // Switch VideoEncoder config
         let encoderConfig = AgoraVideoEncoderConfiguration()
-        encoderConfig.dimensions = CGSize(width: 540, height: 960)
-        encoderConfig.frameRate = 30
+        encoderConfig.dimensions = CGSize(width: 720, height: 1280)
+        encoderConfig.frameRate = 24
         rtcEngine.setVideoEncoderConfiguration(encoderConfig)
         
         rtcEngine.startPreview()

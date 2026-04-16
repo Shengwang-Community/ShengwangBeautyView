@@ -193,8 +193,8 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         rtcEngine?.setupLocalVideo(VideoCanvas(videoView, Constants.RENDER_MODE_HIDDEN, 0))
 
         val encoderConfig = VideoEncoderConfiguration().apply {
-            dimensions = VideoEncoderConfiguration.VD_960x540
-            frameRate = 30
+            dimensions = VideoEncoderConfiguration.VD_1280x720
+            frameRate = 24
         }
         rtcEngine?.setVideoEncoderConfiguration(encoderConfig)
     }
