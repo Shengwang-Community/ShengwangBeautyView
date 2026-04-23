@@ -3,18 +3,26 @@
 /* Beauty Groups */
 "beauty_group_beauty" = "Beauty";
 "beauty_group_filter" = "Filter";
-"beauty_group_makeup" = "Makeup";
+"beauty_group_makeup" = "StyleMakeup";
+"beauty_group_custom_makeup" = "Makeup";
 "beauty_group_sticker" = "Sticker";
+"beauty_group_quality" = "Quality";
 "beauty_effect_none" = "None";
 "beauty_effect_enable" = "Enable";
 "beauty_effect_disable" = "Disable";
 "beauty_effect_save" = "Save";
 "beauty_effect_reset" = "Reset";
+"beauty_effect_back" = "Back";
 /* Beauty Items */
 "beauty_effect_smoothness" = "Smooth";
 "beauty_effect_lightness" = "Whiten";
+"beauty_effect_lightness_natural" = "Natural";
+"beauty_effect_lightness_fair" = "Fair";
+"beauty_effect_lightness_pink" = "Pink\nWhite";
+"beauty_effect_lightness_ultra" = "Ultra\nWhite";
 "beauty_effect_redness" = "Rosy";
 "beauty_effect_contrast_strength" = "Clarity";
+"beauty_effect_contrast_factor" = "Contrast";
 "beauty_effect_sharpness" = "Sharpen";
 "beauty_effect_eye_pouch" = "Dark\nCircles";
 "beauty_effect_brighten_eye" = "Eye\nBrighten";
@@ -26,11 +34,15 @@
 "beauty_effect_brightness" = "Brightness";
 /* FaceShape Items */
 "beauty_face_shape_face_contour" = "Face\nSlim";
+"beauty_face_shape_face_slim_goddess" = "Goddess";
+"beauty_face_shape_face_slim_god" = "Handsome";
+"beauty_face_shape_face_slim_natural" = "Natural";
 "beauty_face_shape_mandible" = "V-Face";
 "beauty_face_shape_chin" = "Chin";
 "beauty_face_shape_cheek" = "Jaw";
 "beauty_face_shape_cheekbone" = "Cheek\nBones";
-"beauty_face_shape_face_length" = "Face\nLength";
+"beauty_face_shape_face_length" = "Face\nShort";
+"beauty_face_shape_face_small" = "Face\nSmall";
 "beauty_face_shape_face_width" = "Face\nWidth";
 "beauty_face_shape_fore_head" = "Hairline";
 "beauty_face_shape_head_scale" = "Head\nSize";
@@ -47,6 +59,7 @@
 "beauty_face_shape_inner_corner" = "Inner\nCorner";
 "beauty_face_shape_outer_corner" = "Outer\nCorner";
 "beauty_face_shape_eye_position" = "Eye\nPos";
+"beauty_face_shape_eye_angle" = "Eye\nAngle";
 "beauty_face_shape_eye_pupils" = "Pupil";
 "beauty_face_shape_mouth_smile" = "Smile";
 "beauty_face_shape_mouth_lip" = "Lip\nThick";
@@ -55,6 +68,17 @@
 "beauty_face_shape_eyebrow_thickness" = "Brow\nThick";
 "beauty_face_shape_eyebrow_position" = "Brow\nLift";
 /* Filter Items */
+"beauty_filter_ct" = "CT";
+"beauty_filter_nuanhuang" = "Warm";
+"beauty_filter_lvtu" = "Journey";
+"beauty_filter_meishijiaopian" = "Film";
+"beauty_filter_landiaojiaopian" = "Blues";
+"beauty_filter_riza" = "Magazine";
+"beauty_filter_jingdu" = "Kyoto";
+"beauty_filter_aizhicheng" = "Amour";
+"beauty_filter_mitao" = "Peach";
+"beauty_filter_heijin" = "Noir";
+"beauty_filter_luolita" = "Lolita";
 "beauty_filter_serene" = "Serene";
 "beauty_filter_urban" = "Urban";
 "beauty_filter_glow" = "Glow";
@@ -103,7 +127,69 @@
 "beauty_makeup_maiden" = "Maiden";
 "beauty_makeup_insight" = "Insight";
 "beauty_makeup_misty" = "Misty";
+/* Custom Makeup Categories */
+"beauty_custom_makeup_lipstick" = "Lipstick";
+"beauty_custom_makeup_blush" = "Blush";
+"beauty_custom_makeup_contour" = "Contour";
+"beauty_custom_makeup_eyeshadow" = "Eye\nShadow";
+"beauty_custom_makeup_eyebrow" = "Eyebrow";
+"beauty_custom_makeup_pupil" = "Pupil";
+/* Custom Makeup - Lipstick */
+"beauty_custom_makeup_lipstick_vintage_red" = "Vintage\nRed";
+"beauty_custom_makeup_lipstick_girl_pink" = "Girl\nPink";
+"beauty_custom_makeup_lipstick_vitality_orange" = "Vitality\nOrange";
+"beauty_custom_makeup_lipstick_grapefruit" = "Grapefruit";
+"beauty_custom_makeup_lipstick_watermelon_red" = "Watermelon\nRed";
+"beauty_custom_makeup_lipstick_velvet_red" = "Velvet\nRed";
+"beauty_custom_makeup_lipstick_dirty_orange" = "Dirty\nOrange";
+"beauty_custom_makeup_lipstick_plum" = "Plum";
+"beauty_custom_makeup_lipstick_bean_paste_pink" = "Bean\nPaste";
+/* Custom Makeup - Blush */
+"beauty_custom_makeup_blush_tipsy" = "Tipsy";
+"beauty_custom_makeup_blush_daily" = "Daily";
+"beauty_custom_makeup_blush_peach" = "Peach";
+"beauty_custom_makeup_blush_sweet_orange" = "Sweet\nOrange";
+"beauty_custom_makeup_blush_playful" = "Playful";
+"beauty_custom_makeup_blush_scheming" = "Scheming";
+"beauty_custom_makeup_blush_sunburn" = "Sunburn";
+/* Custom Makeup - Contour */
+"beauty_custom_makeup_contour_01" = "Contour\n01";
+/* Custom Makeup - Eyeshadow */
+"beauty_custom_makeup_eyeshadow_sunset_red" = "Sunset\nRed";
+"beauty_custom_makeup_eyeshadow_girl_pink" = "Girl\nPink";
+"beauty_custom_makeup_eyeshadow_elegant_pink" = "Elegant\nPink";
+"beauty_custom_makeup_eyeshadow_plum_red" = "Plum\nRed";
+"beauty_custom_makeup_eyeshadow_caramel_brown" = "Caramel\nBrown";
+"beauty_custom_makeup_eyeshadow_vitality_orange" = "Vitality\nOrange";
+"beauty_custom_makeup_eyeshadow_milk_tea" = "Milk\nTea";
+/* Custom Makeup - Eyebrow */
+"beauty_custom_makeup_eyebrow_lady" = "Lady";
+"beauty_custom_makeup_eyebrow_gentle" = "Gentle";
+"beauty_custom_makeup_eyebrow_standard" = "Standard";
+"beauty_custom_makeup_eyebrow_willow" = "Willow";
+"beauty_custom_makeup_eyebrow_fluffy" = "Fluffy";
+"beauty_custom_makeup_eyebrow_wild" = "Wild";
+"beauty_custom_makeup_eyebrow_thin" = "Thin";
+"beauty_custom_makeup_eyebrow_heroic" = "Heroic";
+"beauty_custom_makeup_eyebrow_upright" = "Upright";
+"beauty_custom_makeup_eyebrow_flat" = "Flat";
 /* Sticker Items */
+"beauty_sticker_2year" = "2year";
+"beauty_sticker_3year" = "3year";
+"beauty_sticker_love" = "Heart";
+"beauty_sticker_hazhijie" = "Hazhi";
+"beauty_sticker_bowknot" = "Bowknot";
+"beauty_sticker_flowermask" = "Flowermask";
+"beauty_sticker_goggles" = "Goggles";
+"beauty_sticker_cateye" = "Cateye";
+"beauty_sticker_fronttest" = "Front";
+"beauty_sticker_worldcup" = "Worldcup";
+"beauty_sticker_tuyao" = "Tuyao";
+"beauty_sticker_bunny_ear1" = "Ear1";
+"beauty_sticker_bunny_ear2" = "Ear2";
+"beauty_sticker_bunny_eyepatch" = "Eyepatch1";
+"beauty_sticker_bear_eyepatch" = "Eyepatch2";
+"beauty_sticker_newyear" = "Newyear";
 "beauty_sticker_christmas" = "Christmas";
 "beauty_sticker_squid" = "Squid";
 "beauty_sticker_piggy" = "Piggy";

@@ -35,7 +35,25 @@ internal class StickerPageBuilder(
             )
         )
 
-        // 贴纸选项
+        // 白兔贴纸
+        addStickerItem(stickerItems, R.string.beauty_sticker_2year, R.drawable.beauty_ic_sticker_brush, StickerNames.ANNIVERSARY2)
+        addStickerItem(stickerItems, R.string.beauty_sticker_3year, R.drawable.beauty_ic_sticker_cyber_glass, StickerNames.ANNIVERSARY3)
+        addStickerItem(stickerItems, R.string.beauty_sticker_love, R.drawable.beauty_ic_sticker_neon_tiara, StickerNames.HEART)
+        addStickerItem(stickerItems, R.string.beauty_sticker_hazhijie, R.drawable.beauty_ic_sticker_love_glass, StickerNames.HAZHI)
+        addStickerItem(stickerItems, R.string.beauty_sticker_bowknot, R.drawable.beauty_ic_sticker_neon_tiara, StickerNames.BOWKNOT)
+        addStickerItem(stickerItems, R.string.beauty_sticker_flowermask, R.drawable.beauty_ic_sticker_love_glass, StickerNames.FLOWER_MASK)
+        addStickerItem(stickerItems, R.string.beauty_sticker_goggles, R.drawable.beauty_ic_sticker_neon_tiara, StickerNames.GOGGLES)
+        addStickerItem(stickerItems, R.string.beauty_sticker_cateye, R.drawable.beauty_ic_sticker_love_glass, StickerNames.CATEYE)
+        addStickerItem(stickerItems, R.string.beauty_sticker_fronttest, R.drawable.beauty_ic_sticker_neon_tiara, StickerNames.FRONTTEST)
+        addStickerItem(stickerItems, R.string.beauty_sticker_worldcup, R.drawable.beauty_ic_sticker_love_glass, StickerNames.WORLDCUP)
+        addStickerItem(stickerItems, R.string.beauty_sticker_tuyao, R.drawable.beauty_ic_sticker_neon_tiara, StickerNames.TUYAO)
+        addStickerItem(stickerItems, R.string.beauty_sticker_bunny_ear1, R.drawable.beauty_ic_sticker_love_glass, StickerNames.BUNNY_EAR)
+        addStickerItem(stickerItems, R.string.beauty_sticker_bunny_ear2, R.drawable.beauty_ic_sticker_love_glass, StickerNames.RABBIT_EAR)
+        addStickerItem(stickerItems, R.string.beauty_sticker_bunny_eyepatch, R.drawable.beauty_ic_sticker_love_glass, StickerNames.BUNNY_EYEPATCH)
+        addStickerItem(stickerItems, R.string.beauty_sticker_bear_eyepatch, R.drawable.beauty_ic_sticker_love_glass, StickerNames.BEAR_EYEPATCH)
+        addStickerItem(stickerItems, R.string.beauty_sticker_newyear, R.drawable.beauty_ic_sticker_love_glass, StickerNames.NEW_YEAR)
+
+        // 声网动态贴纸
         // 圣诞节
         addStickerItem(
             stickerItems,
@@ -57,68 +75,12 @@ internal class StickerPageBuilder(
             R.drawable.beauty_ic_sticker_piggy,
             StickerNames.PIGGY
         )
-        // 辫子猫
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_long_cat,
-            R.drawable.beauty_ic_sticker_long_cat,
-            StickerNames.LONG_CAT
-        )
-        // 粉色发箍
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_hairhoop,
-            R.drawable.beauty_ic_sticker_hairhoop,
-            StickerNames.HAIRHOOP
-        )
-        // 没有烦恼
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_relax_time,
-            R.drawable.beauty_ic_sticker_relax_time,
-            StickerNames.RELAX_TIME
-        )
-        // 卡通猫
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_cartoon_cat,
-            R.drawable.beauty_ic_sticker_cartoon_cat,
-            StickerNames.CARTOON_CAT
-        )
         // 蝴蝶
         addStickerItem(
             stickerItems,
             R.string.beauty_sticker_butterfly,
             R.drawable.beauty_ic_sticker_butterfly,
             StickerNames.BUTTERFLY
-        )
-        // 粉刷时光
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_brush,
-            R.drawable.beauty_ic_sticker_brush,
-            StickerNames.BRUSH
-        )
-        // 赛博眼镜
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_cyber_glass,
-            R.drawable.beauty_ic_sticker_cyber_glass,
-            StickerNames.CYBER_GLASS
-        )
-        // 霓虹皇冠
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_neon_tiara,
-            R.drawable.beauty_ic_sticker_neon_tiara,
-            StickerNames.NEON_TIARA
-        )
-        // 爱心眼镜
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_love_glass,
-            R.drawable.beauty_ic_sticker_love_glass,
-            StickerNames.LOVE_GLASS
         )
 
         return BeautyPageInfo(

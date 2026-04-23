@@ -2,20 +2,28 @@
     <!-- Beauty Groups -->
     <string name="beauty_group_beauty">美颜</string>
     <string name="beauty_group_filter">滤镜</string>
-    <string name="beauty_group_makeup">美妆</string>
+    <string name="beauty_group_makeup">风格妆</string>
+    <string name="beauty_group_custom_makeup">美妆</string>
     <string name="beauty_group_sticker">贴纸</string>
+    <string name="beauty_group_quality">画质</string>
 
     <string name="beauty_effect_none">无</string>
     <string name="beauty_effect_enable">已开启</string>
     <string name="beauty_effect_disable">关闭</string>
     <string name="beauty_effect_save">保存</string>
     <string name="beauty_effect_reset">重置</string>
+    <string name="beauty_effect_back">返回</string>
     
     <!-- Beauty Items -->
     <string name="beauty_effect_smoothness">磨皮</string>
     <string name="beauty_effect_lightness">美白</string>
+    <string name="beauty_effect_lightness_natural">自然</string>
+    <string name="beauty_effect_lightness_fair">白皙</string>
+    <string name="beauty_effect_lightness_pink">粉白</string>
+    <string name="beauty_effect_lightness_ultra">超白</string>
     <string name="beauty_effect_redness">红润</string>
     <string name="beauty_effect_contrast_strength">清晰度</string>
+    <string name="beauty_effect_contrast_factor">对比度</string>
     <string name="beauty_effect_sharpness">锐化</string>
     <string name="beauty_effect_eye_pouch">去黑眼圈</string>
     <string name="beauty_effect_brighten_eye">亮眼</string>
@@ -28,11 +36,15 @@
 
     <!-- FaceShape Items -->
     <string name="beauty_face_shape_face_contour">瘦脸</string>
+    <string name="beauty_face_shape_face_slim_goddess">女神</string>
+    <string name="beauty_face_shape_face_slim_god">男神</string>
+    <string name="beauty_face_shape_face_slim_natural">自然</string>
+    <string name="beauty_face_shape_face_small">小脸</string>
     <string name="beauty_face_shape_mandible">v脸</string>
     <string name="beauty_face_shape_chin">瘦下巴</string>
     <string name="beauty_face_shape_cheek">下颌线</string>
     <string name="beauty_face_shape_cheekbone">瘦颧骨</string>
-    <string name="beauty_face_shape_face_length">长脸</string>
+    <string name="beauty_face_shape_face_length">短脸</string>
     <string name="beauty_face_shape_face_width">窄脸</string>
     <string name="beauty_face_shape_fore_head">发际线</string>
     <string name="beauty_face_shape_head_scale">小头</string>
@@ -49,6 +61,7 @@
     <string name="beauty_face_shape_inner_corner">内眼角</string>
     <string name="beauty_face_shape_outer_corner">外眼角</string>
     <string name="beauty_face_shape_eye_position">眼移动</string>
+    <string name="beauty_face_shape_eye_angle">眼角度</string>
     <string name="beauty_face_shape_eye_pupils">瞳孔</string>
     <string name="beauty_face_shape_mouth_smile">微笑唇</string>
     <string name="beauty_face_shape_mouth_lip">丰唇</string>
@@ -58,6 +71,17 @@
     <string name="beauty_face_shape_eyebrow_position">眉上下</string>
     
     <!-- Filter Items -->
+    <string name="beauty_filter_ct">CT</string>
+    <string name="beauty_filter_nuanhuang">暖黄</string>
+    <string name="beauty_filter_lvtu">旅途</string>
+    <string name="beauty_filter_meishijiaopian">美式胶片</string>
+    <string name="beauty_filter_landiaojiaopian">蓝调胶片</string>
+    <string name="beauty_filter_riza">日杂</string>
+    <string name="beauty_filter_jingdu">京都</string>
+    <string name="beauty_filter_aizhicheng">爱之城</string>
+    <string name="beauty_filter_mitao">蜜桃</string>
+    <string name="beauty_filter_heijin">黑金</string>
+    <string name="beauty_filter_luolita">洛丽塔</string>
     <string name="beauty_filter_serene">沉稳</string>
     <string name="beauty_filter_urban">都市</string>
     <string name="beauty_filter_glow">流光</string>
@@ -108,7 +132,70 @@
     <string name="beauty_makeup_insight">深邃妆</string>
     <string name="beauty_makeup_misty">氤氲妆</string>
     
+    <!-- Custom Makeup Categories -->
+    <string name="beauty_custom_makeup_lipstick">口红</string>
+    <string name="beauty_custom_makeup_blush">腮红</string>
+    <string name="beauty_custom_makeup_contour">修容</string>
+    <string name="beauty_custom_makeup_eyeshadow">眼影</string>
+    <string name="beauty_custom_makeup_eyebrow">修眉</string>
+    <string name="beauty_custom_makeup_pupil">美瞳</string>
+    <!-- Custom Makeup - Lipstick -->
+    <string name="beauty_custom_makeup_lipstick_vintage_red">复古红</string>
+    <string name="beauty_custom_makeup_lipstick_girl_pink">少女粉</string>
+    <string name="beauty_custom_makeup_lipstick_vitality_orange">元气橘</string>
+    <string name="beauty_custom_makeup_lipstick_grapefruit">西柚色</string>
+    <string name="beauty_custom_makeup_lipstick_watermelon_red">西瓜红</string>
+    <string name="beauty_custom_makeup_lipstick_velvet_red">丝绒红</string>
+    <string name="beauty_custom_makeup_lipstick_dirty_orange">脏橘色</string>
+    <string name="beauty_custom_makeup_lipstick_plum">梅子色</string>
+    <string name="beauty_custom_makeup_lipstick_bean_paste_pink">豆沙粉</string>
+    <!-- Custom Makeup - Blush -->
+    <string name="beauty_custom_makeup_blush_tipsy">微醺</string>
+    <string name="beauty_custom_makeup_blush_daily">日常</string>
+    <string name="beauty_custom_makeup_blush_peach">蜜桃</string>
+    <string name="beauty_custom_makeup_blush_sweet_orange">甜橙</string>
+    <string name="beauty_custom_makeup_blush_playful">俏皮</string>
+    <string name="beauty_custom_makeup_blush_scheming">心机</string>
+    <string name="beauty_custom_makeup_blush_sunburn">晒伤</string>
+    <!-- Custom Makeup - Contour -->
+    <string name="beauty_custom_makeup_contour_01">修容01</string>
+    <!-- Custom Makeup - Eyeshadow -->
+    <string name="beauty_custom_makeup_eyeshadow_sunset_red">晚霞红</string>
+    <string name="beauty_custom_makeup_eyeshadow_girl_pink">少女粉</string>
+    <string name="beauty_custom_makeup_eyeshadow_elegant_pink">气质粉</string>
+    <string name="beauty_custom_makeup_eyeshadow_plum_red">梅子红</string>
+    <string name="beauty_custom_makeup_eyeshadow_caramel_brown">焦糖棕</string>
+    <string name="beauty_custom_makeup_eyeshadow_vitality_orange">元气橘</string>
+    <string name="beauty_custom_makeup_eyeshadow_milk_tea">奶茶色</string>
+    <!-- Custom Makeup - Eyebrow -->
+    <string name="beauty_custom_makeup_eyebrow_lady">淑女</string>
+    <string name="beauty_custom_makeup_eyebrow_gentle">温润</string>
+    <string name="beauty_custom_makeup_eyebrow_standard">标准</string>
+    <string name="beauty_custom_makeup_eyebrow_willow">柳叶</string>
+    <string name="beauty_custom_makeup_eyebrow_fluffy">茸茸</string>
+    <string name="beauty_custom_makeup_eyebrow_wild">野生</string>
+    <string name="beauty_custom_makeup_eyebrow_thin">细眉</string>
+    <string name="beauty_custom_makeup_eyebrow_heroic">英朗</string>
+    <string name="beauty_custom_makeup_eyebrow_upright">挺拔</string>
+    <string name="beauty_custom_makeup_eyebrow_flat">平锋</string>
+    
     <!-- Sticker Items -->
+    <string name="beauty_sticker_2year">2周年</string>
+    <string name="beauty_sticker_3year">3周年</string>
+    <string name="beauty_sticker_love">爱心</string>
+    <string name="beauty_sticker_hazhijie">哈芝节</string>
+    <string name="beauty_sticker_bowknot">蝴蝶结</string>
+    <string name="beauty_sticker_flowermask">花海口罩</string>
+    <string name="beauty_sticker_goggles">滑雪镜</string>
+    <string name="beauty_sticker_cateye">猫猫眼</string>
+    <string name="beauty_sticker_fronttest">前景测试</string>
+    <string name="beauty_sticker_worldcup">世界杯</string>
+    <string name="beauty_sticker_tuyao">屠妖节</string>
+    <string name="beauty_sticker_bunny_ear1">兔耳朵</string>
+    <string name="beauty_sticker_bunny_ear2">兔子耳朵</string>
+    <string name="beauty_sticker_bunny_eyepatch">兔子眼罩</string>
+    <string name="beauty_sticker_bear_eyepatch">小熊眼罩</string>
+    <string name="beauty_sticker_newyear">新年快乐</string>
     <string name="beauty_sticker_christmas">圣诞节</string>
     <string name="beauty_sticker_squid">章鱼</string>
     <string name="beauty_sticker_piggy">猪可爱</string>

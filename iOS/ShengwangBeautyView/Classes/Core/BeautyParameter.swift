@@ -25,6 +25,17 @@ public struct MakeupNames {
 /// Filter name constants
 /// Used for filter (FILTER) module
 public struct FilterNames {
+    public static let ct = "Filter-CT"
+    public static let nuanhuang = "Filter-Nuanhuang"
+    public static let lvtu = "Filter-Lvtu"
+    public static let meishijiaopian = "Filter-Meishijiaopian"
+    public static let landiaojiaopian = "Filter-Landiaojiaopian"
+    public static let riza = "Filter-Riza"
+    public static let jingdu = "Filter-Jingdu"
+    public static let aizhicheng = "Filter-Aizhicheng"
+    public static let mitao = "Filter-Mitao"
+    public static let heijin = "Filter-Heijin"
+    public static let luolita = "Filter-Luolita"
     public static let serene = "Filter-Serene"         // Serene
     public static let urban = "Filter-Urban"           // Urban
     public static let glow = "Filter-Glow"             // Glow
@@ -67,6 +78,22 @@ public struct FilterNames {
 /// Sticker name constants
 /// Used for sticker (STICKER) module
 public struct StickerNames {
+    public static let anniversary2 = "Sticker-2year"
+    public static let anniversary3 = "Sticker-3year"
+    public static let heart = "Sticker-Heart"
+    public static let hazhi = "Sticker-Hazhi"
+    public static let bowknot = "Sticker-Bowknot"
+    public static let flowerMask = "Sticker-Flowermask"
+    public static let goggles = "Sticker-Goggles"
+    public static let cateye = "Sticker-Cateye"
+    public static let fronttest = "Sticker-Fronttest"
+    public static let worldcup = "Sticker-Worldcup"
+    public static let tuyao = "Sticker-Tuyao"
+    public static let bunnyEar = "Sticker-BunnyEar"
+    public static let rabbitEar = "Sticker-RabbitEar"
+    public static let bunnyEyepatch = "Sticker-BunnyEyepatch"
+    public static let bearEyepatch = "Sticker-BearEyepatch"
+    public static let newYear = "Sticker-Newyear"
     public static let christmas = "Sticker-Christmas"         // Christmas (animated)
     public static let christmasLite = "Sticker-Christmas-Lite" // Christmas (static)
     public static let squid = "Sticker-Squid"                  // Squid (animated)

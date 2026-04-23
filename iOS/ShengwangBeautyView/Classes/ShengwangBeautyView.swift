@@ -34,8 +34,16 @@ import UIKit
         BeautyPageBuilder(beautyConfig: beautyConfig)
     }()
     
+    private lazy var qualityBuilder: QualityPageBuilder = {
+        QualityPageBuilder(beautyConfig: beautyConfig)
+    }()
+    
     private lazy var makeupBuilder: MakeupPageBuilder = {
         MakeupPageBuilder(beautyConfig: beautyConfig)
+    }()
+    
+    private lazy var customMakeupBuilder: CustomMakeupPageBuilder = {
+        CustomMakeupPageBuilder(beautyConfig: beautyConfig)
     }()
     
     private lazy var filterBuilder: FilterPageBuilder = {
@@ -94,6 +102,33 @@ import UIKit
     private var currentPageIndex: Int = 0
     private var currentItemIndex: Int = 0
     
+    // MARK: - Sub-menu bar (shown when in a second-level list, hides the tab bar)
+    
+    private lazy var subMenuBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var subMenuBackButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage.beautyIcon(named: "beauty_ic_back"), for: .normal)
+        button.addTarget(self, action: #selector(onSubMenuBackTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var subMenuTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    /// Constraint switching scrollView top between segmentView (top-level) and subMenuBar (sub-menu)
+    private var scrollViewTopConstraint: NSLayoutConstraint?
+    
     // MARK: - Initialization
     
     public override init(frame: CGRect) {
@@ -120,12 +155,23 @@ import UIKit
         addSubview(slider)
         addSubview(containerView)
         containerView.addSubview(segmentView)
+        containerView.addSubview(subMenuBar)
         containerView.addSubview(scrollView)
+        
+        subMenuBar.addSubview(subMenuBackButton)
+        subMenuBar.addSubview(subMenuTitleLabel)
         
         slider.translatesAutoresizingMaskIntoConstraints = false
         containerView.translatesAutoresizingMaskIntoConstraints = false
         segmentView.translatesAutoresizingMaskIntoConstraints = false
+        subMenuBar.translatesAutoresizingMaskIntoConstraints = false
+        subMenuBackButton.translatesAutoresizingMaskIntoConstraints = false
+        subMenuTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // scrollView top starts anchored below segmentView (top-level state)
+        let scrollTop = scrollView.topAnchor.constraint(equalTo: segmentView.bottomAnchor)
+        scrollViewTopConstraint = scrollTop
         
         NSLayoutConstraint.activate([
             slider.topAnchor.constraint(equalTo: topAnchor),
@@ -136,11 +182,25 @@ import UIKit
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            // segmentView
             segmentView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
             segmentView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             segmentView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             segmentView.heightAnchor.constraint(equalToConstant: 35),
-            scrollView.topAnchor.constraint(equalTo: segmentView.bottomAnchor),
+            // subMenuBar — same position as segmentView, hidden by default
+            subMenuBar.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            subMenuBar.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            subMenuBar.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            subMenuBar.heightAnchor.constraint(equalToConstant: 35),
+            // subMenuBar internals
+            subMenuBackButton.leadingAnchor.constraint(equalTo: subMenuBar.leadingAnchor, constant: 16),
+            subMenuBackButton.centerYAnchor.constraint(equalTo: subMenuBar.centerYAnchor),
+            subMenuBackButton.widthAnchor.constraint(equalToConstant: 32),
+            subMenuBackButton.heightAnchor.constraint(equalToConstant: 32),
+            subMenuTitleLabel.centerXAnchor.constraint(equalTo: subMenuBar.centerXAnchor),
+            subMenuTitleLabel.centerYAnchor.constraint(equalTo: subMenuBar.centerYAnchor),
+            // scrollView
+            scrollTop,
             scrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
@@ -179,7 +239,9 @@ import UIKit
         var pages: [BeautyPageInfo] = []
         
         pages.append(beautyBuilder.buildPage())
-        pages.append(makeupBuilder.buildPage())
+        pages.append(qualityBuilder.buildPage())
+//        pages.append(makeupBuilder.buildPage())
+        pages.append(customMakeupBuilder.buildPage())
         pages.append(filterBuilder.buildPage())
         pages.append(stickerBuilder.buildPage())
         
@@ -240,13 +302,9 @@ import UIKit
             refreshPageList()
             
         case .toggle(let isEnabled):
-            // Handle toggle item: toggle beauty and face shape state
-            if isEnabled {
-                beautyConfig.beautyEnable = false
-                beautyConfig.faceShapeEnable = false
-            } else {
-                beautyConfig.beautyEnable = true
-                beautyConfig.faceShapeEnable = true
+            // Call item-specific onClick if provided (e.g., custom makeup toggle handles itself)
+            if itemInfo.onItemClick != nil {
+                itemInfo.onItemClick?(itemInfo)
             }
         case .normal, .none:
             // Call item-specific onClick callback for normal items (updates config like stickerName, filterName, etc.)
@@ -264,6 +322,38 @@ import UIKit
             itemListViewList[pageIndex].updatePageInfo(pageInfo)
             currentItemIndex = itemIndex
             onSelectedChanged(pageIndex: pageIndex, itemIndex: itemIndex)
+            
+        case .subMenu:
+            // Handle sub-menu entry: save parent list then swap to sub-items
+            guard let subItems = itemInfo.subItems, !subItems.isEmpty else { return }
+            
+            // Save the current (parent) list before replacing
+            pageInfo.parentItemList = pageInfo.itemList
+            
+            // Mark the tapped category as selected in the current (parent) list
+            pageInfo.parentItemList?.forEach { $0.isSelected = false }
+            itemInfo.isSelected = true
+            
+            // Replace the displayed item list with the sub-items
+            pageInfo.itemList = subItems
+            itemListViewList[pageIndex].updatePageInfo(pageInfo)
+            currentItemIndex = 0
+            onSelectedChanged(pageIndex: pageIndex, itemIndex: 0)
+            
+            // Show sub-menu bar, hide tab bar
+            enterSubMenu(title: itemInfo.name.localized, pageIndex: pageIndex)
+            
+        case .back:
+            // Restore the parent item list (generic — works for any page with sub-menus)
+            guard let parentItems = pageInfo.parentItemList else { return }
+            pageInfo.itemList = parentItems
+            pageInfo.parentItemList = nil
+            itemListViewList[pageIndex].updatePageInfo(pageInfo)
+            currentItemIndex = 0
+            onSelectedChanged(pageIndex: pageIndex, itemIndex: 0)
+            
+            // Restore tab bar, hide sub-menu bar
+            exitSubMenu()
         }
     }
     
@@ -453,6 +543,62 @@ import UIKit
         scrollToPage(at: index, animated: true)
         currentPageIndex = index
         updateSelectedItemForPage(at: index)
+    }
+    
+    // MARK: - Sub-menu bar
+    
+    /// Show the sub-menu back bar and hide the tab segment view
+    private func enterSubMenu(title: String, pageIndex: Int) {
+        subMenuTitleLabel.text = title
+        // Store which page we're in so the back button knows where to act
+        subMenuBar.tag = pageIndex
+        
+        UIView.animate(withDuration: 0.2) {
+            self.segmentView.alpha = 0
+            self.subMenuBar.alpha = 1
+        } completion: { _ in
+            self.segmentView.isHidden = true
+            self.subMenuBar.isHidden = false
+            // Switch scrollView top anchor from segmentView to subMenuBar
+            self.scrollViewTopConstraint?.isActive = false
+            self.scrollViewTopConstraint = self.scrollView.topAnchor.constraint(
+                equalTo: self.subMenuBar.bottomAnchor
+            )
+            self.scrollViewTopConstraint?.isActive = true
+            self.setNeedsLayout()
+        }
+    }
+    
+    /// Hide the sub-menu back bar and restore the tab segment view
+    private func exitSubMenu() {
+        UIView.animate(withDuration: 0.2) {
+            self.subMenuBar.alpha = 0
+            self.segmentView.alpha = 1
+        } completion: { _ in
+            self.subMenuBar.isHidden = true
+            self.segmentView.isHidden = false
+            // Switch scrollView top anchor back to segmentView
+            self.scrollViewTopConstraint?.isActive = false
+            self.scrollViewTopConstraint = self.scrollView.topAnchor.constraint(
+                equalTo: self.segmentView.bottomAnchor
+            )
+            self.scrollViewTopConstraint?.isActive = true
+            self.setNeedsLayout()
+        }
+    }
+    
+    /// Called when the back button in the sub-menu bar is tapped
+    @objc private func onSubMenuBackTapped() {
+        let pageIndex = subMenuBar.tag
+        guard pageIndex < pageList.count else { return }
+        let pageInfo = pageList[pageIndex]
+        guard let parentItems = pageInfo.parentItemList else { return }
+        pageInfo.itemList = parentItems
+        pageInfo.parentItemList = nil
+        itemListViewList[pageIndex].updatePageInfo(pageInfo)
+        currentItemIndex = 0
+        onSelectedChanged(pageIndex: pageIndex, itemIndex: 0)
+        exitSubMenu()
     }
 }
 

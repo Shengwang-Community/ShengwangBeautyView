@@ -2,20 +2,28 @@
     <!-- Beauty Groups -->
     <string name="beauty_group_beauty">Beauty</string>
     <string name="beauty_group_filter">Filter</string>
-    <string name="beauty_group_makeup">Makeup</string>
+    <string name="beauty_group_makeup">StyleMakeup</string>
+    <string name="beauty_group_custom_makeup">Makeup</string>
     <string name="beauty_group_sticker">Sticker</string>
+    <string name="beauty_group_quality">Quality</string>
 
     <string name="beauty_effect_none">None</string>
     <string name="beauty_effect_enable">Enable</string>
     <string name="beauty_effect_disable">Disable</string>
     <string name="beauty_effect_save">Save</string>
     <string name="beauty_effect_reset">Reset</string>
+    <string name="beauty_effect_back">Back</string>
 
     <!-- Beauty Items -->
     <string name="beauty_effect_smoothness">Smooth</string>
     <string name="beauty_effect_lightness">Whiten</string>
+    <string name="beauty_effect_lightness_natural">Natural</string>
+    <string name="beauty_effect_lightness_fair">Fair</string>
+    <string name="beauty_effect_lightness_pink">Pink\nWhite</string>
+    <string name="beauty_effect_lightness_ultra">Ultra\nWhite</string>
     <string name="beauty_effect_redness">Rosy</string>
     <string name="beauty_effect_contrast_strength">Clarity</string>
+    <string name="beauty_effect_contrast_factor">Contrast</string>
     <string name="beauty_effect_sharpness">Sharpen</string>
     <string name="beauty_effect_eye_pouch">Dark\nCircles</string>
     <string name="beauty_effect_brighten_eye">Eye\nBrighten</string>
@@ -28,11 +36,15 @@
 
     <!-- FaceShape Items -->
     <string name="beauty_face_shape_face_contour">Face\nSlim</string>
+    <string name="beauty_face_shape_face_slim_goddess">Goddess</string>
+    <string name="beauty_face_shape_face_slim_god">Handsome</string>
+    <string name="beauty_face_shape_face_slim_natural">Natural</string>
+    <string name="beauty_face_shape_face_small">Face\nSmall</string>
     <string name="beauty_face_shape_mandible">V-Face</string>
     <string name="beauty_face_shape_chin">Chin</string>
     <string name="beauty_face_shape_cheek">Jaw</string>
     <string name="beauty_face_shape_cheekbone">Cheek\nBones</string>
-    <string name="beauty_face_shape_face_length">Face\nLength</string>
+    <string name="beauty_face_shape_face_length">Face\nShort</string>
     <string name="beauty_face_shape_face_width">Face\nWidth</string>
     <string name="beauty_face_shape_fore_head">Hairline</string>
     <string name="beauty_face_shape_head_scale">Head\nSize</string>
@@ -49,6 +61,7 @@
     <string name="beauty_face_shape_inner_corner">Inner\nCorner</string>
     <string name="beauty_face_shape_outer_corner">Outer\nCorner</string>
     <string name="beauty_face_shape_eye_position">Eye\nPos</string>
+    <string name="beauty_face_shape_eye_angle">Eye\nAngle</string>
     <string name="beauty_face_shape_eye_pupils">Pupil</string>
     <string name="beauty_face_shape_mouth_smile">Smile</string>
     <string name="beauty_face_shape_mouth_lip">Lip\nThick</string>
@@ -58,6 +71,17 @@
     <string name="beauty_face_shape_eyebrow_position">Brow\nLift</string>
 
     <!-- Filter Items -->
+    <string name="beauty_filter_ct">CT</string>
+    <string name="beauty_filter_nuanhuang">Warm</string>
+    <string name="beauty_filter_lvtu">Journey</string>
+    <string name="beauty_filter_meishijiaopian">Film</string>
+    <string name="beauty_filter_landiaojiaopian">Blues</string>
+    <string name="beauty_filter_riza">Magazine</string>
+    <string name="beauty_filter_jingdu">Kyoto</string>
+    <string name="beauty_filter_aizhicheng">Amour</string>
+    <string name="beauty_filter_mitao">Peach</string>
+    <string name="beauty_filter_heijin">Noir</string>
+    <string name="beauty_filter_luolita">Lolita</string>
     <string name="beauty_filter_serene">Serene</string>
     <string name="beauty_filter_urban">Urban</string>
     <string name="beauty_filter_glow">Glow</string>
@@ -108,7 +132,70 @@
     <string name="beauty_makeup_insight">Insight</string>
     <string name="beauty_makeup_misty">Misty</string>
 
+    <!-- Custom Makeup Categories -->
+    <string name="beauty_custom_makeup_lipstick">Lipstick</string>
+    <string name="beauty_custom_makeup_blush">Blush</string>
+    <string name="beauty_custom_makeup_contour">Contour</string>
+    <string name="beauty_custom_makeup_eyeshadow">Eye\nShadow</string>
+    <string name="beauty_custom_makeup_eyebrow">Eyebrow</string>
+    <string name="beauty_custom_makeup_pupil">Pupil</string>
+    <!-- Custom Makeup - Lipstick -->
+    <string name="beauty_custom_makeup_lipstick_vintage_red">Vintage\nRed</string>
+    <string name="beauty_custom_makeup_lipstick_girl_pink">Girl\nPink</string>
+    <string name="beauty_custom_makeup_lipstick_vitality_orange">Vitality\nOrange</string>
+    <string name="beauty_custom_makeup_lipstick_grapefruit">Grapefruit</string>
+    <string name="beauty_custom_makeup_lipstick_watermelon_red">Watermelon\nRed</string>
+    <string name="beauty_custom_makeup_lipstick_velvet_red">Velvet\nRed</string>
+    <string name="beauty_custom_makeup_lipstick_dirty_orange">Dirty\nOrange</string>
+    <string name="beauty_custom_makeup_lipstick_plum">Plum</string>
+    <string name="beauty_custom_makeup_lipstick_bean_paste_pink">Bean\nPaste</string>
+    <!-- Custom Makeup - Blush -->
+    <string name="beauty_custom_makeup_blush_tipsy">Tipsy</string>
+    <string name="beauty_custom_makeup_blush_daily">Daily</string>
+    <string name="beauty_custom_makeup_blush_peach">Peach</string>
+    <string name="beauty_custom_makeup_blush_sweet_orange">Sweet\nOrange</string>
+    <string name="beauty_custom_makeup_blush_playful">Playful</string>
+    <string name="beauty_custom_makeup_blush_scheming">Scheming</string>
+    <string name="beauty_custom_makeup_blush_sunburn">Sunburn</string>
+    <!-- Custom Makeup - Contour -->
+    <string name="beauty_custom_makeup_contour_01">Contour\n01</string>
+    <!-- Custom Makeup - Eyeshadow -->
+    <string name="beauty_custom_makeup_eyeshadow_sunset_red">Sunset\nRed</string>
+    <string name="beauty_custom_makeup_eyeshadow_girl_pink">Girl\nPink</string>
+    <string name="beauty_custom_makeup_eyeshadow_elegant_pink">Elegant\nPink</string>
+    <string name="beauty_custom_makeup_eyeshadow_plum_red">Plum\nRed</string>
+    <string name="beauty_custom_makeup_eyeshadow_caramel_brown">Caramel\nBrown</string>
+    <string name="beauty_custom_makeup_eyeshadow_vitality_orange">Vitality\nOrange</string>
+    <string name="beauty_custom_makeup_eyeshadow_milk_tea">Milk\nTea</string>
+    <!-- Custom Makeup - Eyebrow -->
+    <string name="beauty_custom_makeup_eyebrow_lady">Lady</string>
+    <string name="beauty_custom_makeup_eyebrow_gentle">Gentle</string>
+    <string name="beauty_custom_makeup_eyebrow_standard">Standard</string>
+    <string name="beauty_custom_makeup_eyebrow_willow">Willow</string>
+    <string name="beauty_custom_makeup_eyebrow_fluffy">Fluffy</string>
+    <string name="beauty_custom_makeup_eyebrow_wild">Wild</string>
+    <string name="beauty_custom_makeup_eyebrow_thin">Thin</string>
+    <string name="beauty_custom_makeup_eyebrow_heroic">Heroic</string>
+    <string name="beauty_custom_makeup_eyebrow_upright">Upright</string>
+    <string name="beauty_custom_makeup_eyebrow_flat">Flat</string>
+
     <!-- Sticker Items -->
+    <string name="beauty_sticker_2year">2year</string>
+    <string name="beauty_sticker_3year">3year</string>
+    <string name="beauty_sticker_love">Heart</string>
+    <string name="beauty_sticker_hazhijie">Hazhi</string>
+    <string name="beauty_sticker_bowknot">Bowknot</string>
+    <string name="beauty_sticker_flowermask">Flowermask</string>
+    <string name="beauty_sticker_goggles">Goggles</string>
+    <string name="beauty_sticker_cateye">Cateye</string>
+    <string name="beauty_sticker_fronttest">Front</string>
+    <string name="beauty_sticker_worldcup">Worldcup</string>
+    <string name="beauty_sticker_tuyao">Tuyao</string>
+    <string name="beauty_sticker_bunny_ear1">Ear1</string>
+    <string name="beauty_sticker_bunny_ear2">Ear2</string>
+    <string name="beauty_sticker_bunny_eyepatch">Eyepatch1</string>
+    <string name="beauty_sticker_bear_eyepatch">Eyepatch2</string>
+    <string name="beauty_sticker_newyear">Newyear</string>
     <string name="beauty_sticker_christmas">Christmas</string>
     <string name="beauty_sticker_squid">Squid</string>
     <string name="beauty_sticker_piggy">Piggy</string>

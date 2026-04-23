@@ -17,6 +17,8 @@ import cn.shengwang.beauty.databinding.ShengwangBeautyViewBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlPageBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlItemBinding
 import cn.shengwang.beauty.ui.builder.BeautyPageBuilder
+import cn.shengwang.beauty.ui.builder.QualityPageBuilder
+import cn.shengwang.beauty.ui.builder.CustomMakeupPageBuilder
 import cn.shengwang.beauty.ui.model.BeautyPageInfo
 import cn.shengwang.beauty.ui.model.BeautyItemInfo
 import cn.shengwang.beauty.ui.builder.MakeupPageBuilder
@@ -55,6 +57,11 @@ class ShengwangBeautyView : android.widget.FrameLayout {
 
     // 使用 ShengwangBeautyManager.beautyConfig 直接访问配置
     private val beautyConfig: ShengwangBeautyManager.BeautyConfig get() = ShengwangBeautyManager.beautyConfig
+
+    // 自定义美妆构建器作为类属性，供 ItemAdapter 在 BACK 操作时重建一级列表
+    internal val customMakeupPageBuilder: CustomMakeupPageBuilder by lazy {
+        CustomMakeupPageBuilder(beautyConfig)
+    }
 
     private val itemAdapterList = mutableListOf<ItemAdapter?>()
 
@@ -221,6 +228,18 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         pageList = onPageListCreate()
         viewBinding.viewPager.adapter = pageAdapter
 
+        // 二级菜单返回按钮
+        viewBinding.subMenuBackButton.setOnClickListener {
+            val pageIndex = viewBinding.viewPager.currentItem
+            val pageInfo = pageList.getOrNull(pageIndex) ?: return@setOnClickListener
+            val parentItems = pageInfo.parentItemList ?: return@setOnClickListener
+            pageInfo.itemList = parentItems
+            pageInfo.parentItemList = null
+            itemAdapterList.getOrNull(pageIndex)?.updateItems(parentItems)
+            updateSliderForCurrentPage(pageIndex)
+            exitSubMenu()
+        }
+
         viewBinding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 // 注意：不在这里更新 pageInfo.isSelected，因为 TabLayoutMediator 会自动同步 ViewPager，
@@ -273,7 +292,7 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         // 构建页面列表，使用独立的构建器类
         val pageList = mutableListOf<BeautyPageInfo>()
 
-        // 1. BEAUTY 模块（美颜：美肤+美型+画质）
+        // 1. BEAUTY 模块（美颜：美肤+美型）
         val beautyBuilder = BeautyPageBuilder(
             beautyConfig = beautyConfig,
             refreshPageList = {
@@ -282,19 +301,51 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         )
         pageList.add(beautyBuilder.buildPage())
 
-        // 2. STYLE_MAKEUP 模块（风格妆）
-        val makeupBuilder = MakeupPageBuilder(beautyConfig)
-        pageList.add(makeupBuilder.buildPage())
+        // 2. QUALITY 模块（画质）
+        val qualityBuilder = QualityPageBuilder(beautyConfig)
+        pageList.add(qualityBuilder.buildPage())
 
-        // 3. FILTER 模块（滤镜）
+        // 3. STYLE_MAKEUP 模块（风格妆）- 暂时注释掉，与 iOS 保持一致
+        // val makeupBuilder = MakeupPageBuilder(beautyConfig)
+        // pageList.add(makeupBuilder.buildPage())
+
+        // 4. CUSTOM_MAKEUP 模块（自定义美妆）
+        pageList.add(customMakeupPageBuilder.buildPage())
+
+        // 5. FILTER 模块（滤镜）
         val filterBuilder = FilterPageBuilder(beautyConfig)
         pageList.add(filterBuilder.buildPage())
 
-        // 4. STICKER 模块（贴纸）
+        // 6. STICKER 模块（贴纸）
         val stickerBuilder = StickerPageBuilder(beautyConfig)
         pageList.add(stickerBuilder.buildPage())
 
         return pageList
+    }
+
+    /**
+     * 进入二级菜单：隐藏 TabLayout，显示返回 bar
+     */
+    private fun enterSubMenu(title: String) {
+        viewBinding.tabLayout.animate().alpha(0f).setDuration(150).withEndAction {
+            viewBinding.tabLayout.visibility = android.view.View.GONE
+            viewBinding.subMenuTitle.text = title
+            viewBinding.subMenuBar.visibility = android.view.View.VISIBLE
+            viewBinding.subMenuBar.alpha = 0f
+            viewBinding.subMenuBar.animate().alpha(1f).setDuration(150).start()
+        }.start()
+    }
+
+    /**
+     * 退出二级菜单：隐藏返回 bar，恢复 TabLayout
+     */
+    private fun exitSubMenu() {
+        viewBinding.subMenuBar.animate().alpha(0f).setDuration(150).withEndAction {
+            viewBinding.subMenuBar.visibility = android.view.View.GONE
+            viewBinding.tabLayout.visibility = android.view.View.VISIBLE
+            viewBinding.tabLayout.alpha = 0f
+            viewBinding.tabLayout.animate().alpha(1f).setDuration(150).start()
+        }.start()
     }
 
     /**
@@ -583,8 +634,38 @@ class ShengwangBeautyView : android.widget.FrameLayout {
 
                 // 重置项：刷新整个列表
                 if (itemInfo.type == BeautyItemType.RESET) {
-                    // 逻辑已经在 onItemClick 中处理（包括 refreshPageList），这里只需要确保 UI 响应
-                    // 由于 onItemClick 中调用了 refreshPageList，这里其实不需要做太多
+                    return@setOnClickListener
+                }
+
+                // 子菜单入口项：保存一级列表，替换为子项
+                if (itemInfo.type == BeautyItemType.SUB_MENU) {
+                    val subItems = itemInfo.subItems ?: return@setOnClickListener
+                    currentPage?.let { page ->
+                        // 保存当前一级列表，供 BACK 恢复
+                        page.parentItemList = page.itemList
+                        page.itemList.forEach { it.isSelected = false }
+                        itemInfo.isSelected = true
+                        page.itemList = subItems
+                        updateItems(subItems)
+                    }
+                    onItemClick.invoke(0)
+                    // 显示二级菜单 bar，隐藏 tab bar
+                    val titleRes = itemInfo.name
+                    enterSubMenu(context.getString(titleRes))
+                    return@setOnClickListener
+                }
+
+                // 返回项：从 parentItemList 通用恢复一级列表
+                if (itemInfo.type == BeautyItemType.BACK) {
+                    currentPage?.let { page ->
+                        val parentItems = page.parentItemList ?: return@setOnClickListener
+                        page.itemList = parentItems
+                        page.parentItemList = null
+                        updateItems(parentItems)
+                    }
+                    onItemClick.invoke(0)
+                    // 恢复 tab bar，隐藏二级菜单 bar
+                    exitSubMenu()
                     return@setOnClickListener
                 }
 

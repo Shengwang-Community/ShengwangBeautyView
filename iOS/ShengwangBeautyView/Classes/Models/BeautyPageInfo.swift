@@ -31,6 +31,11 @@ public enum BeautyItemType: Equatable {
     case reset
     /// None effect item (e.g., cancel sticker/makeup)
     case none
+    /// Sub-menu entry item (e.g., custom makeup category like lipstick, blush)
+    /// Clicking this item should show its sub-items list
+    case subMenu
+    /// Back item — returns from a sub-items list to the parent category list
+    case back
     
     /// Check if this is a toggle type
     public var isToggle: Bool {
@@ -55,6 +60,9 @@ public class BeautyPageInfo {
     public let name: String
     /// Item list
     public var itemList: [BeautyItemInfo]
+    /// Parent item list — saved when drilling into a sub-menu, restored on back
+    /// nil when at the top-level list
+    public var parentItemList: [BeautyItemInfo]?
     /// Whether selected (for Tab switching)
     public var isSelected: Bool
     /// Page type (corresponds to SDK VIDEO_EFFECT_NODE_ID)
@@ -93,6 +101,12 @@ public class BeautyItemInfo {
     public let type: BeautyItemType
     /// Click callback (triggered when item icon is clicked)
     public var onItemClick: ((BeautyItemInfo) -> Void)?
+    /// Sub-items for hierarchical menus (e.g., custom makeup categories)
+    /// When non-nil, this item acts as a parent entry that can expand to show sub-items
+    public var subItems: [BeautyItemInfo]?
+    /// Sub-item's style & color, valid if value >= 0
+    public var subItemStyle: Int32
+    public var subItemColor: Int32
     
     public init(
         name: String,
@@ -103,7 +117,10 @@ public class BeautyItemInfo {
         onValueChanged: ((Float) -> Void)? = nil,
         showSlider: Bool = true,
         type: BeautyItemType = .normal,
-        onItemClick: ((BeautyItemInfo) -> Void)? = nil
+        onItemClick: ((BeautyItemInfo) -> Void)? = nil,
+        subItems: [BeautyItemInfo]? = nil,
+        itemStyle: Int32 = -1,
+        itemColor: Int32 = -1
     ) {
         self.name = name
         self.icon = icon
@@ -114,5 +131,8 @@ public class BeautyItemInfo {
         self.showSlider = showSlider
         self.type = type
         self.onItemClick = onItemClick
+        self.subItems = subItems
+        self.subItemStyle = itemStyle
+        self.subItemColor = itemColor
     }
 }

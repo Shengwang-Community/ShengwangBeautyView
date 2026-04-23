@@ -15,10 +15,13 @@ import io.agora.rtc2.IVideoEffectObject
  */
 data class BeautyPageInfo constructor(
     @StringRes val name: Int,
-    val itemList: List<BeautyItemInfo>,
+    var itemList: List<BeautyItemInfo>,
     var isSelected: Boolean = false,
     val type: BeautyModule = BeautyModule.BEAUTY
-)
+) {
+    /** 进入二级菜单前保存的一级列表，back 时恢复；顶层时为 null */
+    var parentItemList: List<BeautyItemInfo>? = null
+}
 
 /**
  * 美颜功能项类型
@@ -31,7 +34,11 @@ enum class BeautyItemType {
     /** 重置项 */
     RESET,
     /** 无效果项（如取消贴纸/美妆） */
-    NONE
+    NONE,
+    /** 子菜单入口项（如自定义美妆的口红、腮红等分类） */
+    SUB_MENU,
+    /** 返回项 — 从二级子项列表返回一级分类列表 */
+    BACK
 }
 
 /**
@@ -46,6 +53,7 @@ enum class BeautyItemType {
  * @param onItemClick 点击回调（点击功能项图标时触发）
  * @param showSlider 是否显示滑动条（默认为true，对于不需要调节参数的功能项应设置为false）
  * @param type 功能项类型
+ * @param subItems 子项列表（用于层级菜单，如自定义美妆的分类子项）
  */
 data class BeautyItemInfo constructor(
     @StringRes var name: Int,
@@ -56,7 +64,12 @@ data class BeautyItemInfo constructor(
     val onValueChanged: ((value: Float) -> Unit)? = null,
     val onItemClick: ((itemInfo: BeautyItemInfo) -> Unit)? = null,
     val showSlider: Boolean = true,
-    val type: BeautyItemType = BeautyItemType.NORMAL
+    val type: BeautyItemType = BeautyItemType.NORMAL,
+    val subItems: List<BeautyItemInfo>? = null,
+    /** 子项样式编号（用于自定义美妆，对应 SDK style 参数） */
+    val itemStyle: Int = 0,
+    /** 子项颜色编号（用于口红，对应 SDK color 参数） */
+    val itemColor: Int = 0
 )
 
 /**

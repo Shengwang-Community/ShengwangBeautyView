@@ -22,6 +22,17 @@ object MakeupNames {
  * 用于滤镜（FILTER）模块
  */
 object FilterNames {
+    const val CT = "Filter-CT"
+    const val NUANHUANG = "Filter-Nuanhuang"
+    const val LVTU = "Filter-Lvtu"
+    const val MEISHIJIAOPIAN = "Filter-Meishijiaopian"
+    const val LANDIAOJIAOPIAN = "Filter-Landiaojiaopian"
+    const val RIZA = "Filter-Riza"
+    const val JINGDU = "Filter-Jingdu"
+    const val AIZHICHENG = "Filter-Aizhicheng"
+    const val MITAO = "Filter-Mitao"
+    const val HEIJIN = "Filter-Heijin"
+    const val LUOLITA = "Filter-Luolita"
     const val SERENE = "Filter-Serene"            // 沉稳
     const val URBAN = "Filter-Urban"              // 都市
     const val GLOW = "Filter-Glow"           // 流光
@@ -66,6 +77,22 @@ object FilterNames {
  * 用于贴纸（STICKER）模块
  */
 object StickerNames {
+    const val ANNIVERSARY2 = "Sticker-2year"
+    const val ANNIVERSARY3 = "Sticker-3year"
+    const val HEART = "Sticker-Heart"
+    const val HAZHI = "Sticker-Hazhi"
+    const val BOWKNOT = "Sticker-Bowknot"
+    const val FLOWER_MASK = "Sticker-Flowermask"
+    const val GOGGLES = "Sticker-Goggles"
+    const val CATEYE = "Sticker-Cateye"
+    const val FRONTTEST = "Sticker-Fronttest"
+    const val WORLDCUP = "Sticker-Worldcup"
+    const val TUYAO = "Sticker-Tuyao"
+    const val BUNNY_EAR = "Sticker-BunnyEar"
+    const val RABBIT_EAR = "Sticker-RabbitEar"
+    const val BUNNY_EYEPATCH = "Sticker-BunnyEyepatch"
+    const val BEAR_EYEPATCH = "Sticker-BearEyepatch"
+    const val NEW_YEAR = "Sticker-Newyear"
     const val CHRISTMAS = "Sticker-Christmas"         // 圣诞节（动态）
     const val CHRISTMAS_LITE = "Sticker-Christmas-Lite" // 圣诞节（静态）
     const val SQUID = "Sticker-Squid"               // 章鱼（动态）

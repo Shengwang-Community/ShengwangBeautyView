@@ -3,18 +3,26 @@
 /* Beauty Groups */
 "beauty_group_beauty" = "美颜";
 "beauty_group_filter" = "滤镜";
-"beauty_group_makeup" = "美妆";
+"beauty_group_makeup" = "风格妆";
+"beauty_group_custom_makeup" = "美妆";
 "beauty_group_sticker" = "贴纸";
+"beauty_group_quality" = "画质";
 "beauty_effect_none" = "无";
 "beauty_effect_enable" = "已开启";
 "beauty_effect_disable" = "关闭";
 "beauty_effect_save" = "保存";
 "beauty_effect_reset" = "重置";
+"beauty_effect_back" = "返回";
 /* Beauty Items */
 "beauty_effect_smoothness" = "磨皮";
 "beauty_effect_lightness" = "美白";
+"beauty_effect_lightness_natural" = "自然";
+"beauty_effect_lightness_fair" = "白皙";
+"beauty_effect_lightness_pink" = "粉白";
+"beauty_effect_lightness_ultra" = "超白";
 "beauty_effect_redness" = "红润";
 "beauty_effect_contrast_strength" = "清晰度";
+"beauty_effect_contrast_factor" = "对比度";
 "beauty_effect_sharpness" = "锐化";
 "beauty_effect_eye_pouch" = "去黑眼圈";
 "beauty_effect_brighten_eye" = "亮眼";
@@ -26,11 +34,15 @@
 "beauty_effect_brightness" = "亮度";
 /* FaceShape Items */
 "beauty_face_shape_face_contour" = "瘦脸";
+"beauty_face_shape_face_slim_goddess" = "女神";
+"beauty_face_shape_face_slim_god" = "男神";
+"beauty_face_shape_face_slim_natural" = "自然";
 "beauty_face_shape_mandible" = "v脸";
 "beauty_face_shape_chin" = "瘦下巴";
 "beauty_face_shape_cheek" = "下颌线";
 "beauty_face_shape_cheekbone" = "瘦颧骨";
-"beauty_face_shape_face_length" = "长脸";
+"beauty_face_shape_face_length" = "短脸";
+"beauty_face_shape_face_small" = "小脸";
 "beauty_face_shape_face_width" = "窄脸";
 "beauty_face_shape_fore_head" = "发际线";
 "beauty_face_shape_head_scale" = "小头";
@@ -47,6 +59,7 @@
 "beauty_face_shape_inner_corner" = "内眼角";
 "beauty_face_shape_outer_corner" = "外眼角";
 "beauty_face_shape_eye_position" = "眼移动";
+"beauty_face_shape_eye_angle" = "眼角度";
 "beauty_face_shape_eye_pupils" = "瞳孔";
 "beauty_face_shape_mouth_smile" = "微笑唇";
 "beauty_face_shape_mouth_lip" = "丰唇";
@@ -55,6 +68,17 @@
 "beauty_face_shape_eyebrow_thickness" = "眉粗细";
 "beauty_face_shape_eyebrow_position" = "眉上下";
 /* Filter Items */
+"beauty_filter_ct" = "CT";
+"beauty_filter_nuanhuang" = "暖黄";
+"beauty_filter_lvtu" = "旅途";
+"beauty_filter_meishijiaopian" = "美式胶片";
+"beauty_filter_landiaojiaopian" = "蓝调胶片";
+"beauty_filter_riza" = "日杂";
+"beauty_filter_jingdu" = "京都";
+"beauty_filter_aizhicheng" = "爱之城";
+"beauty_filter_mitao" = "蜜桃";
+"beauty_filter_heijin" = "黑金";
+"beauty_filter_luolita" = "洛丽塔";
 "beauty_filter_serene" = "沉稳";
 "beauty_filter_urban" = "都市";
 "beauty_filter_glow" = "流光";
@@ -103,7 +127,69 @@
 "beauty_makeup_maiden" = "少女妆";
 "beauty_makeup_insight" = "深邃妆";
 "beauty_makeup_misty" = "氤氲妆";
+/* Custom Makeup Categories */
+"beauty_custom_makeup_lipstick" = "口红";
+"beauty_custom_makeup_blush" = "腮红";
+"beauty_custom_makeup_contour" = "修容";
+"beauty_custom_makeup_eyeshadow" = "眼影";
+"beauty_custom_makeup_eyebrow" = "修眉";
+"beauty_custom_makeup_pupil" = "美瞳";
+/* Custom Makeup - Lipstick */
+"beauty_custom_makeup_lipstick_vintage_red" = "复古红";
+"beauty_custom_makeup_lipstick_girl_pink" = "少女粉";
+"beauty_custom_makeup_lipstick_vitality_orange" = "元气橘";
+"beauty_custom_makeup_lipstick_grapefruit" = "西柚色";
+"beauty_custom_makeup_lipstick_watermelon_red" = "西瓜红";
+"beauty_custom_makeup_lipstick_velvet_red" = "丝绒红";
+"beauty_custom_makeup_lipstick_dirty_orange" = "脏橘色";
+"beauty_custom_makeup_lipstick_plum" = "梅子色";
+"beauty_custom_makeup_lipstick_bean_paste_pink" = "豆沙粉";
+/* Custom Makeup - Blush */
+"beauty_custom_makeup_blush_tipsy" = "微醺";
+"beauty_custom_makeup_blush_daily" = "日常";
+"beauty_custom_makeup_blush_peach" = "蜜桃";
+"beauty_custom_makeup_blush_sweet_orange" = "甜橙";
+"beauty_custom_makeup_blush_playful" = "俏皮";
+"beauty_custom_makeup_blush_scheming" = "心机";
+"beauty_custom_makeup_blush_sunburn" = "晒伤";
+/* Custom Makeup - Contour */
+"beauty_custom_makeup_contour_01" = "修容01";
+/* Custom Makeup - Eyeshadow */
+"beauty_custom_makeup_eyeshadow_sunset_red" = "晚霞红";
+"beauty_custom_makeup_eyeshadow_girl_pink" = "少女粉";
+"beauty_custom_makeup_eyeshadow_elegant_pink" = "气质粉";
+"beauty_custom_makeup_eyeshadow_plum_red" = "梅子红";
+"beauty_custom_makeup_eyeshadow_caramel_brown" = "焦糖棕";
+"beauty_custom_makeup_eyeshadow_vitality_orange" = "元气橘";
+"beauty_custom_makeup_eyeshadow_milk_tea" = "奶茶色";
+/* Custom Makeup - Eyebrow */
+"beauty_custom_makeup_eyebrow_lady" = "淑女";
+"beauty_custom_makeup_eyebrow_gentle" = "温润";
+"beauty_custom_makeup_eyebrow_standard" = "标准";
+"beauty_custom_makeup_eyebrow_willow" = "柳叶";
+"beauty_custom_makeup_eyebrow_fluffy" = "茸茸";
+"beauty_custom_makeup_eyebrow_wild" = "野生";
+"beauty_custom_makeup_eyebrow_thin" = "细眉";
+"beauty_custom_makeup_eyebrow_heroic" = "英朗";
+"beauty_custom_makeup_eyebrow_upright" = "挺拔";
+"beauty_custom_makeup_eyebrow_flat" = "平锋";
 /* Sticker Items */
+"beauty_sticker_2year" = "2周年";
+"beauty_sticker_3year" = "3周年";
+"beauty_sticker_love" = "爱心";
+"beauty_sticker_hazhijie" = "哈芝节";
+"beauty_sticker_bowknot" = "蝴蝶结";
+"beauty_sticker_flowermask" = "花海口罩";
+"beauty_sticker_goggles" = "滑雪镜";
+"beauty_sticker_cateye" = "猫猫眼";
+"beauty_sticker_fronttest" = "前景测试";
+"beauty_sticker_worldcup" = "世界杯";
+"beauty_sticker_tuyao" = "屠妖节";
+"beauty_sticker_bunny_ear1" = "兔耳朵";
+"beauty_sticker_bunny_ear2" = "兔子耳朵";
+"beauty_sticker_bunny_eyepatch" = "兔子眼罩";
+"beauty_sticker_bear_eyepatch" = "小熊眼罩";
+"beauty_sticker_newyear" = "新年快乐";
 "beauty_sticker_christmas" = "圣诞节";
 "beauty_sticker_squid" = "章鱼";
 "beauty_sticker_piggy" = "猪可爱";
