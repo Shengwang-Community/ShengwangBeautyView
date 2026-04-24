@@ -72,14 +72,11 @@ internal class BeautyPageBuilder(
             )
         )
 
-        // 美肤参数
-        addSkinBeautyItems(beautyItems)
+        // 美颜参数（美肤+美型混排，按指定顺序）
+        addBeautyItems(beautyItems)
 
-        // 美型参数
-        addFaceShapeItems(beautyItems)
-
-        // 画质参数
-        addQualityItems(beautyItems)
+        // 画质参数（已全部注释，当前不显示）
+        // addQualityItems(beautyItems)
 
         return BeautyPageInfo(
             R.string.beauty_group_beauty,
@@ -89,97 +86,47 @@ internal class BeautyPageBuilder(
     }
 
     /**
-     * 添加美肤参数
+     * 添加美颜参数（美肤+美型混排，严格按指定顺序）
+     * 顺序：美白、磨皮、红润、瘦脸、V脸、窄脸、大眼、眼距、亮眼、瘦颧骨、瘦鼻、长鼻、嘴形、下巴、瘦下颌骨、黑眼圈、法令纹
      */
-    private fun addSkinBeautyItems(items: MutableList<BeautyItemInfo>) {
-        // 磨皮
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_smoothness,
-            R.drawable.beauty_ic_effect_smoothness,
-            beautyConfig.smoothness,
-            isSelected = beautyConfig.beautyEnable
-        ) { value ->
-            beautyConfig.smoothness = value
-        }
-        // 美白
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_lightness,
-            R.drawable.beauty_ic_effect_lightness,
-            beautyConfig.whitenNatural
-        ) { value ->
-            beautyConfig.whitenNatural = value
-        }
-        // 红润
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_redness,
-            R.drawable.beauty_ic_effect_redness,
-            beautyConfig.redness
-        ) { value ->
-            beautyConfig.redness = value
-        }
-        // 清晰度
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_contrast_strength,
-            R.drawable.beauty_ic_effect_contrast_strength,
-            beautyConfig.contrastStrength,
-            valueRange = -1.0f..1.0f
-        ) { value ->
-            beautyConfig.contrastStrength = value
-        }
-        // 锐化
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_sharpness,
-            R.drawable.beauty_ic_effect_sharpness,
-            beautyConfig.sharpness
-        ) { value ->
-            beautyConfig.sharpness = value
-        }
-        // 去黑眼圈
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_eye_pouch,
-            R.drawable.beauty_ic_effect_eye_pouch,
-            beautyConfig.eyePouch
-        ) { value ->
-            beautyConfig.eyePouch = value
-        }
-        // 亮眼
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_brighten_eye,
-            R.drawable.beauty_ic_effect_brighten_eye,
-            beautyConfig.brightenEye
-        ) { value ->
-            beautyConfig.brightenEye = value
-        }
-        // 白牙
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_whiten_teeth,
-            R.drawable.beauty_ic_effect_whiten_teeth,
-            beautyConfig.whitenTeeth
-        ) { value ->
-            beautyConfig.whitenTeeth = value
-        }
-        // 去法令纹
-        addSkinBeautyItem(
-            items,
-            R.string.beauty_effect_nasolabial_fold,
-            R.drawable.beauty_ic_effect_nasolabial_fold,
-            beautyConfig.nasolabialFold
-        ) { value ->
-            beautyConfig.nasolabialFold = value
-        }
-    }
+    private fun addBeautyItems(items: MutableList<BeautyItemInfo>) {
+        // 1. 美白
+        addSkinBeautyItem(items, R.string.beauty_effect_lightness, R.drawable.beauty_ic_effect_lightness, beautyConfig.whitenNatural, isSelected = beautyConfig.beautyEnable) { value -> beautyConfig.whitenNatural = value }
+        // 2. 磨皮
+        addSkinBeautyItem(items, R.string.beauty_effect_smoothness, R.drawable.beauty_ic_effect_smoothness, beautyConfig.smoothness) { value -> beautyConfig.smoothness = value }
+        // 3. 红润
+        addSkinBeautyItem(items, R.string.beauty_effect_redness, R.drawable.beauty_ic_effect_redness, beautyConfig.redness) { value -> beautyConfig.redness = value }
+        // 4. 瘦脸
+        addFaceShapeItem(items, R.string.beauty_face_shape_face_contour, R.drawable.beauty_ic_face_shape_face_contour, beautyConfig.faceContour) { value -> beautyConfig.faceContour = value }
+        // 5. V脸
+        addFaceShapeItem(items, R.string.beauty_face_shape_mandible, R.drawable.beauty_ic_face_shape_mandible, beautyConfig.mandible) { value -> beautyConfig.mandible = value }
+        // 6. 窄脸
+        addFaceShapeItem(items, R.string.beauty_face_shape_face_width, R.drawable.beauty_ic_face_shape_face_width, beautyConfig.faceWidth) { value -> beautyConfig.faceWidth = value }
+        // 7. 大眼
+        addFaceShapeItem(items, R.string.beauty_face_shape_eye_scale, R.drawable.beauty_ic_face_shape_eye_scale, beautyConfig.eyeScale) { value -> beautyConfig.eyeScale = value }
+        // 8. 眼距
+        addFaceShapeItem(items, R.string.beauty_face_shape_eye_distance, R.drawable.beauty_ic_face_shape_eye_distance, beautyConfig.eyeDistance, valueRange = -100f..100f) { value -> beautyConfig.eyeDistance = value }
+        // 9. 亮眼
+        addSkinBeautyItem(items, R.string.beauty_effect_brighten_eye, R.drawable.beauty_ic_effect_brighten_eye, beautyConfig.brightenEye) { value -> beautyConfig.brightenEye = value }
+        // 10. 瘦颧骨
+        addFaceShapeItem(items, R.string.beauty_face_shape_cheekbone, R.drawable.beauty_ic_face_shape_cheekbone, beautyConfig.cheekbone) { value -> beautyConfig.cheekbone = value }
+        // 11. 瘦鼻
+        addFaceShapeItem(items, R.string.beauty_face_shape_nose_width, R.drawable.beauty_ic_face_shape_nose_width, beautyConfig.noseWidth) { value -> beautyConfig.noseWidth = value }
+        // 12. 长鼻
+        addFaceShapeItem(items, R.string.beauty_face_shape_nose_length, R.drawable.beauty_ic_face_shape_nose_length, beautyConfig.noseLength, valueRange = -100f..100f) { value -> beautyConfig.noseLength = value }
+        // 13. 嘴形
+        addFaceShapeItem(items, R.string.beauty_face_shape_mouth_scale, R.drawable.beauty_ic_face_shape_mouth_scale, beautyConfig.mouthScale, valueRange = -100f..100f) { value -> beautyConfig.mouthScale = value }
+        // 14. 下巴
+        addFaceShapeItem(items, R.string.beauty_face_shape_chin, R.drawable.beauty_ic_face_shape_chin, beautyConfig.chin, valueRange = -100f..100f) { value -> beautyConfig.chin = value }
+        // 15. 瘦下颌骨
+        addFaceShapeItem(items, R.string.beauty_face_shape_cheek, R.drawable.beauty_ic_face_shape_cheek, beautyConfig.cheek) { value -> beautyConfig.cheek = value }
+        // 16. 黑眼圈
+        addSkinBeautyItem(items, R.string.beauty_effect_eye_pouch, R.drawable.beauty_ic_effect_eye_pouch, beautyConfig.eyePouch) { value -> beautyConfig.eyePouch = value }
+        // 17. 法令纹
+        addSkinBeautyItem(items, R.string.beauty_effect_nasolabial_fold, R.drawable.beauty_ic_effect_nasolabial_fold, beautyConfig.nasolabialFold) { value -> beautyConfig.nasolabialFold = value }
 
+    }
     /**
-     * 添加单个美肤参数项
-     *
      * UI 显示换算规则：
      * - SDK 值范围 0.0~1.0 → UI 显示 0~100（整数）
      * - SDK 值范围 -1.0~1.0 → UI 显示 -50~50（整数）
@@ -222,293 +169,6 @@ internal class BeautyPageBuilder(
                 }
             )
         )
-    }
-
-    /**
-     * 添加美型参数
-     */
-    private fun addFaceShapeItems(items: MutableList<BeautyItemInfo>) {
-        // 脸部轮廓
-        // 瘦脸
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_face_contour,
-            R.drawable.beauty_ic_face_shape_face_contour,
-            beautyConfig.faceContour
-        ) { value ->
-            beautyConfig.faceContour = value
-        }
-        // v脸
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mandible,
-            R.drawable.beauty_ic_face_shape_mandible,
-            beautyConfig.mandible
-        ) { value ->
-            beautyConfig.mandible = value
-        }
-        // 瘦下巴
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_chin,
-            R.drawable.beauty_ic_face_shape_chin,
-            beautyConfig.chin,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.chin = value
-        }
-        // 下颌线
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_cheek,
-            R.drawable.beauty_ic_face_shape_cheek,
-            beautyConfig.cheek
-        ) { value ->
-            beautyConfig.cheek = value
-        }
-        // 瘦颧骨
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_cheekbone,
-            R.drawable.beauty_ic_face_shape_cheekbone,
-            beautyConfig.cheekbone
-        ) { value ->
-            beautyConfig.cheekbone = value
-        }
-        // 长脸
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_face_length,
-            R.drawable.beauty_ic_face_shape_face_length,
-            beautyConfig.faceLength,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.faceLength = value
-        }
-        // 窄脸
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_face_width,
-            R.drawable.beauty_ic_face_shape_face_width,
-            beautyConfig.faceWidth
-        ) { value ->
-            beautyConfig.faceWidth = value
-        }
-        // 发际线
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_fore_head,
-            R.drawable.beauty_ic_face_shape_fore_head,
-            beautyConfig.foreHead
-        ) { value ->
-            beautyConfig.foreHead = value
-        }
-        // 小头
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_head_scale,
-            R.drawable.beauty_ic_face_shape_head_scale,
-            beautyConfig.headScale
-        ) { value ->
-            beautyConfig.headScale = value
-        }
-
-        // 鼻子
-        // 瘦鼻
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_width,
-            R.drawable.beauty_ic_face_shape_nose_width,
-            beautyConfig.noseWidth
-        ) { value ->
-            beautyConfig.noseWidth = value
-        }
-        // 山根
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_root,
-            R.drawable.beauty_ic_face_shape_nose_root,
-            beautyConfig.noseRoot
-        ) { value ->
-            beautyConfig.noseRoot = value
-        }
-        // 鼻梁
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_bridge,
-            R.drawable.beauty_ic_face_shape_nose_bridge,
-            beautyConfig.noseBridge
-        ) { value ->
-            beautyConfig.noseBridge = value
-        }
-        // 鼻尖
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_tip,
-            R.drawable.beauty_ic_face_shape_nose_tip,
-            beautyConfig.noseTip
-        ) { value ->
-            beautyConfig.noseTip = value
-        }
-        // 鼻翼
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_wing,
-            R.drawable.beauty_ic_face_shape_nose_wing,
-            beautyConfig.noseWing
-        ) { value ->
-            beautyConfig.noseWing = value
-        }
-        // 长鼻
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_length,
-            R.drawable.beauty_ic_face_shape_nose_length,
-            beautyConfig.noseLength,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.noseLength = value
-        }
-        // 鼻综合
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_general,
-            R.drawable.beauty_ic_face_shape_nose_general,
-            beautyConfig.noseGeneral,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.noseGeneral = value
-        }
-
-        // 眼睛
-        // 大眼
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_scale,
-            R.drawable.beauty_ic_face_shape_eye_scale,
-            beautyConfig.eyeScale
-        ) { value ->
-            beautyConfig.eyeScale = value
-        }
-        // 眼距
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_distance,
-            R.drawable.beauty_ic_face_shape_eye_distance,
-            beautyConfig.eyeDistance,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyeDistance = value
-        }
-        // 眼睑下至
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_lid,
-            R.drawable.beauty_ic_face_shape_eye_lid,
-            beautyConfig.eyeLid
-        ) { value ->
-            beautyConfig.eyeLid = value
-        }
-        // 内眼角
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_inner_corner,
-            R.drawable.beauty_ic_face_shape_inner_corner,
-            beautyConfig.eyeInnerCorner,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyeInnerCorner = value
-        }
-        // 外眼角
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_outer_corner,
-            R.drawable.beauty_ic_face_shape_outer_corner,
-            beautyConfig.eyeOuterCorner,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyeOuterCorner = value
-        }
-        // 眼移动
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_position,
-            R.drawable.beauty_ic_face_shape_eye_position,
-            beautyConfig.eyePosition,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyePosition = value
-        }
-        // 瞳孔
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_pupils,
-            R.drawable.beauty_ic_face_shape_eye_pupils,
-            beautyConfig.eyePupils
-        ) { value ->
-            beautyConfig.eyePupils = value
-        }
-
-        // 嘴巴
-        // 微笑唇
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_smile,
-            R.drawable.beauty_ic_face_shape_mouth_smile,
-            beautyConfig.mouthSmile
-        ) { value ->
-            beautyConfig.mouthSmile = value
-        }
-        // 丰唇
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_lip,
-            R.drawable.beauty_ic_face_shape_mouth_lip,
-            beautyConfig.mouthLip
-        ) { value ->
-            beautyConfig.mouthLip = value
-        }
-        // 嘴型
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_scale,
-            R.drawable.beauty_ic_face_shape_mouth_scale,
-            beautyConfig.mouthScale,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.mouthScale = value
-        }
-        // 缩人中
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_position,
-            R.drawable.beauty_ic_face_shape_mouth_position,
-            beautyConfig.mouthPosition
-        ) { value ->
-            beautyConfig.mouthPosition = value
-        }
-
-        // 眉毛
-        // 眉粗细
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eyebrow_thickness,
-            R.drawable.beauty_ic_face_shape_eyebrow_thickness,
-            beautyConfig.eyebrowThickness,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyebrowThickness = value
-        }
-        // 眉上下
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eyebrow_position,
-            R.drawable.beauty_ic_face_shape_eyebrow_position,
-            beautyConfig.eyebrowPosition,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyebrowPosition = value
-        }
     }
 
     /**
