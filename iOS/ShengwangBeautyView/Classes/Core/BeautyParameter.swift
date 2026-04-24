@@ -45,7 +45,7 @@ public struct FilterNames {
     public static let cotton = "Filter-Cotton"         // Cotton
     public static let soda = "Filter-Soda"             // Soda
     public static let moonlight = "Filter-Moonlight"    // Moonlight
-    public static let whiteTea = "Filter-WhiteTea"    // White Tea
+    public static let whiteTea = "Filter-Whitetea"    // White Tea
     public static let tranquil = "Filter-Tranquil"     // Tranquil
     public static let instaStyle = "Filter-Ins"         // Instagram style
     public static let street = "Filter-Street"         // Street

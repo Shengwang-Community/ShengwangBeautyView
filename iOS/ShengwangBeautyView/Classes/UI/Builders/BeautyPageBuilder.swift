@@ -297,14 +297,21 @@ internal class BeautyPageBuilder: IPageBuilder {
         valueRange: ClosedRange<Float> = 0.0...1.0,
         onValueChanged: @escaping (Float) -> Void
     ) {
+        let isBipolar = valueRange.lowerBound < 0
+        // UI 显示范围和换算
+        let uiRange: ClosedRange<Float> = isBipolar ? -50.0...50.0 : 0.0...100.0
+        let uiValue: Float = isBipolar ? value * 50.0 : value * 100.0
         items.append(
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: value,
+                value: uiValue,
                 isSelected: isSelected,
-                valueRange: valueRange,
-                onValueChanged: onValueChanged
+                valueRange: uiRange,
+                onValueChanged: { uiVal in
+                    let sdkValue = isBipolar ? uiVal / 50.0 : uiVal / 100.0
+                    onValueChanged(sdkValue)
+                }
             )
         )
     }
@@ -317,13 +324,20 @@ internal class BeautyPageBuilder: IPageBuilder {
         valueRange: ClosedRange<Float> = 0.0...100.0,
         onValueChanged: @escaping (Float) -> Void
     ) {
+        let isBipolar = valueRange.lowerBound < 0
+        // UI display conversion: SDK -100~100 → UI -50~50; 0~100 unchanged
+        let uiRange: ClosedRange<Float> = isBipolar ? -50.0...50.0 : valueRange
+        let uiValue: Float = isBipolar ? value / 2.0 : value
         items.append(
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: value,
-                valueRange: valueRange,
-                onValueChanged: onValueChanged
+                value: uiValue,
+                valueRange: uiRange,
+                onValueChanged: { uiVal in
+                    let sdkValue = isBipolar ? uiVal * 2.0 : uiVal
+                    onValueChanged(sdkValue)
+                }
             )
         )
     }
@@ -340,9 +354,11 @@ internal class BeautyPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: value,
-                valueRange: valueRange,
-                onValueChanged: onValueChanged
+                value: value * 50.0,  // -1.0~1.0 → -50~50
+                valueRange: -50.0...50.0,
+                onValueChanged: { uiVal in
+                    onValueChanged(uiVal / 50.0)  // -50~50 → -1.0~1.0
+                }
             )
         )
     }

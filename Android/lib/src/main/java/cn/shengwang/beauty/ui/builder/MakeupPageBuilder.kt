@@ -35,77 +35,77 @@ internal class MakeupPageBuilder(
             )
         )
 
-        // 美妆选项
-        // 学妹妆
+        // 美妆选项（仅保留素材包中存在的模板）
+        // 学妹妆 Makeup-Young
         addMakeupItem(
             makeupItems,
             R.string.beauty_makeup_young,
             R.drawable.beauty_ic_makeup_young,
             MakeupNames.YOUNG
         )
-        // 学姐妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_mature,
-            R.drawable.beauty_ic_makeup_mature,
-            MakeupNames.MATURE
-        )
-        // 气质妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_aura,
-            R.drawable.beauty_ic_makeup_aura,
-            MakeupNames.AURA
-        )
-        // 白皙妆
+        // 学姐妆 Makeup-Mature — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_mature,
+//            R.drawable.beauty_ic_makeup_mature,
+//            MakeupNames.MATURE
+//        )
+        // 气质妆 Makeup-Aura — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_aura,
+//            R.drawable.beauty_ic_makeup_aura,
+//            MakeupNames.AURA
+//        )
+        // 白皙妆 Makeup-Natural
         addMakeupItem(
             makeupItems,
             R.string.beauty_makeup_natural,
             R.drawable.beauty_ic_makeup_natural,
             MakeupNames.NATURAL
         )
-        // 优雅妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_graceful,
-            R.drawable.beauty_ic_makeup_graceful,
-            MakeupNames.GRACEFUL
-        )
-        // 粉晕妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_charm,
-            R.drawable.beauty_ic_makeup_charm,
-            MakeupNames.CHARM
-        )
-        // 俏皮妆
+        // 优雅妆 Makeup-Graceful — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_graceful,
+//            R.drawable.beauty_ic_makeup_graceful,
+//            MakeupNames.GRACEFUL
+//        )
+        // 粉晕妆 Makeup-Charm — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_charm,
+//            R.drawable.beauty_ic_makeup_charm,
+//            MakeupNames.CHARM
+//        )
+        // 俏皮妆 Makeup-Perkey
         addMakeupItem(
             makeupItems,
             R.string.beauty_makeup_perky,
             R.drawable.beauty_ic_makeup_perky,
             MakeupNames.PERKY
         )
-        // 少女妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_maiden,
-            R.drawable.beauty_ic_makeup_maiden,
-            MakeupNames.MAIDEN
-        )
-        // 深邃妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_insight,
-            R.drawable.beauty_ic_makeup_insight,
-            MakeupNames.INSIGHT
-        )
-        // 氤氲妆
-        addMakeupItem(
-            makeupItems,
-            R.string.beauty_makeup_misty,
-            R.drawable.beauty_ic_makeup_misty,
-            MakeupNames.MISTY
-        )
+        // 少女妆 Makeup-Maiden — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_maiden,
+//            R.drawable.beauty_ic_makeup_maiden,
+//            MakeupNames.MAIDEN
+//        )
+        // 深邃妆 Makeup-Insight — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_insight,
+//            R.drawable.beauty_ic_makeup_insight,
+//            MakeupNames.INSIGHT
+//        )
+        // 氤氲妆 Makeup-Misty — 素材包不含此模板，已注释
+//        addMakeupItem(
+//            makeupItems,
+//            R.string.beauty_makeup_misty,
+//            R.drawable.beauty_ic_makeup_misty,
+//            MakeupNames.MISTY
+//        )
 
         return BeautyPageInfo(
             R.string.beauty_group_makeup,
@@ -140,12 +140,12 @@ internal class MakeupPageBuilder(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                beautyConfig.makeupIntensity,
+                beautyConfig.makeupIntensity * 100f,  // 0.0~1.0 → 0~100
                 isSelected = beautyConfig.makeupName == makeupName,
-                valueRange = 0f..1.0f,
+                valueRange = 0f..100f,
                 // 用户拖动滑块时，更新强度值（会同步更新缓存）
-                onValueChanged = { value ->
-                    beautyConfig.makeupIntensity = value
+                onValueChanged = { uiVal ->
+                    beautyConfig.makeupIntensity = uiVal / 100f  // 0~100 → 0.0~1.0
                 },
                 // 用户点击切换模板时
                 onItemClick = { itemInfo ->
@@ -161,8 +161,8 @@ internal class MakeupPageBuilder(
                         beautyConfig.makeupIntensity = it
                     }
                     
-                    // 4. 更新 UI 显示的强度值，确保与 SDK 状态一致
-                    itemInfo.value = beautyConfig.makeupIntensity
+                    // 4. 更新 UI 显示的强度值，确保与 SDK 状态一致（换算为 UI 值）
+                    itemInfo.value = beautyConfig.makeupIntensity * 100f  // 0.0~1.0 → 0~100
                 }
             )
         )

@@ -47,7 +47,7 @@ class FilterPageBuilder implements IPageBuilder {
     _add(items, 'beauty_filter_cotton', 'beauty_ic_filter_cotton', 'Filter-Cotton', currentStrength);
     _add(items, 'beauty_filter_soda', 'beauty_ic_filter_soda', 'Filter-Soda', currentStrength);
     _add(items, 'beauty_filter_moonlight', 'beauty_ic_filter_moonlight', 'Filter-Moonlight', currentStrength);
-    _add(items, 'beauty_filter_white_tea', 'beauty_ic_filter_whitetea', 'Filter-WhiteTea', currentStrength);
+    _add(items, 'beauty_filter_white_tea', 'beauty_ic_filter_whitetea', 'Filter-Whitetea', currentStrength);
     _add(items, 'beauty_filter_tranquil', 'beauty_ic_filter_tranquil', 'Filter-Tranquil', currentStrength);
     _add(items, 'beauty_filter_insta_style', 'beauty_ic_filter_ins', 'Filter-Ins', currentStrength);
     _add(items, 'beauty_filter_street', 'beauty_ic_filter_street', 'Filter-Street', currentStrength);

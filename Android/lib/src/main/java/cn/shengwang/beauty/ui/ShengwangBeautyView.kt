@@ -412,14 +412,9 @@ class ShengwangBeautyView : android.widget.FrameLayout {
             viewBinding.slider.value = itemInfo.value
         }
 
-        // 设置格式化器
+        // 设置格式化器 - 所有值统一显示为整数
         viewBinding.slider.setLabelFormatter { value ->
-            if (isIntegerType) {
-                value.toInt().toString()
-            } else {
-                // float 类型保留两位小数，例如 0.99
-                String.format("%.2f", value)
-            }
+            value.toInt().toString()
         }
 
         // 设置值后再添加监听器，避免初始化时触发回调

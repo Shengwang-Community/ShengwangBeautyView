@@ -35,17 +35,27 @@ internal class MakeupPageBuilder: IPageBuilder {
             )
         )
         
-        // Style makeup options
+        // Style makeup options (only templates present in the material package)
+        // Makeup-Young ✓
         addMakeupItem(&makeupItems, name: "beauty_makeup_young", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_young"), makeupName: MakeupNames.young)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_mature", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_mature"), makeupName: MakeupNames.mature)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_aura", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_aura"), makeupName: MakeupNames.aura)
+        // Makeup-Mature — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_mature", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_mature"), makeupName: MakeupNames.mature)
+        // Makeup-Aura — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_aura", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_aura"), makeupName: MakeupNames.aura)
+        // Makeup-Natural ✓
         addMakeupItem(&makeupItems, name: "beauty_makeup_natural", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_natural"), makeupName: MakeupNames.natural)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_graceful", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_graceful"), makeupName: MakeupNames.graceful)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_charm", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_charm"), makeupName: MakeupNames.charm)
+        // Makeup-Graceful — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_graceful", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_graceful"), makeupName: MakeupNames.graceful)
+        // Makeup-Charm — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_charm", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_charm"), makeupName: MakeupNames.charm)
+        // Makeup-Perkey ✓
         addMakeupItem(&makeupItems, name: "beauty_makeup_perky", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_perky"), makeupName: MakeupNames.perky)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_maiden", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_maiden"), makeupName: MakeupNames.maiden)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_insight", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_insight"), makeupName: MakeupNames.insight)
-        addMakeupItem(&makeupItems, name: "beauty_makeup_misty", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_misty"), makeupName: MakeupNames.misty)
+        // Makeup-Maiden — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_maiden", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_maiden"), makeupName: MakeupNames.maiden)
+        // Makeup-Insight — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_insight", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_insight"), makeupName: MakeupNames.insight)
+        // Makeup-Misty — not in material package, commented out
+//        addMakeupItem(&makeupItems, name: "beauty_makeup_misty", icon: UIImage.beautyIcon(named: "beauty_ic_makeup_misty"), makeupName: MakeupNames.misty)
         
         return BeautyPageInfo(
             name: "beauty_group_makeup",
@@ -80,12 +90,12 @@ internal class MakeupPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: beautyConfig.makeupIntensity,
+                value: beautyConfig.makeupIntensity * 100.0,  // 0.0~1.0 → 0~100
                 isSelected: beautyConfig.makeupName == makeupName,
-                valueRange: 0.0...1.0,
+                valueRange: 0.0...100.0,
                 // User drags slider: update intensity value (will sync update cache)
-                onValueChanged: { [weak self] value in
-                    self?.beautyConfig.makeupIntensity = value
+                onValueChanged: { [weak self] uiVal in
+                    self?.beautyConfig.makeupIntensity = uiVal / 100.0  // 0~100 → 0.0~1.0
                 },
                 // User clicks to switch makeup
                 onItemClick: { [weak self] itemInfo in
@@ -103,8 +113,8 @@ internal class MakeupPageBuilder: IPageBuilder {
                         self.beautyConfig.makeupIntensity = cached
                     }
                     
-                    // 4. Update UI displayed intensity value to ensure UI matches SDK state
-                    itemInfo.value = self.beautyConfig.makeupIntensity
+                    // 4. Update UI displayed intensity value to ensure UI matches SDK state (convert to UI value)
+                    itemInfo.value = self.beautyConfig.makeupIntensity * 100.0  // 0.0~1.0 → 0~100
                 }
             )
         )

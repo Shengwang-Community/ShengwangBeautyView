@@ -180,13 +180,17 @@ internal class BeautyPageBuilder(
     /**
      * 添加单个美肤参数项
      *
+     * UI 显示换算规则：
+     * - SDK 值范围 0.0~1.0 → UI 显示 0~100（整数）
+     * - SDK 值范围 -1.0~1.0 → UI 显示 -50~50（整数）
+     *
      * @param items 功能项列表
      * @param nameRes 参数名称资源ID
      * @param iconRes 图标资源ID
-     * @param currentValue 当前值
+     * @param currentValue 当前值（SDK 原始值）
      * @param isSelected 是否选中（默认false）
-     * @param valueRange 值范围（默认0.0f..1.0f）
-     * @param onValueChanged 值变化回调
+     * @param valueRange SDK 值范围（默认0.0f..1.0f）
+     * @param onValueChanged 值变化回调（接收 SDK 原始值）
      */
     private fun addSkinBeautyItem(
         items: MutableList<BeautyItemInfo>,
@@ -197,14 +201,25 @@ internal class BeautyPageBuilder(
         valueRange: ClosedFloatingPointRange<Float> = 0.0f..1.0f,
         onValueChanged: (Float) -> Unit
     ) {
+        val isBipolar = valueRange.start < 0f
+        // UI 显示范围和换算
+        val uiRange = if (isBipolar) -50f..50f else 0f..100f
+        val uiValue = if (isBipolar) {
+            currentValue * 50f  // -1.0~1.0 → -50~50
+        } else {
+            currentValue * 100f // 0.0~1.0 → 0~100
+        }
         items.add(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                currentValue,
+                uiValue,
                 isSelected = isSelected,
-                valueRange = valueRange,
-                onValueChanged = onValueChanged
+                valueRange = uiRange,
+                onValueChanged = { uiVal ->
+                    val sdkValue = if (isBipolar) uiVal / 50f else uiVal / 100f
+                    onValueChanged(sdkValue)
+                }
             )
         )
     }
@@ -499,12 +514,16 @@ internal class BeautyPageBuilder(
     /**
      * 添加单个美型参数项
      *
+     * UI 显示换算规则：
+     * - SDK 值范围 0~100 → UI 显示 0~100（整数，不变）
+     * - SDK 值范围 -100~100 → UI 显示 -50~50（整数），回调时 ×2 还原
+     *
      * @param items 功能项列表
      * @param nameRes 参数名称资源ID
      * @param iconRes 图标资源ID
-     * @param currentValue 当前值（Int类型，会自动转换为Float显示）
-     * @param valueRange 值范围（默认0f..100f）
-     * @param onValueChanged 值变化回调（接收Int值）
+     * @param currentValue 当前值（Int类型，SDK 原始值）
+     * @param valueRange SDK 值范围（默认0f..100f）
+     * @param onValueChanged 值变化回调（接收 SDK 原始 Int 值）
      */
     private fun addFaceShapeItem(
         items: MutableList<BeautyItemInfo>,
@@ -514,14 +533,18 @@ internal class BeautyPageBuilder(
         valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
         onValueChanged: (Int) -> Unit
     ) {
+        val isBipolar = valueRange.start < 0f
+        val uiRange = if (isBipolar) -50f..50f else valueRange
+        val uiValue = if (isBipolar) currentValue / 2f else currentValue.toFloat()
         items.add(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                currentValue.toFloat(),
-                valueRange = valueRange,
+                uiValue,
+                valueRange = uiRange,
                 onValueChanged = { value ->
-                    onValueChanged(value.toInt())
+                    val sdkValue = if (isBipolar) (value * 2f).toInt() else value.toInt()
+                    onValueChanged(sdkValue)
                 }
             )
         )
@@ -573,11 +596,13 @@ internal class BeautyPageBuilder(
     /**
      * 添加单个画质参数项
      *
+     * UI 显示换算规则：SDK 值范围 -1.0~1.0 → UI 显示 -50~50（整数）
+     *
      * @param items 功能项列表
      * @param nameRes 参数名称资源ID
      * @param iconRes 图标资源ID
-     * @param currentValue 当前值
-     * @param onValueChanged 值变化回调
+     * @param currentValue 当前值（SDK 原始值）
+     * @param onValueChanged 值变化回调（接收 SDK 原始值）
      */
     private fun addQualityItem(
         items: MutableList<BeautyItemInfo>,
@@ -590,9 +615,11 @@ internal class BeautyPageBuilder(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                currentValue,
-                valueRange = -1.0f..1.0f,
-                onValueChanged = onValueChanged
+                currentValue * 50f,  // -1.0~1.0 → -50~50
+                valueRange = -50f..50f,
+                onValueChanged = { uiVal ->
+                    onValueChanged(uiVal / 50f)  // -50~50 → -1.0~1.0
+                }
             )
         )
     }

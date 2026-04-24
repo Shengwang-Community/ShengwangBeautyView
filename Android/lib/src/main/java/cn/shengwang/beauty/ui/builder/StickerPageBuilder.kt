@@ -35,91 +35,91 @@ internal class StickerPageBuilder(
             )
         )
 
-        // 贴纸选项
-        // 圣诞节
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_christmas,
-            R.drawable.beauty_ic_sticker_christmas,
-            StickerNames.CHRISTMAS
-        )
-        // 章鱼
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_squid,
-            R.drawable.beauty_ic_sticker_squid,
-            StickerNames.SQUID
-        )
-        // 猪可爱
+        // 贴纸选项（仅保留素材包中存在的模板）
+        // 圣诞节 Sticker-Christmas — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_christmas,
+//            R.drawable.beauty_ic_sticker_christmas,
+//            StickerNames.CHRISTMAS
+//        )
+        // 章鱼 Sticker-Squid — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_squid,
+//            R.drawable.beauty_ic_sticker_squid,
+//            StickerNames.SQUID
+//        )
+        // 猪可爱 Sticker-Piggy
         addStickerItem(
             stickerItems,
             R.string.beauty_sticker_piggy,
             R.drawable.beauty_ic_sticker_piggy,
             StickerNames.PIGGY
         )
-        // 辫子猫
+        // 辫子猫 Sticker-Longcat
         addStickerItem(
             stickerItems,
             R.string.beauty_sticker_long_cat,
             R.drawable.beauty_ic_sticker_long_cat,
             StickerNames.LONG_CAT
         )
-        // 粉色发箍
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_hairhoop,
-            R.drawable.beauty_ic_sticker_hairhoop,
-            StickerNames.HAIRHOOP
-        )
-        // 没有烦恼
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_relax_time,
-            R.drawable.beauty_ic_sticker_relax_time,
-            StickerNames.RELAX_TIME
-        )
-        // 卡通猫
+        // 粉色发箍 Sticker-Hairhoop — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_hairhoop,
+//            R.drawable.beauty_ic_sticker_hairhoop,
+//            StickerNames.HAIRHOOP
+//        )
+        // 没有烦恼 Sticker-Relax — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_relax_time,
+//            R.drawable.beauty_ic_sticker_relax_time,
+//            StickerNames.RELAX_TIME
+//        )
+        // 卡通猫 Sticker-Cartooncat
         addStickerItem(
             stickerItems,
             R.string.beauty_sticker_cartoon_cat,
             R.drawable.beauty_ic_sticker_cartoon_cat,
             StickerNames.CARTOON_CAT
         )
-        // 蝴蝶
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_butterfly,
-            R.drawable.beauty_ic_sticker_butterfly,
-            StickerNames.BUTTERFLY
-        )
-        // 粉刷时光
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_brush,
-            R.drawable.beauty_ic_sticker_brush,
-            StickerNames.BRUSH
-        )
-        // 赛博眼镜
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_cyber_glass,
-            R.drawable.beauty_ic_sticker_cyber_glass,
-            StickerNames.CYBER_GLASS
-        )
-        // 霓虹皇冠
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_neon_tiara,
-            R.drawable.beauty_ic_sticker_neon_tiara,
-            StickerNames.NEON_TIARA
-        )
-        // 爱心眼镜
-        addStickerItem(
-            stickerItems,
-            R.string.beauty_sticker_love_glass,
-            R.drawable.beauty_ic_sticker_love_glass,
-            StickerNames.LOVE_GLASS
-        )
+        // 蝴蝶 Sticker-Butterfly — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_butterfly,
+//            R.drawable.beauty_ic_sticker_butterfly,
+//            StickerNames.BUTTERFLY
+//        )
+        // 粉刷时光 Sticker-Brush — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_brush,
+//            R.drawable.beauty_ic_sticker_brush,
+//            StickerNames.BRUSH
+//        )
+        // 赛博眼镜 Sticker-Glass — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_cyber_glass,
+//            R.drawable.beauty_ic_sticker_cyber_glass,
+//            StickerNames.CYBER_GLASS
+//        )
+        // 霓虹皇冠 Sticker-Tiara — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_neon_tiara,
+//            R.drawable.beauty_ic_sticker_neon_tiara,
+//            StickerNames.NEON_TIARA
+//        )
+        // 爱心眼镜 Sticker-Love — 素材包不含此模板，已注释
+//        addStickerItem(
+//            stickerItems,
+//            R.string.beauty_sticker_love_glass,
+//            R.drawable.beauty_ic_sticker_love_glass,
+//            StickerNames.LOVE_GLASS
+//        )
 
         return BeautyPageInfo(
             R.string.beauty_group_sticker,

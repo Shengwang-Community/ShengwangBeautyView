@@ -35,44 +35,81 @@ internal class FilterPageBuilder: IPageBuilder {
             )
         )
         
-        // Filter options
-        addFilterItem(&filterItems, name: "beauty_filter_serene", icon: UIImage.beautyIcon(named: "beauty_ic_filter_serene"), filterName: FilterNames.serene)
-        addFilterItem(&filterItems, name: "beauty_filter_urban", icon: UIImage.beautyIcon(named: "beauty_ic_filter_urban"), filterName: FilterNames.urban)
-        addFilterItem(&filterItems, name: "beauty_filter_glow", icon: UIImage.beautyIcon(named: "beauty_ic_filter_glow"), filterName: FilterNames.glow)
-        addFilterItem(&filterItems, name: "beauty_filter_gilt", icon: UIImage.beautyIcon(named: "beauty_ic_filter_gilt"), filterName: FilterNames.gilt)
-        addFilterItem(&filterItems, name: "beauty_filter_cream", icon: UIImage.beautyIcon(named: "beauty_ic_filter_cream"), filterName: FilterNames.cream)
-        addFilterItem(&filterItems, name: "beauty_filter_latte", icon: UIImage.beautyIcon(named: "beauty_ic_filter_latte"), filterName: FilterNames.latte)
-        addFilterItem(&filterItems, name: "beauty_filter_summer", icon: UIImage.beautyIcon(named: "beauty_ic_filter_summer"), filterName: FilterNames.summer)
-        addFilterItem(&filterItems, name: "beauty_filter_daily", icon: UIImage.beautyIcon(named: "beauty_ic_filter_daily"), filterName: FilterNames.daily)
-        addFilterItem(&filterItems, name: "beauty_filter_gentleman", icon: UIImage.beautyIcon(named: "beauty_ic_filter_genyleman"), filterName: FilterNames.gentleman)
-        addFilterItem(&filterItems, name: "beauty_filter_vanilla", icon: UIImage.beautyIcon(named: "beauty_ic_filter_vanila"), filterName: FilterNames.vanilla)
-        addFilterItem(&filterItems, name: "beauty_filter_bright", icon: UIImage.beautyIcon(named: "beauty_ic_filter_bright"), filterName: FilterNames.bright)
-        addFilterItem(&filterItems, name: "beauty_filter_peach", icon: UIImage.beautyIcon(named: "beauty_ic_filter_peach"), filterName: FilterNames.peach)
-        addFilterItem(&filterItems, name: "beauty_filter_ink", icon: UIImage.beautyIcon(named: "beauty_ic_filter_ink"), filterName: FilterNames.ink)
-        addFilterItem(&filterItems, name: "beauty_filter_film", icon: UIImage.beautyIcon(named: "beauty_ic_filter_film"), filterName: FilterNames.film)
-        addFilterItem(&filterItems, name: "beauty_filter_sunny", icon: UIImage.beautyIcon(named: "beauty_ic_filter_sunny"), filterName: FilterNames.sunny)
-        addFilterItem(&filterItems, name: "beauty_filter_comic", icon: UIImage.beautyIcon(named: "beauty_ic_filter_comic"), filterName: FilterNames.comic)
-        addFilterItem(&filterItems, name: "beauty_filter_dreamy", icon: UIImage.beautyIcon(named: "beauty_ic_filter_dreamy"), filterName: FilterNames.dreamy)
-        addFilterItem(&filterItems, name: "beauty_filter_cotton", icon: UIImage.beautyIcon(named: "beauty_ic_filter_cotton"), filterName: FilterNames.cotton)
-        addFilterItem(&filterItems, name: "beauty_filter_soda", icon: UIImage.beautyIcon(named: "beauty_ic_filter_soda"), filterName: FilterNames.soda)
-        addFilterItem(&filterItems, name: "beauty_filter_moonlight", icon: UIImage.beautyIcon(named: "beauty_ic_filter_moonlight"), filterName: FilterNames.moonlight)
+        // Filter options (only templates present in the material package)
+        // Filter-Serene — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_serene", icon: UIImage.beautyIcon(named: "beauty_ic_filter_serene"), filterName: FilterNames.serene)
+        // Filter-Urban — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_urban", icon: UIImage.beautyIcon(named: "beauty_ic_filter_urban"), filterName: FilterNames.urban)
+        // Filter-Glow — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_glow", icon: UIImage.beautyIcon(named: "beauty_ic_filter_glow"), filterName: FilterNames.glow)
+        // Filter-Gilt — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_gilt", icon: UIImage.beautyIcon(named: "beauty_ic_filter_gilt"), filterName: FilterNames.gilt)
+        // Filter-Cream — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_cream", icon: UIImage.beautyIcon(named: "beauty_ic_filter_cream"), filterName: FilterNames.cream)
+        // Filter-Latte — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_latte", icon: UIImage.beautyIcon(named: "beauty_ic_filter_latte"), filterName: FilterNames.latte)
+        // Filter-Summer — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_summer", icon: UIImage.beautyIcon(named: "beauty_ic_filter_summer"), filterName: FilterNames.summer)
+        // Filter-Daily — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_daily", icon: UIImage.beautyIcon(named: "beauty_ic_filter_daily"), filterName: FilterNames.daily)
+        // Filter-Gentleman — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_gentleman", icon: UIImage.beautyIcon(named: "beauty_ic_filter_genyleman"), filterName: FilterNames.gentleman)
+        // Filter-Vanilla — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_vanilla", icon: UIImage.beautyIcon(named: "beauty_ic_filter_vanila"), filterName: FilterNames.vanilla)
+        // Filter-Bright — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_bright", icon: UIImage.beautyIcon(named: "beauty_ic_filter_bright"), filterName: FilterNames.bright)
+        // Filter-Peach — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_peach", icon: UIImage.beautyIcon(named: "beauty_ic_filter_peach"), filterName: FilterNames.peach)
+        // Filter-Ink — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_ink", icon: UIImage.beautyIcon(named: "beauty_ic_filter_ink"), filterName: FilterNames.ink)
+        // Filter-Film — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_film", icon: UIImage.beautyIcon(named: "beauty_ic_filter_film"), filterName: FilterNames.film)
+        // Filter-Sunny — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_sunny", icon: UIImage.beautyIcon(named: "beauty_ic_filter_sunny"), filterName: FilterNames.sunny)
+        // Filter-Comic — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_comic", icon: UIImage.beautyIcon(named: "beauty_ic_filter_comic"), filterName: FilterNames.comic)
+        // Filter-Dreamy — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_dreamy", icon: UIImage.beautyIcon(named: "beauty_ic_filter_dreamy"), filterName: FilterNames.dreamy)
+        // Filter-Cotton — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_cotton", icon: UIImage.beautyIcon(named: "beauty_ic_filter_cotton"), filterName: FilterNames.cotton)
+        // Filter-Soda — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_soda", icon: UIImage.beautyIcon(named: "beauty_ic_filter_soda"), filterName: FilterNames.soda)
+        // Filter-Moonlight — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_moonlight", icon: UIImage.beautyIcon(named: "beauty_ic_filter_moonlight"), filterName: FilterNames.moonlight)
+        // Filter-Whitetea ✓
         addFilterItem(&filterItems, name: "beauty_filter_white_tea", icon: UIImage.beautyIcon(named: "beauty_ic_filter_whitetea"), filterName: FilterNames.whiteTea)
-        addFilterItem(&filterItems, name: "beauty_filter_tranquil", icon: UIImage.beautyIcon(named: "beauty_ic_filter_tranquil"), filterName: FilterNames.tranquil)
+        // Filter-Tranquil — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_tranquil", icon: UIImage.beautyIcon(named: "beauty_ic_filter_tranquil"), filterName: FilterNames.tranquil)
+        // Filter-Ins ✓
         addFilterItem(&filterItems, name: "beauty_filter_insta_style", icon: UIImage.beautyIcon(named: "beauty_ic_filter_ins"), filterName: FilterNames.instaStyle)
-        addFilterItem(&filterItems, name: "beauty_filter_street", icon: UIImage.beautyIcon(named: "beauty_ic_filter_street"), filterName: FilterNames.street)
-        addFilterItem(&filterItems, name: "beauty_filter_puff", icon: UIImage.beautyIcon(named: "beauty_ic_filter_puff"), filterName: FilterNames.puff)
-        addFilterItem(&filterItems, name: "beauty_filter_collection", icon: UIImage.beautyIcon(named: "beauty_ic_filter_collection"), filterName: FilterNames.collection)
-        addFilterItem(&filterItems, name: "beauty_filter_salty", icon: UIImage.beautyIcon(named: "beauty_ic_filter_salty"), filterName: FilterNames.salty)
-        addFilterItem(&filterItems, name: "beauty_filter_texture", icon: UIImage.beautyIcon(named: "beauty_ic_filter_texture"), filterName: FilterNames.texture)
-        addFilterItem(&filterItems, name: "beauty_filter_colorful", icon: UIImage.beautyIcon(named: "beauty_ic_filter_colorful"), filterName: FilterNames.colorful)
-        addFilterItem(&filterItems, name: "beauty_filter_snow", icon: UIImage.beautyIcon(named: "beauty_ic_filter_snow"), filterName: FilterNames.snow)
+        // Filter-Street — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_street", icon: UIImage.beautyIcon(named: "beauty_ic_filter_street"), filterName: FilterNames.street)
+        // Filter-Puff — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_puff", icon: UIImage.beautyIcon(named: "beauty_ic_filter_puff"), filterName: FilterNames.puff)
+        // Filter-Collection — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_collection", icon: UIImage.beautyIcon(named: "beauty_ic_filter_collection"), filterName: FilterNames.collection)
+        // Filter-Salty — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_salty", icon: UIImage.beautyIcon(named: "beauty_ic_filter_salty"), filterName: FilterNames.salty)
+        // Filter-Texture — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_texture", icon: UIImage.beautyIcon(named: "beauty_ic_filter_texture"), filterName: FilterNames.texture)
+        // Filter-Colorful — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_colorful", icon: UIImage.beautyIcon(named: "beauty_ic_filter_colorful"), filterName: FilterNames.colorful)
+        // Filter-Snow — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_snow", icon: UIImage.beautyIcon(named: "beauty_ic_filter_snow"), filterName: FilterNames.snow)
+        // Filter-Blush ✓
         addFilterItem(&filterItems, name: "beauty_filter_blush", icon: UIImage.beautyIcon(named: "beauty_ic_filter_blush"), filterName: FilterNames.blush)
-        addFilterItem(&filterItems, name: "beauty_filter_nostalgia", icon: UIImage.beautyIcon(named: "beauty_ic_filter_nostalgia"), filterName: FilterNames.nostalgia)
-        addFilterItem(&filterItems, name: "beauty_filter_caramel", icon: UIImage.beautyIcon(named: "beauty_ic_filter_caramel"), filterName: FilterNames.caramel)
-        addFilterItem(&filterItems, name: "beauty_filter_tipsy", icon: UIImage.beautyIcon(named: "beauty_ic_filter_tipsy"), filterName: FilterNames.tipsy)
-        addFilterItem(&filterItems, name: "beauty_filter_lavender", icon: UIImage.beautyIcon(named: "beauty_ic_filter_lavender"), filterName: FilterNames.lavender)
-        addFilterItem(&filterItems, name: "beauty_filter_rouge", icon: UIImage.beautyIcon(named: "beauty_ic_filter_rouge"), filterName: FilterNames.rouge)
-        addFilterItem(&filterItems, name: "beauty_filter_misty", icon: UIImage.beautyIcon(named: "beauty_ic_filter_misty"), filterName: FilterNames.misty)
+        // Filter-Nostalgia — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_nostalgia", icon: UIImage.beautyIcon(named: "beauty_ic_filter_nostalgia"), filterName: FilterNames.nostalgia)
+        // Filter-Caramel — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_caramel", icon: UIImage.beautyIcon(named: "beauty_ic_filter_caramel"), filterName: FilterNames.caramel)
+        // Filter-Tipsy — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_tipsy", icon: UIImage.beautyIcon(named: "beauty_ic_filter_tipsy"), filterName: FilterNames.tipsy)
+        // Filter-Lavender — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_lavender", icon: UIImage.beautyIcon(named: "beauty_ic_filter_lavender"), filterName: FilterNames.lavender)
+        // Filter-Rouge — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_rouge", icon: UIImage.beautyIcon(named: "beauty_ic_filter_rouge"), filterName: FilterNames.rouge)
+        // Filter-Misty — not in material package, commented out
+//        addFilterItem(&filterItems, name: "beauty_filter_misty", icon: UIImage.beautyIcon(named: "beauty_ic_filter_misty"), filterName: FilterNames.misty)
         
         return BeautyPageInfo(
             name: "beauty_group_filter",
@@ -105,12 +142,12 @@ internal class FilterPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: beautyConfig.filterStrength,
+                value: beautyConfig.filterStrength * 100.0,  // 0.0~1.0 → 0~100
                 isSelected: beautyConfig.filterName == filterName,
-                valueRange: 0.0...1.0,
+                valueRange: 0.0...100.0,
                 // User drags slider: update strength value (will sync update cache)
-                onValueChanged: { [weak self] value in
-                    self?.beautyConfig.filterStrength = value
+                onValueChanged: { [weak self] uiVal in
+                    self?.beautyConfig.filterStrength = uiVal / 100.0  // 0~100 → 0.0~1.0
                 },
                 // User clicks to switch filter
                 onItemClick: { [weak self] itemInfo in
@@ -128,8 +165,8 @@ internal class FilterPageBuilder: IPageBuilder {
                         self.beautyConfig.filterStrength = cached
                     }
                     
-                    // 4. Update UI displayed strength value to ensure UI matches SDK state
-                    itemInfo.value = self.beautyConfig.filterStrength
+                    // 4. Update UI displayed strength value to ensure UI matches SDK state (convert to UI value)
+                    itemInfo.value = self.beautyConfig.filterStrength * 100.0  // 0.0~1.0 → 0~100
                 }
             )
         )
