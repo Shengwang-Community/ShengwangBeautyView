@@ -79,6 +79,9 @@ object ShengwangBeautyManager {
         // Enable beauty by default
         enable(true)
 
+        // workaround for chin
+        beautyConfig.chin = -10
+
         Log.d(TAG, "Beauty manager initialized successfully")
         notifyBeautyStateChanged()
         return true
@@ -447,9 +450,9 @@ object ShengwangBeautyManager {
             }
 
         // 下巴 对应修饰力度范围为 [-100,100]，下巴拉长(正数)与收缩(负数)。
-        var chin = 0
+        var chin = -10
             get() = parentRtcEngine?.getFaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_CHIN)?.shapeIntensity
-                ?: 0
+                ?: -10
             set(value) {
                 field = value
                 val areaOption = FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_CHIN, value);
@@ -851,6 +854,8 @@ object ShengwangBeautyManager {
         // 重置美肤参数
         internal fun resetBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
             parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.RESET)
+            // workaround for chin
+            beautyConfig.chin = -10
         }
 
         // 保存美颜节点
