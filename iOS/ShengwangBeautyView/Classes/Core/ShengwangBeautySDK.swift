@@ -830,6 +830,19 @@ import AgoraRtcKit
             set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength", floatValue: newValue) }
         }
         
+        public var customLashStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashStyle") ?? 0 }
+            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashStyle", intValue: newValue) }
+        }
+        public var customLashColor: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashColor") ?? 0 }
+            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashColor", intValue: newValue) }
+        }
+        public var customLashStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "lashStrength") ?? 0.0 }
+            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "lashStrength", floatValue: newValue) }
+        }
+        
         /// Custom makeup: eyebrow
         public var customEyebrowStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "browStyle") ?? 0 }

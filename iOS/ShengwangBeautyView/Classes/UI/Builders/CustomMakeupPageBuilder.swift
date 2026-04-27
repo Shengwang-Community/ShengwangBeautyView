@@ -328,25 +328,93 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
     private func buildEyeshadowItems() -> [BeautyItemInfo] {
         return [
             // 晚霞红
-            buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_sunset_red",
-                              icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_sunset_red"),
-                              style: 9),
+            BeautyItemInfo(
+                name: "beauty_custom_makeup_eyeshadow_sunset_red",
+                icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_sunset_red"),
+                value: beautyConfig.customEyeshadowStrength,
+                valueRange: 0.0...1.0,
+                onValueChanged: { [weak self] value in
+                    self?.beautyConfig.customEyeshadowStrength = value
+                    self?.beautyConfig.customLashStrength = value
+                },
+                onItemClick: { [weak self] itemInfo in
+                    guard let self = self else { return }
+                    self.beautyConfig.makeupName = ""
+                    self.beautyConfig.customEyeshadowStyle = itemInfo.subItemStyle
+                    self.beautyConfig.customLashStyle = 4
+                    self.beautyConfig.customLashColor = 1
+                    self.beautyConfig.customLashStrength = self.beautyConfig.customEyeshadowStrength
+                    itemInfo.value = self.beautyConfig.customEyeshadowStrength
+                },
+                itemStyle: 9
+            ),
             // 少女粉
             buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_girl_pink",
                               icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_girl_pink"),
                               style: 2),
             // 气质粉
-            buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_elegant_pink",
-                              icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_elegant_pink"),
-                              style: 13),
+            BeautyItemInfo(
+                name: "beauty_custom_makeup_eyeshadow_elegant_pink",
+                icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_elegant_pink"),
+                value: beautyConfig.customEyeshadowStrength,
+                valueRange: 0.0...1.0,
+                onValueChanged: { [weak self] value in
+                    self?.beautyConfig.customEyeshadowStrength = value
+                    self?.beautyConfig.customLashStrength = value
+                },
+                onItemClick: { [weak self] itemInfo in
+                    guard let self = self else { return }
+                    self.beautyConfig.makeupName = ""
+                    self.beautyConfig.customEyeshadowStyle = itemInfo.subItemStyle
+                    self.beautyConfig.customLashStyle = 3
+                    self.beautyConfig.customLashColor = 1
+                    self.beautyConfig.customLashStrength = self.beautyConfig.customEyeshadowStrength
+                    itemInfo.value = self.beautyConfig.customEyeshadowStrength
+                },
+                itemStyle: 13
+            ),
             // 梅子红
-            buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_plum_red",
-                              icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_plum_red"),
-                              style: 12),
+            BeautyItemInfo(
+                name: "beauty_custom_makeup_eyeshadow_plum_red",
+                icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_plum_red"),
+                value: beautyConfig.customEyeshadowStrength,
+                valueRange: 0.0...1.0,
+                onValueChanged: { [weak self] value in
+                    self?.beautyConfig.customEyeshadowStrength = value
+                    self?.beautyConfig.customLashStrength = value
+                },
+                onItemClick: { [weak self] itemInfo in
+                    guard let self = self else { return }
+                    self.beautyConfig.makeupName = ""
+                    self.beautyConfig.customEyeshadowStyle = itemInfo.subItemStyle
+                    self.beautyConfig.customLashStyle = 2
+                    self.beautyConfig.customLashColor = 1
+                    self.beautyConfig.customLashStrength = self.beautyConfig.customEyeshadowStrength
+                    itemInfo.value = self.beautyConfig.customEyeshadowStrength
+                },
+                itemStyle: 12
+            ),
             // 焦糖棕
-            buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_caramel_brown",
-                              icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_caramel_brown"),
-                              style: 8),
+            BeautyItemInfo(
+                name: "beauty_custom_makeup_eyeshadow_caramel_brown",
+                icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_caramel_brown"),
+                value: beautyConfig.customEyeshadowStrength,
+                valueRange: 0.0...1.0,
+                onValueChanged: { [weak self] value in
+                    self?.beautyConfig.customEyeshadowStrength = value
+                    self?.beautyConfig.customLashStrength = value
+                },
+                onItemClick: { [weak self] itemInfo in
+                    guard let self = self else { return }
+                    self.beautyConfig.makeupName = ""
+                    self.beautyConfig.customEyeshadowStyle = itemInfo.subItemStyle
+                    self.beautyConfig.customLashStyle = 8
+                    self.beautyConfig.customLashColor = 1
+                    self.beautyConfig.customLashStrength = self.beautyConfig.customEyeshadowStrength
+                    itemInfo.value = self.beautyConfig.customEyeshadowStrength
+                },
+                itemStyle: 8
+            ),
             // 元气橘
             buildSubShadowItem(name: "beauty_custom_makeup_eyeshadow_vitality_orange",
                               icon: UIImage.beautyIcon(named: "beauty_ic_makeup_eyeshadow_vitality_orange"),
