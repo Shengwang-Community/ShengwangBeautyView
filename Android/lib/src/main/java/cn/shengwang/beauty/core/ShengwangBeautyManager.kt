@@ -5,6 +5,10 @@ import io.agora.rtc2.Constants
 import io.agora.rtc2.IVideoEffectObject
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.video.FaceShapeAreaOptions
+import org.json.JSONException
+import org.json.JSONObject
+
+
 
 /**
  * 声网美颜管理器
@@ -89,6 +93,9 @@ object ShengwangBeautyManager {
             return false
         }
 
+        // only in debug mode
+//        enableInnerLog(true)
+
         // Enable beauty by default
         enable(true)
 
@@ -152,6 +159,15 @@ object ShengwangBeautyManager {
             enableMakeup(false)
             enableSticker(false)
         }
+    }
+
+    private fun enableInnerLog(enable: Boolean) {
+        val debugObj = JSONObject()
+        debugObj.put("logfile_enable", enable)
+        rtcEngine?.setExtensionProperty(
+                    "agora_video_filters_clear_vision", "clear_vision",
+                    "debug_param", debugObj.toString()
+                )
     }
 
     private fun enableBeauty(enable: Boolean) {
