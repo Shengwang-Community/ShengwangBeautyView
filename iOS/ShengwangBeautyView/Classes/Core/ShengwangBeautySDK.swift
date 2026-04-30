@@ -1003,6 +1003,9 @@ import AgoraRtcKit
             self.rtcEngine = nil
             return false
         }
+
+        // only for debug
+//        enableInnerLog(enable: true)
         
         // Create VideoEffectObject
         // iOS: agorakit.createVideoEffectObject(bundlePath:sourceType:)
@@ -1023,6 +1026,15 @@ import AgoraRtcKit
         print("[BeautySDK] Beauty SDK initialized successfully")
         notifyBeautyStateChanged()
         return true
+    }
+
+    private func enableInnerLog(enable: Bool) {
+        let dict = ["logfile_enable" : enable] as [String : Any]
+        let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let str = String(data: data!, encoding: String.Encoding.utf8) ?? ""
+        self.rtcEngine?.setExtensionPropertyWithVendor("agora_video_filters_clear_vision", extension: "clear_vision",
+                                                      key: "debug_param",
+                                                      value: str)
     }
     
     /// Uninitialize beauty SDK
