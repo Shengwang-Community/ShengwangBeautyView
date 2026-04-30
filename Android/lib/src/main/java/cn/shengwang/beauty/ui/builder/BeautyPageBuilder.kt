@@ -56,22 +56,6 @@ internal class BeautyPageBuilder(
             )
         )
 
-        // 2. 重置按钮
-        beautyItems.add(
-            BeautyItemInfo(
-                R.string.beauty_effect_reset,
-                R.drawable.beauty_ic_effect_reset,
-                showSlider = false,
-                type = BeautyItemType.RESET,
-                onItemClick = {
-                    // 调用重置功能
-                    beautyConfig.resetBeauty()
-                    // 刷新整个页面列表以更新开关状态和其他参数值
-                    refreshPageList.invoke()
-                }
-            )
-        )
-
         // 磨皮
         addSkinBeautyItem(
             beautyItems,

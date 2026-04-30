@@ -242,13 +242,17 @@ class ExampleViewController: UIViewController {
     
     @objc private func saveBeautyButtonTapped() {
         guard let beautyView = beautyView else { return }
-        beautyView.saveBeauty()
+        beautyView.saveBeauty(.beauty)
+        beautyView.saveBeauty(.styleMakeup)
+        beautyView.saveBeauty(.filter)
         showAutoAlert(message: NSLocalizedString("beauty_setting_saved_info", comment: ""))
     }
     
     @objc private func resetBeautyButtonTapped() {
         guard let beautyView = beautyView else { return }
-        beautyView.resetBeauty()
+        beautyView.resetBeauty(.beauty)
+        beautyView.resetBeauty(.styleMakeup)
+        beautyView.resetBeauty(.filter)
         showAutoAlert(message: NSLocalizedString("beauty_setting_reseted_info", comment: ""))
     }
     
