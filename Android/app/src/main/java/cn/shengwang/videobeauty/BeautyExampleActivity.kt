@@ -97,6 +97,8 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         binding.tvSaveBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.saveBeauty(BeautyModule.BEAUTY)
+                binding.beautyControlView.saveBeauty(BeautyModule.STYLE_MAKEUP)
+                binding.beautyControlView.saveBeauty(BeautyModule.FILTER)
                 showToast(getString(R.string.beauty_setting_saved_info))
             }
         }
@@ -104,6 +106,8 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         binding.tvResetBeauty.setOnClickListener {
             if (isInitialized) {
                 binding.beautyControlView.resetBeauty(BeautyModule.BEAUTY)
+                binding.beautyControlView.resetBeauty(BeautyModule.STYLE_MAKEUP)
+                binding.beautyControlView.resetBeauty(BeautyModule.FILTER)
                 showToast(getString(R.string.beauty_setting_reseted_info))
             }
         }
