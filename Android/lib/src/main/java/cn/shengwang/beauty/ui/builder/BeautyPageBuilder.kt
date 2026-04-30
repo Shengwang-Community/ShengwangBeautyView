@@ -182,6 +182,9 @@ internal class BeautyPageBuilder(
                 valueRange = 0f..100f,
                 onValueChanged = { value ->
                     beautyConfig.faceContour = value.toInt()
+                },
+                onItemClick = {
+                    beautyConfig.faceShapeStyle = -1
                 }
             ),
             // 女神
@@ -191,8 +194,11 @@ internal class BeautyPageBuilder(
                 value = beautyConfig.faceShapeIntensity.toFloat(),
                 valueRange = 0f..100f,
                 onValueChanged = { value ->
-                    beautyConfig.faceShapeStyle = 0
+                    beautyConfig.faceContour = value.toInt()
                     beautyConfig.faceShapeIntensity = value.toInt()
+                },
+                onItemClick = {
+                    beautyConfig.faceShapeStyle = 0
                 }
             ),
             // 男神
@@ -202,8 +208,11 @@ internal class BeautyPageBuilder(
                 value = beautyConfig.faceShapeIntensity.toFloat(),
                 valueRange = 0f..100f,
                 onValueChanged = { value ->
-                    beautyConfig.faceShapeStyle = 1
+                    beautyConfig.faceContour = value.toInt()
                     beautyConfig.faceShapeIntensity = value.toInt()
+                },
+                onItemClick = {
+                    beautyConfig.faceShapeStyle = 1
                 }
             ),
             // 自然
@@ -213,8 +222,11 @@ internal class BeautyPageBuilder(
                 value = beautyConfig.faceShapeIntensity.toFloat(),
                 valueRange = 0f..100f,
                 onValueChanged = { value ->
-                    beautyConfig.faceShapeStyle = 2
+                    beautyConfig.faceContour = value.toInt()
                     beautyConfig.faceShapeIntensity = value.toInt()
+                },
+                onItemClick = {
+                    beautyConfig.faceShapeStyle = 2
                 }
             )
         )

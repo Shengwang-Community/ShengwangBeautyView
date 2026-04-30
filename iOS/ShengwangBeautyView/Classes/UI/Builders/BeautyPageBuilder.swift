@@ -140,6 +140,9 @@ internal class BeautyPageBuilder: IPageBuilder {
                 valueRange: 0.0...100.0,
                 onValueChanged: { [weak self] value in
                     self?.beautyConfig.faceContour = Int32(value)
+                },
+                onItemClick: { [weak self] _ in
+                    self?.beautyConfig.faceShapeStyle = -1
                 }
             ),
             // 女神
@@ -149,8 +152,11 @@ internal class BeautyPageBuilder: IPageBuilder {
                 value: Float(beautyConfig.faceShapeStyleIntensity),
                 valueRange: 0.0...100.0,
                 onValueChanged: { [weak self] value in
-                    self?.beautyConfig.faceShapeStyle = 0
+                    self?.beautyConfig.faceContour = Int32(value)
                     self?.beautyConfig.faceShapeStyleIntensity = Int32(value)
+                },
+                onItemClick: { [weak self] _ in
+                    self?.beautyConfig.faceShapeStyle = 0
                 }
             ),
             // 男神
@@ -160,8 +166,11 @@ internal class BeautyPageBuilder: IPageBuilder {
                 value: Float(beautyConfig.faceShapeStyleIntensity),
                 valueRange: 0.0...100.0,
                 onValueChanged: { [weak self] value in
-                    self?.beautyConfig.faceShapeStyle = 1
+                    self?.beautyConfig.faceContour = Int32(value)
                     self?.beautyConfig.faceShapeStyleIntensity = Int32(value)
+                },
+                onItemClick: { [weak self] _ in
+                    self?.beautyConfig.faceShapeStyle = 1
                 }
             ),
             // 自然
@@ -171,8 +180,11 @@ internal class BeautyPageBuilder: IPageBuilder {
                 value: Float(beautyConfig.faceShapeStyleIntensity),
                 valueRange: 0.0...100.0,
                 onValueChanged: { [weak self] value in
-                    self?.beautyConfig.faceShapeStyle = 2
+                    self?.beautyConfig.faceContour = Int32(value)
                     self?.beautyConfig.faceShapeStyleIntensity = Int32(value)
+                },
+                onItemClick: { [weak self] _ in
+                    self?.beautyConfig.faceShapeStyle = 2
                 }
             ),
         ]
