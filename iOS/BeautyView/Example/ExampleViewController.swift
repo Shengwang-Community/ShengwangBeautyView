@@ -170,10 +170,14 @@ class ExampleViewController: UIViewController {
         }
         let config = AgoraRtcEngineConfig()
         config.appId = appId
+        config.eventDelegate = self
         let rtcEngine = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
         rtcEngine.enableVideo()
         self.rtcEngine = rtcEngine
         self.enable = true
+        ShengwangBeautySDK.shared.beautyEventListener = { key, value in
+            print("📩 Beauty event callback on app side: key=\(key), value=\(value)")
+        }
         
         // Setup video view
         videoContainerView.addSubview(videoView)
@@ -270,6 +274,7 @@ class ExampleViewController: UIViewController {
         videoView.removeFromSuperview()
         
         ShengwangBeautySDK.shared.unInitBeautySDK()
+        ShengwangBeautySDK.shared.beautyEventListener = nil
         self.rtcEngine = nil
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -283,6 +288,12 @@ extension ExampleViewController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
         print("⚠️ RTC Error code: \(errorCode.rawValue), msg: \(AgoraRtcEngineKit.getErrorDescription(errorCode.rawValue))")
+    }
+}
+
+extension ExampleViewController: AgoraMediaFilterEventDelegate {
+    func onEventWithContext(_ context: AgoraExtensionContext, key: String?, value: String?) {
+        ShengwangBeautySDK.shared.handleExtensionEventWithContext(context, key: key, value: value)
     }
 }
 

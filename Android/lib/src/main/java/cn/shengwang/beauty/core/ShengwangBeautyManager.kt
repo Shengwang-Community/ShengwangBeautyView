@@ -2,9 +2,11 @@ package cn.shengwang.beauty.core
 
 import android.util.Log
 import io.agora.rtc2.Constants
+import io.agora.rtc2.ExtensionContext
 import io.agora.rtc2.IVideoEffectObject
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.video.FaceShapeAreaOptions
+import kotlin.math.abs
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -20,6 +22,24 @@ import org.json.JSONObject
  */
 object ShengwangBeautyManager {
     private const val TAG = "ShengwangBeautyManager"
+    private const val BEAUTY_PROVIDER_NAME = "agora_video_filters_clear_vision"
+    private const val BEAUTY_EXTENSION_NAME = "clear_vision"
+    private const val BEAUTY_EVENT_KEY = "beauty"
+    private val beautyErrorCodeHints: Map<Int, String> = mapOf(
+        1600 to "ERR_VIDEOEFFECT_ASSET_INVALID: beauty 资源包无效或损坏",
+        1601 to "ERR_VIDEOEFFECT_SAVE_FAILED: beauty 配置保存失败",
+        1602 to "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty 引擎状态无效",
+        1604 to "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty 节点未激活",
+        1605 to "ERR_VIDEOEFFECT_INVALID_PARAM: beauty 参数无效",
+        1606 to "ERR_VIDEOEFFECT_NOT_SUPPORTED: 当前设备不支持 beauty",
+        1607 to "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty 素材路径无效"
+    )
+    private val commonErrorCodeHints: Map<Int, String> = mapOf(
+        2 to "ERR_INVALID_ARGUMENT: 传入参数无效",
+        3 to "ERR_NOT_READY: SDK 当前状态未就绪",
+        4 to "ERR_NOT_SUPPORTED: 当前设备或场景不支持该能力",
+        7 to "ERR_NOT_INITIALIZED: SDK 尚未初始化"
+    )
     private var rtcEngine: RtcEngine? = null
     private var beautyEffect: IVideoEffectObject? = null
 
@@ -30,6 +50,7 @@ object ShengwangBeautyManager {
 
     // 状态监听器
     var beautyStateListener: (() -> Unit)? = null
+    var beautyEventListener: ((String, String) -> Unit)? = null
 
     /**
      * 指定美颜 UI 的显示语言，覆盖系统语言。
@@ -47,6 +68,40 @@ object ShengwangBeautyManager {
      */
     private fun notifyBeautyStateChanged() {
         beautyStateListener?.invoke()
+    }
+
+    /**
+     * 处理扩展事件回调，仅转发 beauty 扩展发出的 "beauty" 事件。
+     * 注意：该回调线程由 RTC SDK 内部线程决定，若需更新 UI 请切回主线程。
+     */
+    fun handleExtensionEventWithContext(extContext: ExtensionContext, key: String?, value: String?) {
+        if (extContext.providerName != BEAUTY_PROVIDER_NAME ||
+            extContext.extensionName != BEAUTY_EXTENSION_NAME ||
+            key != BEAUTY_EVENT_KEY ||
+            value.isNullOrEmpty()
+        ) {
+            return
+        }
+        Log.d(
+            TAG,
+            "Beauty extension event received: key=$key, value=$value, uid=${extContext.uid}, isValid=${extContext.isValid}"
+        )
+        beautyEventListener?.invoke(key, value)
+    }
+
+    private fun printLog(errCode: Int) {
+        if (errCode == Constants.ERR_OK) {
+            return
+        }
+        val normalizedErrCode = abs(errCode)
+        val errorMsg = RtcEngine.getErrorDescription(errCode)
+        val hintText = beautyErrorCodeHints[normalizedErrCode]
+            ?: commonErrorCodeHints[normalizedErrCode]
+        val hint = hintText?.let { " ($it)" } ?: ""
+        Log.e(
+            TAG,
+            "VideoEffect API failed: errorCode=$errCode, normalizedErrorCode=$normalizedErrCode, errorMsg=$errorMsg$hint"
+        )
     }
 
     // 美颜配置
@@ -98,15 +153,21 @@ object ShengwangBeautyManager {
             
             // Destroy beautyEffect before disabling extension
             beautyEffect?.let { effect ->
-                rtcEngine?.destroyVideoEffectObject(effect)
+            val ret = rtcEngine?.destroyVideoEffectObject(effect)
+            if (ret != null) {
+                printLog(ret)
+            }
             }
             
-            rtcEngine?.enableExtension(
+            val ret = rtcEngine?.enableExtension(
                 "agora_video_filters_clear_vision",
                 "clear_vision",
                 false,
                 Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE
             )
+            if (ret != null) {
+                printLog(ret)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error during unInitBeautySDK", e)
         } finally {
@@ -149,9 +210,9 @@ object ShengwangBeautyManager {
         val debugObj = JSONObject()
         debugObj.put("logfile_enable", enable)
         rtcEngine?.setExtensionProperty(
-                    "agora_video_filters_clear_vision", "clear_vision",
-                    "debug_param", debugObj.toString()
-                )
+            "agora_video_filters_clear_vision", "clear_vision",
+            "debug_param", debugObj.toString()
+        )
     }
 
     private fun enableBeauty(enable: Boolean) {
@@ -159,14 +220,16 @@ object ShengwangBeautyManager {
         if (enable == beautyEnable) return
         if (enable) {
             if (beautyConfig.beautyName != null) {
-                effect.addOrUpdateVideoEffect(
+                val ret = effect.addOrUpdateVideoEffect(
                     IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value, beautyConfig.beautyName
                 )
+                printLog(ret)
             }
             beautyConfig.beautyEnable = true
             beautyConfig.faceShapeEnable = true
         } else {
-            effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value)
+            val ret = effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value)
+            printLog(ret)
         }
         this.beautyEnable = enable
     }
@@ -176,12 +239,14 @@ object ShengwangBeautyManager {
         if (enable == filterEnable) return
         if (enable) {
             if (beautyConfig.filterName != null) {
-                effect.addOrUpdateVideoEffect(
+                val ret = effect.addOrUpdateVideoEffect(
                     IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value, beautyConfig.filterName
                 )
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value)
+            val ret = effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value)
+            printLog(ret)
         }
         this.filterEnable = enable
     }
@@ -191,12 +256,14 @@ object ShengwangBeautyManager {
         if (enable == makeupEnable) return
         if (enable) {
             if (beautyConfig.makeupName != null) {
-                effect.addOrUpdateVideoEffect(
+                val ret = effect.addOrUpdateVideoEffect(
                     IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value, beautyConfig.makeupName
                 )
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value)
+            val ret = effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value)
+            printLog(ret)
         }
         this.makeupEnable = enable
     }
@@ -206,12 +273,14 @@ object ShengwangBeautyManager {
         if (enable == stickerEnable) return
         if (enable) {
             if (beautyConfig.stickerName != null) {
-                effect.addOrUpdateVideoEffect(
+                val ret = effect.addOrUpdateVideoEffect(
                     IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value, beautyConfig.stickerName
                 )
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value)
+            val ret = effect.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value)
+            printLog(ret)
         }
         this.stickerEnable = enable
     }
@@ -229,7 +298,10 @@ object ShengwangBeautyManager {
                     return
                 }
                 field = value
-                parentBeautyEffect?.addOrUpdateVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value, value)
+                val ret = parentBeautyEffect?.addOrUpdateVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY.value, value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 打开/关闭基础美颜+美肤+画质
@@ -238,7 +310,10 @@ object ShengwangBeautyManager {
             set(value) {
                 field = value
                 // Just set the parameter, don't call addOrUpdateVideoEffect to avoid overriding beauty effect
-                parentBeautyEffect?.setVideoEffectBoolParam("beauty_effect_option", "enable", value)
+                val ret = parentBeautyEffect?.setVideoEffectBoolParam("beauty_effect_option", "enable", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
                 notifyBeautyStateChanged()
             }
 
@@ -247,7 +322,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "smoothness") ?: 0.7f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "smoothness", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "smoothness", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 美白 强度，取值范围为 [0.0,1.0]。
@@ -255,7 +333,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "lightness") ?: 0.7f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "lightness", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "lightness", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 美白 LUT 路径（自定义美白滤镜的相对路径）
@@ -264,7 +345,10 @@ object ShengwangBeautyManager {
             set(value) {
                 if (field == value) return
                 field = value
-                parentBeautyEffect?.setVideoEffectStringParam("beauty_effect_option", "whiten_lut_path", value)
+                val ret = parentBeautyEffect?.setVideoEffectStringParam("beauty_effect_option", "whiten_lut_path", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 红润 强度，取值范围为 [0.0,1.0]。
@@ -272,7 +356,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "redness") ?: 0.3f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "redness", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "redness", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 锐化 强度，取值范围为 [0.0,1.0]。
@@ -280,7 +367,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "sharpness") ?: 0.6f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "sharpness", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "sharpness", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 清晰度 强度，取值范围为 [-1.0,1.0]。
@@ -288,14 +378,20 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "contrast_strength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "contrast_strength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "contrast_strength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         var contrastFactor: Float = 0f
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "contrast_factor") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "contrast_factor", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "contrast_factor", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 白牙 强度 取值范围为 [0.0,1.0]。
@@ -303,7 +399,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("face_buffing_option", "whiten_teeth") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "whiten_teeth", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "whiten_teeth", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 去法令纹 强度 取值范围为 [0.0,1.0]。
@@ -311,7 +410,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("face_buffing_option", "nasolabial_fold") ?: 0.8f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "nasolabial_fold", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "nasolabial_fold", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 亮眼 强度 取值范围为 [0.0,1.0]。
@@ -319,7 +421,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("face_buffing_option", "brighten_eye") ?: 0.8f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "brighten_eye", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "brighten_eye", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 去眼袋/去黑眼圈 强度 取值范围为 [0.0,1.0]。
@@ -327,7 +432,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("face_buffing_option", "eye_pouch") ?: 0.8f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "eye_pouch", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("face_buffing_option", "eye_pouch", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // --------------------------------------------- 画质 start ----------------------------------------------------
@@ -351,7 +459,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "temperature") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "temperature", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "temperature", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 色调 强度 取值范围为 [-1.0,1.0]。
@@ -359,7 +470,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "hue") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "hue", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "hue", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 饱和度 强度 取值范围为 [-1.0,1.0]。
@@ -367,7 +481,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "saturation") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "saturation", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "saturation", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 亮度 强度 取值范围为 [-1.0,1.0]。
@@ -375,7 +492,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "brightness") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "brightness", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "brightness", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // ----------------------------------------- 美型 ---------------------------------------------------------------
@@ -385,7 +505,10 @@ object ShengwangBeautyManager {
             set(value) {
                 field = value
                 // Just set the parameter, don't call addOrUpdateVideoEffect to avoid overriding beauty effect
-                parentBeautyEffect?.setVideoEffectBoolParam("face_shape_beauty_option", "enable", value)
+                val ret = parentBeautyEffect?.setVideoEffectBoolParam("face_shape_beauty_option", "enable", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
                 notifyBeautyStateChanged()
             }
 
@@ -394,7 +517,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("face_shape_beauty_option", "style") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("face_shape_beauty_option", "style", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("face_shape_beauty_option", "style", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 美型风格强度，取值范围为 [0,100]。
@@ -402,7 +528,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("face_shape_beauty_option", "intensity") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("face_shape_beauty_option", "intensity", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("face_shape_beauty_option", "intensity", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 小头 对应修饰力度范围为 [0,100]，缩小整个头。
@@ -722,12 +851,18 @@ object ShengwangBeautyManager {
                 }
                 field = value
                 if (value == null) {
-                    parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value)
+                    val ret = parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value)
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
                 if (makeupEnable && value != null) {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(
+                    val ret = parentBeautyEffect?.addOrUpdateVideoEffect(
                         IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP.value, value
                     )
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
             }
 
@@ -776,7 +911,10 @@ object ShengwangBeautyManager {
                 // 更新缓存和底层效果参数
                 makeupName?.let { name ->
                     makeupIntensityMap[name] = value
-                    parentBeautyEffect?.setVideoEffectFloatParam("style_makeup_option", "styleIntensity", value)
+                    val ret = parentBeautyEffect?.setVideoEffectFloatParam("style_makeup_option", "styleIntensity", value)
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
             }
 
@@ -800,7 +938,10 @@ object ShengwangBeautyManager {
             }
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("style_makeup_option", "filterStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("style_makeup_option", "filterStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // =================================== 自定义美妆 start ==========================
@@ -810,7 +951,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectBoolParam("makeup_options", "enable_mu") ?: false
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectBoolParam("makeup_options", "enable_mu", value)
+                val ret = parentBeautyEffect?.setVideoEffectBoolParam("makeup_options", "enable_mu", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
                 notifyBeautyStateChanged()
             }
 
@@ -819,7 +963,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lipStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 口红颜色
@@ -827,7 +974,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lipColor") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipColor", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipColor", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 口红强度 取值范围为 [0.0, 1.0]
@@ -835,7 +985,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "lipStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "lipStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "lipStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 腮红样式
@@ -843,7 +996,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "blushStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "blushStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "blushStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 腮红强度 取值范围为 [0.0, 1.0]
@@ -851,7 +1007,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "blushStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "blushStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "blushStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 修容样式
@@ -859,7 +1018,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "facialStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "facialStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "facialStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 修容强度 取值范围为 [0.0, 1.0]
@@ -867,7 +1029,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "facialStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "facialStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "facialStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 眼影样式
@@ -875,7 +1040,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "shadowStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "shadowStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "shadowStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 眼影强度 取值范围为 [0.0, 1.0]
@@ -883,7 +1051,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "shadowStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "shadowStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "shadowStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 修眉样式
@@ -891,7 +1062,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "browStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "browStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "browStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 修眉强度 取值范围为 [0.0, 1.0]
@@ -899,7 +1073,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "browStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "browStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "browStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 美瞳样式
@@ -907,7 +1084,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "pupilStyle") ?: 0
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "pupilStyle", value)
+                val ret = parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "pupilStyle", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // 美瞳强度 取值范围为 [0.0, 1.0]
@@ -915,7 +1095,10 @@ object ShengwangBeautyManager {
             get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "pupilStrength") ?: 0f
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "pupilStrength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "pupilStrength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
 
         // =================================== 自定义美妆 end ==========================
@@ -929,12 +1112,18 @@ object ShengwangBeautyManager {
                 }
                 field = value
                 if (value == null) {
-                    parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value)
+                    val ret = parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value)
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
                 if (filterEnable && value != null) {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(
+                    val ret = parentBeautyEffect?.addOrUpdateVideoEffect(
                         IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER.value, value
                     )
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
             }
 
@@ -974,7 +1163,10 @@ object ShengwangBeautyManager {
                 // 更新缓存和底层效果参数
                 filterName?.let { name ->
                     filterStrengthMap[name] = value
-                    parentBeautyEffect?.setVideoEffectFloatParam("filter_effect_option", "strength", value)
+                    val ret = parentBeautyEffect?.setVideoEffectFloatParam("filter_effect_option", "strength", value)
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
             }
 
@@ -999,12 +1191,18 @@ object ShengwangBeautyManager {
                 }
                 field = value
                 if (value == null) {
-                    parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value)
+                    val ret = parentBeautyEffect?.removeVideoEffect(IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value)
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
                 if (stickerEnable && value != null) {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(
+                    val ret = parentBeautyEffect?.addOrUpdateVideoEffect(
                         IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER.value, value
                     )
+                    if (ret != null) {
+                        printLog(ret)
+                    }
                 }
             }
 
@@ -1016,18 +1214,27 @@ object ShengwangBeautyManager {
             }
             set(value) {
                 field = value
-                parentBeautyEffect?.setVideoEffectFloatParam("sticker_effect_option", "strength", value)
+                val ret = parentBeautyEffect?.setVideoEffectFloatParam("sticker_effect_option", "strength", value)
+                if (ret != null) {
+                    printLog(ret)
+                }
             }
         // =================================== 贴纸 end ==========================
 
         // 重置美肤参数
         internal fun resetBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
-            parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.RESET)
+            val ret = parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.RESET)
+            if (ret != null) {
+                printLog(ret)
+            }
         }
 
         // 保存美颜节点
         internal fun saveBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
-            parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.SAVE)
+            val ret = parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.SAVE)
+            if (ret != null) {
+                printLog(ret)
+            }
         }
     }
 }

@@ -24,6 +24,24 @@ import AgoraRtcKit
     
     private var rtcEngine: AgoraRtcEngineKit?
     private var beautyEffect: AgoraVideoEffectObject?
+    private let beautyProviderName = "agora_video_filters_clear_vision"
+    private let beautyExtensionName = "clear_vision"
+    private let beautyEventKey = "beauty"
+    private let beautyErrorCodeHints: [Int32: String] = [
+        1600: "ERR_VIDEOEFFECT_ASSET_INVALID: beauty asset invalid",
+        1601: "ERR_VIDEOEFFECT_SAVE_FAILED: beauty config save failed",
+        1602: "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty engine invalid",
+        1604: "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty node not active",
+        1605: "ERR_VIDEOEFFECT_INVALID_PARAM: beauty invalid param",
+        1606: "ERR_VIDEOEFFECT_NOT_SUPPORTED: beauty not supported on this device",
+        1607: "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty bundle path invalid"
+    ]
+    private let commonErrorCodeHints: [Int32: String] = [
+        2: "ERR_INVALID_ARGUMENT: invalid argument",
+        3: "ERR_NOT_READY: SDK is not ready",
+        4: "ERR_NOT_SUPPORTED: operation not supported",
+        7: "ERR_NOT_INITIALIZED: SDK is not initialized"
+    ]
     
     private var beautyEnable = false
     private var filterEnable = false
@@ -32,6 +50,9 @@ import AgoraRtcKit
     
     /// State listener (Swift). For Objective-C use setBeautyStateListener(_:).
     public var beautyStateListener: (() -> Void)?
+    /// Extension event listener for beauty pipeline events.
+    /// Note: callback thread is controlled by RTC SDK internal worker thread.
+    public var beautyEventListener: ((String, String) -> Void)?
     
     /// Beauty configuration (internal; used by ShengwangBeautyView and builders)
     internal lazy var beautyConfig: BeautyConfig = {
@@ -78,14 +99,17 @@ import AgoraRtcKit
         private var stickerEnable: Bool {
             return sdk?.stickerEnable ?? false
         }
-        
+
         // MARK: - Beauty Parameters
         
         /// Beauty template name, empty string means default material
         public var beautyName: String = "" {
             didSet {
                 if oldValue == beautyName { return }
-                parentBeautyEffect?.addOrUpdateVideoEffect(nodeId: BeautyModule.beauty.rawValue, templateName: beautyName)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.beauty.rawValue, templateName: beautyName)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -96,7 +120,10 @@ import AgoraRtcKit
                 return value
             }
             set {
-                parentBeautyEffect?.setVideoEffectBoolParam(option: "beauty_effect_option", key: "enable", boolValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectBoolParam(option: "beauty_effect_option", key: "enable", boolValue: newValue)
+                    sdk?.printLog(ret)
+                }
                 sdk?.notifyBeautyStateChanged()
             }
         }
@@ -108,7 +135,10 @@ import AgoraRtcKit
                 return value
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "smoothness", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "smoothness", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -119,14 +149,20 @@ import AgoraRtcKit
                 return value
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "lightness", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "lightness", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
         public var whitenLut: String = "" {
             didSet {
                 if oldValue == whitenLut { return }
-                parentBeautyEffect?.setVideoEffectStringParam(option: "beauty_effect_option", key: "whiten_lut_path", stringValue: whitenLut)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectStringParam(option: "beauty_effect_option", key: "whiten_lut_path", stringValue: whitenLut)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -136,7 +172,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "redness") ?? 0.3
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "redness", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "redness", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -146,7 +185,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness") ?? 0.6
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -156,7 +198,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_strength") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_strength", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_strength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -166,7 +211,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "whiten_teeth") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "whiten_teeth", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "face_buffing_option", key: "whiten_teeth", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -176,7 +224,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold") ?? 0.8
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -186,7 +237,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye") ?? 0.8
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -196,7 +250,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch") ?? 0.8
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -222,7 +279,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "temperature") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "temperature", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "temperature", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -232,7 +292,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "hue") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "hue", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "hue", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -242,7 +305,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "saturation") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "saturation", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "saturation", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -252,7 +318,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "brightness") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "brightness", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "brightness", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -262,7 +331,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_factor") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_factor", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_factor", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -275,7 +347,10 @@ import AgoraRtcKit
                 return value
             }
             set {
-                parentBeautyEffect?.setVideoEffectBoolParam(option: "face_shape_beauty_option", key: "enable", boolValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectBoolParam(option: "face_shape_beauty_option", key: "enable", boolValue: newValue)
+                    sdk?.printLog(ret)
+                }
                 sdk?.notifyBeautyStateChanged()
             }
         }
@@ -286,7 +361,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectIntParam(option: "face_shape_beauty_option", key: "style") ?? 0
             }
             set {
-                parentBeautyEffect?.setVideoEffectIntParam(option: "face_shape_beauty_option", key: "style", intValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "face_shape_beauty_option", key: "style", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -296,7 +374,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectIntParam(option: "face_shape_beauty_option", key: "intensity") ?? 0
             }
             set {
-                parentBeautyEffect?.setVideoEffectIntParam(option: "face_shape_beauty_option", key: "intensity", intValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "face_shape_beauty_option", key: "intensity", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -708,9 +789,15 @@ import AgoraRtcKit
             didSet {
                 if oldValue == makeupName { return }
                 if makeupName == nil {
-                    parentBeautyEffect?.removeVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.removeVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue)
+                        sdk?.printLog(ret)
+                    }
                 } else if makeupEnable, let name = makeupName {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue, templateName: name)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue, templateName: name)
+                        sdk?.printLog(ret)
+                    }
                 }
             }
         }
@@ -754,7 +841,10 @@ import AgoraRtcKit
                 // Update cache and underlying effect parameters
                 if let name = makeupName {
                     makeupIntensityMap[name] = newValue
-                    parentBeautyEffect?.setVideoEffectFloatParam(option: "style_makeup_option", key: "styleIntensity", floatValue: newValue)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.setVideoEffectFloatParam(option: "style_makeup_option", key: "styleIntensity", floatValue: newValue)
+                        sdk?.printLog(ret)
+                    }
                 }
             }
         }
@@ -773,7 +863,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "style_makeup_option", key: "filterStrength") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "style_makeup_option", key: "filterStrength", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "style_makeup_option", key: "filterStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -781,7 +874,10 @@ import AgoraRtcKit
         public var customMakeupEnable: Bool {
             get { return parentBeautyEffect?.getVideoEffectBoolParam(option: "makeup_options", key: "enable_mu") ?? false }
             set {
-                parentBeautyEffect?.setVideoEffectBoolParam(option: "makeup_options", key: "enable_mu", boolValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectBoolParam(option: "makeup_options", key: "enable_mu", boolValue: newValue)
+                    sdk?.printLog(ret)
+                }
                 sdk?.notifyBeautyStateChanged()
             }
         }
@@ -789,68 +885,138 @@ import AgoraRtcKit
         /// Custom makeup: lipstick
         public var customLipstickStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lipStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lipStyle", intValue: newValue)}
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "lipStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customLipstickColor: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lipColor") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lipColor", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "lipColor", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customLipstickStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "lipStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "lipStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "lipStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         /// Custom makeup: blush
         public var customBlushStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "blushStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "blushStyle", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "blushStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customBlushStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "blushStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "blushStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "blushStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         /// Custom makeup: facial
         public var customFacialStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "facialStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "facialStyle", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "facialStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customFacialStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "facialStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "facialStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "facialStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         /// Custom makeup: eyeshadow
         public var customEyeshadowStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "shadowStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "shadowStyle", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "shadowStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customEyeshadowStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         public var customLashStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashStyle", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "lashStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customLashColor: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashColor") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashColor", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "lashColor", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customLashStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "lashStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "lashStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "lashStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         /// Custom makeup: eyebrow
         public var customEyebrowStyle: Int32 {
             get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "browStyle") ?? 0 }
-            set { parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "browStyle", intValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectIntParam(option: "makeup_options", key: "browStyle", intValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         public var customEyebrowStrength: Float {
             get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "browStrength") ?? 0.0 }
-            set { parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "browStrength", floatValue: newValue) }
+            set {
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "makeup_options", key: "browStrength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
+            }
         }
         
         // MARK: - Filter Parameters
@@ -860,10 +1026,16 @@ import AgoraRtcKit
             didSet {
                 if oldValue == filterName { return }
                 if filterName == nil {
-                    parentBeautyEffect?.removeVideoEffect(nodeId: BeautyModule.filter.rawValue)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.removeVideoEffect(nodeId: BeautyModule.filter.rawValue)
+                        sdk?.printLog(ret)
+                    }
                 }
                 if filterEnable, let name = filterName {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: name)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: name)
+                        sdk?.printLog(ret)
+                    }
                 }
             }
         }
@@ -898,7 +1070,10 @@ import AgoraRtcKit
                 // Update cache and underlying effect parameters
                 if let name = filterName {
                     filterStrengthMap[name] = newValue
-                    parentBeautyEffect?.setVideoEffectFloatParam(option: "filter_effect_option", key: "strength", floatValue: newValue)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.setVideoEffectFloatParam(option: "filter_effect_option", key: "strength", floatValue: newValue)
+                        sdk?.printLog(ret)
+                    }
                 }
             }
         }
@@ -918,10 +1093,16 @@ import AgoraRtcKit
             didSet {
                 if oldValue == stickerName { return }
                 if stickerName == nil {
-                    parentBeautyEffect?.removeVideoEffect(nodeId: BeautyModule.sticker.rawValue)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.removeVideoEffect(nodeId: BeautyModule.sticker.rawValue)
+                        sdk?.printLog(ret)
+                    }
                 }
                 if stickerEnable, let name = stickerName {
-                    parentBeautyEffect?.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: name)
+                    if let effect = parentBeautyEffect {
+                        let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: name)
+                        sdk?.printLog(ret)
+                    }
                 }
             }
         }
@@ -932,7 +1113,10 @@ import AgoraRtcKit
                 return parentBeautyEffect?.getVideoEffectFloatParam(option: "sticker_effect_option", key: "strength") ?? 0.0
             }
             set {
-                parentBeautyEffect?.setVideoEffectFloatParam(option: "sticker_effect_option", key: "strength", floatValue: newValue)
+                if let effect = parentBeautyEffect {
+                    let ret = effect.setVideoEffectFloatParam(option: "sticker_effect_option", key: "strength", floatValue: newValue)
+                    sdk?.printLog(ret)
+                }
             }
         }
         
@@ -941,13 +1125,19 @@ import AgoraRtcKit
         /// Reset beauty parameters
         /// - Parameter nodeId: Node ID (corresponds to BeautyModule)
         internal func resetBeauty(_ nodeId: BeautyModule = .beauty) {
-            parentBeautyEffect?.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.reset)
+            if let effect = parentBeautyEffect {
+                let ret = effect.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.reset)
+                sdk?.printLog(ret)
+            }
         }
         
         /// Save beauty parameters
         /// - Parameter nodeId: Node ID (corresponds to BeautyModule)
         internal func saveBeauty(_ nodeId: BeautyModule = .beauty) {
-            parentBeautyEffect?.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.save)
+            if let effect = parentBeautyEffect {
+                let ret = effect.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.save)
+                sdk?.printLog(ret)
+            }
         }
     }
     
@@ -1032,9 +1222,12 @@ import AgoraRtcKit
         let dict = ["logfile_enable" : enable] as [String : Any]
         let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
         let str = String(data: data!, encoding: String.Encoding.utf8) ?? ""
-        self.rtcEngine?.setExtensionPropertyWithVendor("agora_video_filters_clear_vision", extension: "clear_vision",
-                                                      key: "debug_param",
-                                                      value: str)
+        self.rtcEngine?.setExtensionPropertyWithVendor(
+            "agora_video_filters_clear_vision",
+            extension: "clear_vision",
+            key: "debug_param",
+            value: str
+        )
     }
     
     /// Uninitialize beauty SDK
@@ -1154,7 +1347,8 @@ import AgoraRtcKit
     private func updateFilter() {
         guard let effect = beautyEffect else { return }
         if let filterName = beautyConfig.filterName {
-            effect.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: filterName)
+            let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: filterName)
+            printLog(ret)
         }
     }
     
@@ -1162,7 +1356,8 @@ import AgoraRtcKit
     private func updateSticker() {
         guard let effect = beautyEffect else { return }
         if let stickerName = beautyConfig.stickerName {
-            effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: stickerName)
+            let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: stickerName)
+            printLog(ret)
         }
     }
     
@@ -1173,9 +1368,11 @@ import AgoraRtcKit
         if enable == beautyEnable { return }
         
         if enable {
-            effect.addOrUpdateVideoEffect(nodeId: BeautyModule.beauty.rawValue, templateName: beautyConfig.beautyName)
+            let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.beauty.rawValue, templateName: beautyConfig.beautyName)
+            printLog(ret)
         } else {
-            effect.removeVideoEffect(nodeId: BeautyModule.beauty.rawValue)
+            let ret = effect.removeVideoEffect(nodeId: BeautyModule.beauty.rawValue)
+            printLog(ret)
         }
         
         beautyEnable = enable
@@ -1187,10 +1384,12 @@ import AgoraRtcKit
         
         if enable {
             if let filterName = beautyConfig.filterName {
-                effect.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: filterName)
+                let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.filter.rawValue, templateName: filterName)
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(nodeId: BeautyModule.filter.rawValue)
+            let ret = effect.removeVideoEffect(nodeId: BeautyModule.filter.rawValue)
+            printLog(ret)
         }
         
         filterEnable = enable
@@ -1202,10 +1401,12 @@ import AgoraRtcKit
         
         if enable {
             if let makeupName = beautyConfig.makeupName {
-                effect.addOrUpdateVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue, templateName: makeupName)
+                let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue, templateName: makeupName)
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue)
+            let ret = effect.removeVideoEffect(nodeId: BeautyModule.styleMakeup.rawValue)
+            printLog(ret)
         }
         
         makeupEnable = enable
@@ -1220,15 +1421,38 @@ import AgoraRtcKit
         }
         if enable {
             if let stickerName = beautyConfig.stickerName {
-                effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: stickerName)
+                let ret = effect.addOrUpdateVideoEffect(nodeId: BeautyModule.sticker.rawValue, templateName: stickerName)
+                printLog(ret)
             }
         } else {
-            effect.removeVideoEffect(nodeId: BeautyModule.sticker.rawValue)
+            let ret = effect.removeVideoEffect(nodeId: BeautyModule.sticker.rawValue)
+            printLog(ret)
         }
         stickerEnable = enable
     }
     
     internal func notifyBeautyStateChanged() {
         beautyStateListener?()
+    }
+
+    /// Handles extension events from AgoraMediaFilterEventDelegate and forwards beauty events only.
+    @objc public func handleExtensionEventWithContext(_ context: AgoraExtensionContext, key: String?, value: String?) {
+        guard context.providerName == beautyProviderName,
+              context.extensionName == beautyExtensionName,
+              key == beautyEventKey,
+              let value,
+              !value.isEmpty else {
+            return
+        }
+        print("[BeautySDK] Beauty extension event received: key=\(key ?? ""), value=\(value), uid=\(context.uid), isValid=\(context.isValid)")
+        beautyEventListener?(beautyEventKey, value)
+    }
+
+    private func printLog(_ errCode: Int32) {
+        guard errCode != 0 else { return }
+        let normalizedErrCode = abs(errCode)
+        let hintText = beautyErrorCodeHints[normalizedErrCode] ?? commonErrorCodeHints[normalizedErrCode]
+        let hint = hintText.map { " (\($0))" } ?? ""
+        print("[BeautySDK] ERROR: VideoEffect API failed: errorCode=\(errCode), normalizedErrorCode=\(normalizedErrCode)\(hint)")
     }
 }

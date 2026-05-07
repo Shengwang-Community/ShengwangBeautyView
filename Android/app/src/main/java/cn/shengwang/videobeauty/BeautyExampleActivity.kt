@@ -17,6 +17,8 @@ import cn.shengwang.videobeauty.databinding.ActivityBeautyExampleBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.video.VideoCanvas
 import io.agora.rtc2.video.VideoEncoderConfiguration
+import io.agora.rtc2.IMediaExtensionObserver
+import io.agora.rtc2.ExtensionContext
 
 /**
  * 美颜功能使用示例 Activity
@@ -124,6 +126,9 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         }
 
         Log.d(TAG, "Initializing beauty manager with material path: $path")
+        ShengwangBeautyManager.beautyEventListener = { key, value ->
+            Log.d(TAG, "Beauty event callback on app side: key=$key, value=$value")
+        }
 
         // 初始化美颜 SDK
         val success = ShengwangBeautyManager.initBeautySDK(path, rtcEngine!!)
@@ -154,6 +159,11 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             override fun onLeaveChannel(stats: RtcStats?) {
                 super.onLeaveChannel(stats)
                 Log.d(TAG, "onLeaveChannel")
+            }
+        }
+        config.mExtensionObserver = object : IMediaExtensionObserver {
+            override fun onEventWithContext(extContext: ExtensionContext, key: String?, value: String?) {
+                ShengwangBeautyManager.handleExtensionEventWithContext(extContext, key, value)
             }
         }
         return (RtcEngine.create(config) as RtcEngineEx).apply {
@@ -212,6 +222,7 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
             isInitialized = false
             // 销毁美颜 SDK
             ShengwangBeautyManager.unInitBeautySDK()
+            ShengwangBeautyManager.beautyEventListener = null
             rtcEngine?.stopPreview()
             rtcEngine?.leaveChannel()
             
