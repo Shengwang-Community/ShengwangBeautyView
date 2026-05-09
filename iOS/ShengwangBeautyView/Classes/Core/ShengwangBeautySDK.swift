@@ -28,13 +28,13 @@ import AgoraRtcKit
     private let beautyExtensionName = "clear_vision"
     private let beautyEventKey = "beauty"
     private let beautyErrorCodeHints: [Int32: String] = [
-        1600: "ERR_VIDEOEFFECT_ASSET_INVALID: beauty asset invalid",
-        1601: "ERR_VIDEOEFFECT_SAVE_FAILED: beauty config save failed",
-        1602: "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty engine invalid",
-        1604: "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty node not active",
-        1605: "ERR_VIDEOEFFECT_INVALID_PARAM: beauty invalid param",
-        1606: "ERR_VIDEOEFFECT_NOT_SUPPORTED: beauty not supported on this device",
-        1607: "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty bundle path invalid"
+        1700: "ERR_VIDEOEFFECT_ASSET_INVALID: beauty asset invalid",
+        1701: "ERR_VIDEOEFFECT_SAVE_FAILED: beauty config save failed",
+        1702: "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty engine invalid",
+        1704: "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty node not active",
+        1705: "ERR_VIDEOEFFECT_INVALID_PARAM: beauty invalid param",
+        1706: "ERR_VIDEOEFFECT_NOT_SUPPORTED: beauty not supported on this device",
+        1707: "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty bundle path invalid"
     ]
     private let commonErrorCodeHints: [Int32: String] = [
         2: "ERR_INVALID_ARGUMENT: invalid argument",
@@ -169,7 +169,7 @@ import AgoraRtcKit
         /// Redness intensity, range: [0.0, 1.0]
         public var redness: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "redness") ?? 0.3
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "redness") ?? 0.0
             }
             set {
                 if let effect = parentBeautyEffect {
@@ -182,7 +182,7 @@ import AgoraRtcKit
         /// Sharpness intensity, range: [0.0, 1.0]
         public var sharpness: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness") ?? 0.6
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness") ?? 0.0
             }
             set {
                 if let effect = parentBeautyEffect {
@@ -221,7 +221,7 @@ import AgoraRtcKit
         /// Nasolabial fold removal intensity, range: [0.0, 1.0]
         public var nasolabialFold: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold") ?? 0.0
             }
             set {
                 if let effect = parentBeautyEffect {
@@ -234,7 +234,7 @@ import AgoraRtcKit
         /// Eye brightening intensity, range: [0.0, 1.0]
         public var brightenEye: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye") ?? 0.0
             }
             set {
                 if let effect = parentBeautyEffect {
@@ -247,7 +247,7 @@ import AgoraRtcKit
         /// Eye bag/dark circle removal intensity, range: [0.0, 1.0]
         public var eyePouch: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch") ?? 0.0
             }
             set {
                 if let effect = parentBeautyEffect {
@@ -1126,8 +1126,11 @@ import AgoraRtcKit
         /// - Parameter nodeId: Node ID (corresponds to BeautyModule)
         internal func resetBeauty(_ nodeId: BeautyModule = .beauty) {
             if let effect = parentBeautyEffect {
+                // 选择1：用SDK的接口重置
                 let ret = effect.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.reset)
                 sdk?.printLog(ret)
+                // 选择2：代码默认值重置
+                sdk?.applayDefaultValue()
             }
         }
         
@@ -1135,8 +1138,11 @@ import AgoraRtcKit
         /// - Parameter nodeId: Node ID (corresponds to BeautyModule)
         internal func saveBeauty(_ nodeId: BeautyModule = .beauty) {
             if let effect = parentBeautyEffect {
+                // 选择1：用SDK的接口重置
                 let ret = effect.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.save)
                 sdk?.printLog(ret)
+                // 选择2：app自己落盘
+                // ...
             }
         }
     }
@@ -1213,6 +1219,9 @@ import AgoraRtcKit
         // Enable beauty by default
         enable(true)
         
+        // Apply Default value
+        applayDefaultValue()
+        
         print("[BeautySDK] Beauty SDK initialized successfully")
         notifyBeautyStateChanged()
         return true
@@ -1228,6 +1237,27 @@ import AgoraRtcKit
             key: "debug_param",
             value: str
         )
+    }
+    
+    /// apply default value
+    private func applayDefaultValue() {
+        // 把下发的值/默认值应用进去
+        beautyConfig.smoothness = 0.35
+        beautyConfig.whitenStength = 0.25
+        beautyConfig.sharpness = 0.15
+        beautyConfig.faceContour = 40
+        beautyConfig.faceWidth = 10
+        beautyConfig.cheekbone = 15
+        beautyConfig.cheek = 30
+        beautyConfig.chin = 15
+        beautyConfig.nasolabialFold = 0.35
+        beautyConfig.eyeScale = 30
+        beautyConfig.brightenEye = 0.4
+        beautyConfig.noseWidth = 15
+        beautyConfig.mouthScale = 15
+        beautyConfig.whitenTeeth = 0.35
+        beautyConfig.temperature = -0.6
+        beautyConfig.contrastStrength = 0.2
     }
     
     /// Uninitialize beauty SDK

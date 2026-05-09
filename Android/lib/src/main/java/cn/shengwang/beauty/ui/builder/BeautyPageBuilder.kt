@@ -74,7 +74,7 @@ internal class BeautyPageBuilder(
                 icon = R.drawable.beauty_ic_none,
                 showSlider = false,
                 onItemClick = { _ ->
-                    beautyConfig.whitenNatural = 0f
+                    beautyConfig.whitenStrength = 0f
                     beautyConfig.whitenLut = ""
                 }
             ),
@@ -82,56 +82,56 @@ internal class BeautyPageBuilder(
             BeautyItemInfo(
                 name = R.string.beauty_effect_lightness_natural,
                 icon = R.drawable.beauty_ic_effect_lightness,
-                value = beautyConfig.whitenNatural,
+                value = beautyConfig.whitenStrength,
                 valueRange = 0f..1.0f,
                 onValueChanged = { value ->
-                    beautyConfig.whitenNatural = value
+                    beautyConfig.whitenStrength = value
                 },
                 onItemClick = { itemInfo ->
                     beautyConfig.whitenLut = ""
-                    itemInfo.value = beautyConfig.whitenNatural
+                    itemInfo.value = beautyConfig.whitenStrength
                 }
             ),
             // 白皙
             BeautyItemInfo(
                 name = R.string.beauty_effect_lightness_fair,
                 icon = R.drawable.beauty_ic_effect_lightness,
-                value = beautyConfig.whitenNatural,
+                value = beautyConfig.whitenStrength,
                 valueRange = 0f..1.0f,
                 onValueChanged = { value ->
-                    beautyConfig.whitenNatural = value
+                    beautyConfig.whitenStrength = value
                 },
                 onItemClick = { itemInfo ->
                     beautyConfig.whitenLut = "../resource/whiten/lengbai.png"
-                    itemInfo.value = beautyConfig.whitenNatural
+                    itemInfo.value = beautyConfig.whitenStrength
                 }
             ),
             // 粉白
             BeautyItemInfo(
                 name = R.string.beauty_effect_lightness_pink,
                 icon = R.drawable.beauty_ic_effect_lightness,
-                value = beautyConfig.whitenNatural,
+                value = beautyConfig.whitenStrength,
                 valueRange = 0f..1.0f,
                 onValueChanged = { value ->
-                    beautyConfig.whitenNatural = value
+                    beautyConfig.whitenStrength = value
                 },
                 onItemClick = { itemInfo ->
                     beautyConfig.whitenLut = "../resource/whiten/fenbai.png"
-                    itemInfo.value = beautyConfig.whitenNatural
+                    itemInfo.value = beautyConfig.whitenStrength
                 }
             ),
             // 超白
             BeautyItemInfo(
                 name = R.string.beauty_effect_lightness_ultra,
                 icon = R.drawable.beauty_ic_effect_lightness,
-                value = beautyConfig.whitenNatural,
+                value = beautyConfig.whitenStrength,
                 valueRange = 0f..1.0f,
                 onValueChanged = { value ->
-                    beautyConfig.whitenNatural = value
+                    beautyConfig.whitenStrength = value
                 },
                 onItemClick = { itemInfo ->
                     beautyConfig.whitenLut = "../resource/whiten/chaobai.png"
-                    itemInfo.value = beautyConfig.whitenNatural
+                    itemInfo.value = beautyConfig.whitenStrength
                 }
             )
         )

@@ -26,13 +26,13 @@ object ShengwangBeautyManager {
     private const val BEAUTY_EXTENSION_NAME = "clear_vision"
     private const val BEAUTY_EVENT_KEY = "beauty"
     private val beautyErrorCodeHints: Map<Int, String> = mapOf(
-        1600 to "ERR_VIDEOEFFECT_ASSET_INVALID: beauty 资源包无效或损坏",
-        1601 to "ERR_VIDEOEFFECT_SAVE_FAILED: beauty 配置保存失败",
-        1602 to "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty 引擎状态无效",
-        1604 to "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty 节点未激活",
-        1605 to "ERR_VIDEOEFFECT_INVALID_PARAM: beauty 参数无效",
-        1606 to "ERR_VIDEOEFFECT_NOT_SUPPORTED: 当前设备不支持 beauty",
-        1607 to "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty 素材路径无效"
+        1700 to "ERR_VIDEOEFFECT_ASSET_INVALID: beauty 资源包无效或损坏",
+        1701 to "ERR_VIDEOEFFECT_SAVE_FAILED: beauty 配置保存失败",
+        1702 to "ERR_VIDEOEFFECT_ENGINE_INVALID: beauty 引擎状态无效",
+        1704 to "ERR_VIDEOEFFECT_NODE_NOT_ACTIVE: beauty 节点未激活",
+        1705 to "ERR_VIDEOEFFECT_INVALID_PARAM: beauty 参数无效",
+        1706 to "ERR_VIDEOEFFECT_NOT_SUPPORTED: 当前设备不支持 beauty",
+        1707 to "ERR_VIDEOEFFECT_INVALID_BUNDLE_PATH: beauty 素材路径无效"
     )
     private val commonErrorCodeHints: Map<Int, String> = mapOf(
         2 to "ERR_INVALID_ARGUMENT: 传入参数无效",
@@ -141,6 +141,9 @@ object ShengwangBeautyManager {
         // Enable beauty by default
         enable(true)
 
+        // apply default value
+        applyDefaultValue()
+
         Log.d(TAG, "Beauty manager initialized successfully")
         notifyBeautyStateChanged()
         return true
@@ -213,6 +216,25 @@ object ShengwangBeautyManager {
             "agora_video_filters_clear_vision", "clear_vision",
             "debug_param", debugObj.toString()
         )
+    }
+
+    private fun applyDefaultValue() {
+        beautyConfig.smoothness = 0.65f
+        beautyConfig.whitenStrength = 0.5f
+        beautyConfig.sharpness = 0.15f
+        beautyConfig.faceContour = 50
+        beautyConfig.faceWidth = 10
+        beautyConfig.cheekbone = 15
+        beautyConfig.cheek = 30
+        beautyConfig.chin = 65
+        beautyConfig.nasolabialFold = 0.3f
+        beautyConfig.eyeScale = 30
+        beautyConfig.brightenEye = 0.3f
+        beautyConfig.noseWidth = 70
+        beautyConfig.noseLength = 50
+        beautyConfig.mouthScale = 65
+        beautyConfig.whitenTeeth = 0.3f
+        beautyConfig.contrastStrength = 0.15f
     }
 
     private fun enableBeauty(enable: Boolean) {
@@ -319,7 +341,7 @@ object ShengwangBeautyManager {
 
         // 磨皮 强度，取值范围为 [0.0,1.0]。
         var smoothness: Float = 0f
-            get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "smoothness") ?: 0.7f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "smoothness") ?: 0.0f
             set(value) {
                 field = value
                 val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "smoothness", value)
@@ -329,8 +351,8 @@ object ShengwangBeautyManager {
             }
 
         // 美白 强度，取值范围为 [0.0,1.0]。
-        var whitenNatural: Float = 0f
-            get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "lightness") ?: 0.7f
+        var whitenStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("beauty_effect_option", "lightness") ?: 0.0f
             set(value) {
                 field = value
                 val ret = parentBeautyEffect?.setVideoEffectFloatParam("beauty_effect_option", "lightness", value)
@@ -1221,20 +1243,26 @@ object ShengwangBeautyManager {
             }
         // =================================== 贴纸 end ==========================
 
-        // 重置美肤参数
+        // 重置美颜节点
         internal fun resetBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
+            // 选择1：用SDK的接口重置
             val ret = parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.RESET)
             if (ret != null) {
                 printLog(ret)
             }
+            // 选择2：代码默认值重置
+            applyDefaultValue()
         }
 
         // 保存美颜节点
         internal fun saveBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
+            // 选择1：用SDK的接口重置
             val ret = parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.SAVE)
             if (ret != null) {
                 printLog(ret)
             }
+            // 选择2：app自己落盘
+            // ...
         }
     }
 }
