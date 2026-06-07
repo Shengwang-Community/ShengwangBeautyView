@@ -396,13 +396,13 @@ object ShengwangBeautyManager {
                 parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
             }
 
-        // 长脸 对应修饰力度范围为 [-100,100]，垂直方向脸拉伸：正数拉长，负数缩短。
-        var faceLength = 0
-            get() = parentRtcEngine?.getFaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_FACELENGTH)?.shapeIntensity
-                ?: 0
+        // 短脸 对应修饰力度范围为 [-100,0]。
+        var faceShort = 0
+            get() = -(parentRtcEngine?.getFaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_FACELENGTH)?.shapeIntensity
+                ?: 0)
             set(value) {
                 field = value
-                val areaOption = FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_FACELENGTH, value);
+                val areaOption = FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_FACELENGTH, -value);
                 parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
             }
 
@@ -747,6 +747,191 @@ object ShengwangBeautyManager {
                 parentBeautyEffect?.setVideoEffectFloatParam("style_makeup_option", "filterStrength", value)
             }
         // =================================== 美妆 end ==========================
+
+        // =================================== 画质 start ==========================
+        // 画质总开关
+        private var _qualityEnable: Boolean = false
+
+        var qualityEnable: Boolean
+            get() = _qualityEnable
+            set(value) {
+                if (_qualityEnable == value) return
+                _qualityEnable = value
+                if (!value) {
+                    hue = 0f
+                    saturation = 0f
+                    brightness = 0f
+                    temperature = 0f
+                }
+                notifyBeautyStateChanged()
+            }
+
+        /**
+         * 内部设置画质开关，不触发 notifyBeautyStateChanged
+         * 用于 onItemClick 中避免页面重建
+         */
+        fun setQualityEnableInternal(value: Boolean) {
+            _qualityEnable = value
+        }
+        // =================================== 画质 end ==========================
+
+        // =================================== 自定义美妆 start ==========================
+        // 自定义美妆总开关
+        var customMakeupEnable: Boolean = false
+            get() = parentBeautyEffect?.getVideoEffectBoolParam("makeup_options", "enable_mu") ?: false
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectBoolParam("makeup_options", "enable_mu", value)
+                makeupName = if (value) "" else null
+                notifyBeautyStateChanged()
+            }
+
+        /**
+         * 内部设置自定义美妆开关，不触发 notifyBeautyStateChanged
+         * 用于 onItemClick 中避免页面重建
+         */
+        fun setCustomMakeupEnableInternal(value: Boolean) {
+            if (customMakeupEnable == value) return
+            parentBeautyEffect?.setVideoEffectBoolParam("makeup_options", "enable_mu", value)
+            makeupName = if (value) "" else null
+        }
+
+        // 口红样式
+        var customLipstickStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lipStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipStyle", value)
+            }
+
+        // 口红颜色
+        var customLipstickColor: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lipColor") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lipColor", value)
+            }
+
+        // 口红强度 [0.0, 1.0]
+        var customLipstickStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "lipStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "lipStrength", value)
+            }
+
+        // 腮红样式
+        var customBlushStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "blushStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "blushStyle", value)
+            }
+
+        // 腮红颜色
+        var customBlushColor: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "blushColor") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "blushColor", value)
+            }
+
+        // 腮红强度 [0.0, 1.0]
+        var customBlushStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "blushStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "blushStrength", value)
+            }
+
+        // 修容样式
+        var customFacialStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "facialStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "facialStyle", value)
+            }
+
+        // 修容强度 [0.0, 1.0]
+        var customFacialStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "facialStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "facialStrength", value)
+            }
+
+        // 眼影样式
+        var customEyeshadowStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "shadowStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "shadowStyle", value)
+            }
+
+        // 眼影强度 [0.0, 1.0]
+        var customEyeshadowStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "shadowStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "shadowStrength", value)
+            }
+
+        // 修眉样式
+        var customEyebrowStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "browStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "browStyle", value)
+            }
+
+        // 修眉强度 [0.0, 1.0]
+        var customEyebrowStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "browStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "browStrength", value)
+            }
+
+        // 睫毛样式
+        var customLashStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lashStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lashStyle", value)
+            }
+
+        // 睫毛颜色
+        var customLashColor: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "lashColor") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "lashColor", value)
+            }
+
+        // 睫毛强度 [0.0, 1.0]
+        var customLashStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "lashStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "lashStrength", value)
+            }
+
+        // 美瞳样式
+        var customPupilStyle: Int = 0
+            get() = parentBeautyEffect?.getVideoEffectIntParam("makeup_options", "pupilStyle") ?: 0
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectIntParam("makeup_options", "pupilStyle", value)
+            }
+
+        // 美瞳强度 [0.0, 1.0]
+        var customPupilStrength: Float = 0f
+            get() = parentBeautyEffect?.getVideoEffectFloatParam("makeup_options", "pupilStrength") ?: 0f
+            set(value) {
+                field = value
+                parentBeautyEffect?.setVideoEffectFloatParam("makeup_options", "pupilStrength", value)
+            }
+        // =================================== 自定义美妆 end ==========================
 
         // =================================== 滤镜 start ==========================
         // 滤镜模板

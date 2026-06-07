@@ -78,9 +78,6 @@ internal class BeautyPageBuilder(
         // 美型参数
         addFaceShapeItems(beautyItems)
 
-        // 画质参数
-        addQualityItems(beautyItems)
-
         return BeautyPageInfo(
             R.string.beauty_group_beauty,
             beautyItems,
@@ -260,15 +257,15 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.cheekbone = value
         }
-        // 长脸
+        // 短脸
         addFaceShapeItem(
             items,
             R.string.beauty_face_shape_face_length,
             R.drawable.beauty_ic_face_shape_face_length,
-            beautyConfig.faceLength,
-            valueRange = -100f..100f
+            beautyConfig.faceShort,
+            valueRange = 0.0f..100f
         ) { value ->
-            beautyConfig.faceLength = value
+            beautyConfig.faceShort = value
         }
         // 窄脸
         addFaceShapeItem(
@@ -523,76 +520,6 @@ internal class BeautyPageBuilder(
                 onValueChanged = { value ->
                     onValueChanged(value.toInt())
                 }
-            )
-        )
-    }
-
-    /**
-     * 添加画质参数
-     * 顺序：色调、色温、饱和度、亮度
-     */
-    private fun addQualityItems(items: MutableList<BeautyItemInfo>) {
-        // 色温
-        addQualityItem(
-            items,
-            R.string.beauty_effect_temperature,
-            R.drawable.beauty_ic_effect_temperature,
-            beautyConfig.temperature
-        ) { value ->
-            beautyConfig.temperature = value
-        }
-        // 色调
-        addQualityItem(
-            items,
-            R.string.beauty_effect_hue,
-            R.drawable.beauty_ic_effect_hue,
-            beautyConfig.hue
-        ) { value ->
-            beautyConfig.hue = value
-        }
-        // 饱和度
-        addQualityItem(
-            items,
-            R.string.beauty_effect_saturation,
-            R.drawable.beauty_ic_effect_saturation,
-            beautyConfig.saturation
-        ) { value ->
-            beautyConfig.saturation = value
-        }
-        // 亮度
-        addQualityItem(
-            items,
-            R.string.beauty_effect_brightness,
-            R.drawable.beauty_ic_effect_brightness,
-            beautyConfig.brightness
-        ) { value ->
-            beautyConfig.brightness = value
-        }
-    }
-
-    /**
-     * 添加单个画质参数项
-     *
-     * @param items 功能项列表
-     * @param nameRes 参数名称资源ID
-     * @param iconRes 图标资源ID
-     * @param currentValue 当前值
-     * @param onValueChanged 值变化回调
-     */
-    private fun addQualityItem(
-        items: MutableList<BeautyItemInfo>,
-        nameRes: Int,
-        iconRes: Int,
-        currentValue: Float,
-        onValueChanged: (Float) -> Unit
-    ) {
-        items.add(
-            BeautyItemInfo(
-                nameRes,
-                iconRes,
-                currentValue,
-                valueRange = -1.0f..1.0f,
-                onValueChanged = onValueChanged
             )
         )
     }

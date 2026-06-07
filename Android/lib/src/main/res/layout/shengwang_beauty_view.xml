@@ -52,6 +52,41 @@
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="#C6C4DD" />
 
+        <!-- Sub-menu bar: shown when in second-level list, hides the tab bar -->
+        <LinearLayout
+            android:id="@+id/subMenuBar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/subMenuBackButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/beauty_effect_back"
+                android:scaleType="centerInside"
+                android:src="@drawable/beauty_ic_back" />
+
+            <TextView
+                android:id="@+id/subMenuTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Spacer to balance the back button -->
+            <android.view.View
+                android:layout_width="48dp"
+                android:layout_height="1dp" />
+        </LinearLayout>
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"

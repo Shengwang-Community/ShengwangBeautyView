@@ -2,7 +2,9 @@
     <!-- Beauty Groups -->
     <string name="beauty_group_beauty">Beauty</string>
     <string name="beauty_group_filter">Filter</string>
-    <string name="beauty_group_makeup">Makeup</string>
+    <string name="beauty_group_makeup">Style\nMakeup</string>
+    <string name="beauty_group_custom_makeup">Makeup</string>
+    <string name="beauty_group_quality">Quality</string>
     <string name="beauty_group_sticker">Sticker</string>
 
     <string name="beauty_effect_none">None</string>
@@ -10,6 +12,7 @@
     <string name="beauty_effect_disable">Disable</string>
     <string name="beauty_effect_save">Save</string>
     <string name="beauty_effect_reset">Reset</string>
+    <string name="beauty_effect_back">Back</string>
 
     <!-- Beauty Items -->
     <string name="beauty_effect_smoothness">Smooth</string>
@@ -107,6 +110,53 @@
     <string name="beauty_makeup_maiden">Maiden</string>
     <string name="beauty_makeup_insight">Insight</string>
     <string name="beauty_makeup_misty">Misty</string>
+
+    <!-- Custom Makeup -->
+    <string name="beauty_custom_makeup_lipstick">Lipstick</string>
+    <string name="beauty_custom_makeup_blush">Blush</string>
+    <string name="beauty_custom_makeup_contour">Contour</string>
+    <string name="beauty_custom_makeup_eyeshadow">Eye\nShadow</string>
+    <string name="beauty_custom_makeup_eyebrow">Eyebrow</string>
+    <string name="beauty_custom_makeup_lash">Lash</string>
+    <string name="beauty_custom_makeup_pupil">Pupil</string>
+    <string name="beauty_custom_makeup_lipstick_cherry">Cherry</string>
+    <string name="beauty_custom_makeup_lipstick_glossy">Glossy</string>
+    <string name="beauty_custom_makeup_lipstick_matte">Matte</string>
+    <string name="beauty_custom_makeup_lipstick_bitten">Bitten</string>
+    <string name="beauty_custom_makeup_lipstick_ombre">Ombre</string>
+    <string name="beauty_custom_makeup_blush_powder">Powder</string>
+    <string name="beauty_custom_makeup_blush_peach">Peach</string>
+    <string name="beauty_custom_makeup_blush_tipsy">Tipsy</string>
+    <string name="beauty_custom_makeup_blush_enchanted">Enchanted</string>
+    <string name="beauty_custom_makeup_blush_cloud">Cloud</string>
+    <string name="beauty_custom_makeup_contour_sculpt">Sculpt</string>
+    <string name="beauty_custom_makeup_contour_even">Even</string>
+    <string name="beauty_custom_makeup_contour_plump">Plump</string>
+    <string name="beauty_custom_makeup_contour_contour">Contour</string>
+    <string name="beauty_custom_makeup_contour_highlight">Highlight</string>
+    <string name="beauty_custom_makeup_eyeshadow_violet">Violet</string>
+    <string name="beauty_custom_makeup_eyeshadow_rose">Rose</string>
+    <string name="beauty_custom_makeup_eyeshadow_berry">Berry</string>
+    <string name="beauty_custom_makeup_eyeshadow_earth">Earth</string>
+    <string name="beauty_custom_makeup_eyeshadow_korean">Korean</string>
+    <string name="beauty_custom_makeup_eyeshadow_apricot">Apricot</string>
+    <string name="beauty_custom_makeup_eyebrow_lady">Lady</string>
+    <string name="beauty_custom_makeup_eyebrow_gentle">Gentle</string>
+    <string name="beauty_custom_makeup_eyebrow_standard">Standard</string>
+    <string name="beauty_custom_makeup_eyebrow_willow">Willow</string>
+    <string name="beauty_custom_makeup_eyebrow_fluffy">Fluffy</string>
+    <string name="beauty_custom_makeup_eyebrow_wild">Wild</string>
+    <string name="beauty_custom_makeup_lash_delicate">Delicate</string>
+    <string name="beauty_custom_makeup_lash_wing">Wing</string>
+    <string name="beauty_custom_makeup_lash_curly">Curly</string>
+    <string name="beauty_custom_makeup_lash_comic">Comic</string>
+    <string name="beauty_custom_makeup_lash_rise">Rise</string>
+    <string name="beauty_custom_makeup_pupil_hazel">Hazel</string>
+    <string name="beauty_custom_makeup_pupil_skyblue">Sky Blue</string>
+    <string name="beauty_custom_makeup_pupil_green">Green</string>
+    <string name="beauty_custom_makeup_pupil_gray">Gray</string>
+    <string name="beauty_custom_makeup_pupil_mars">Mars</string>
+    <string name="beauty_custom_makeup_pupil_natural">Natural</string>
 
     <!-- Sticker Items -->
     <string name="beauty_sticker_christmas">Christmas</string>

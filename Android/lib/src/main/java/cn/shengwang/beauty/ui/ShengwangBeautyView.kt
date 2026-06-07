@@ -17,9 +17,10 @@ import cn.shengwang.beauty.databinding.ShengwangBeautyViewBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlPageBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlItemBinding
 import cn.shengwang.beauty.ui.builder.BeautyPageBuilder
+import cn.shengwang.beauty.ui.builder.CustomMakeupPageBuilder
+import cn.shengwang.beauty.ui.builder.QualityPageBuilder
 import cn.shengwang.beauty.ui.model.BeautyPageInfo
 import cn.shengwang.beauty.ui.model.BeautyItemInfo
-import cn.shengwang.beauty.ui.builder.MakeupPageBuilder
 import cn.shengwang.beauty.ui.builder.FilterPageBuilder
 import cn.shengwang.beauty.ui.builder.StickerPageBuilder
 import android.content.res.Configuration
@@ -60,6 +61,9 @@ class ShengwangBeautyView : android.widget.FrameLayout {
 
     // TabLayoutMediator 实例，用于管理 TabLayout 和 ViewPager 的同步
     private var tabLayoutMediator: TabLayoutMediator? = null
+
+    // 当前所在子菜单的页面索引，-1 表示不在子菜单中
+    private var subMenuPageIndex: Int = -1
 
     // ViewPager2 页面切换回调，用于在页面切换时更新滑动条
     private var pageChangeCallback: androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback? = null
@@ -256,6 +260,11 @@ class ShengwangBeautyView : android.widget.FrameLayout {
             tab.text = context.getString(pageList[position].name)
         }
         tabLayoutMediator?.attach()
+
+        // Sub-menu bar: back button click
+        viewBinding.subMenuBackButton.setOnClickListener {
+            onSubMenuBack()
+        }
     }
 
     private fun createItemAdapter(pageIndex: Int) =
@@ -273,7 +282,7 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         // 构建页面列表，使用独立的构建器类
         val pageList = mutableListOf<BeautyPageInfo>()
 
-        // 1. BEAUTY 模块（美颜：美肤+美型+画质）
+        // 1. BEAUTY 模块（美颜：美肤+美型）
         val beautyBuilder = BeautyPageBuilder(
             beautyConfig = beautyConfig,
             refreshPageList = {
@@ -282,15 +291,19 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         )
         pageList.add(beautyBuilder.buildPage())
 
-        // 2. STYLE_MAKEUP 模块（风格妆）
-        val makeupBuilder = MakeupPageBuilder(beautyConfig)
-        pageList.add(makeupBuilder.buildPage())
+        // 2. 画质模块
+        val qualityBuilder = QualityPageBuilder(beautyConfig)
+        pageList.add(qualityBuilder.buildPage())
 
-        // 3. FILTER 模块（滤镜）
+        // 3. 自定义美妆模块
+        val customMakeupBuilder = CustomMakeupPageBuilder(beautyConfig)
+        pageList.add(customMakeupBuilder.buildPage())
+
+        // 4. FILTER 模块（滤镜）
         val filterBuilder = FilterPageBuilder(beautyConfig)
         pageList.add(filterBuilder.buildPage())
 
-        // 4. STICKER 模块（贴纸）
+        // 5. STICKER 模块（贴纸）
         val stickerBuilder = StickerPageBuilder(beautyConfig)
         pageList.add(stickerBuilder.buildPage())
 
@@ -511,6 +524,44 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         beautyConfig.saveBeauty(type)
     }
 
+    // MARK: - Sub-menu bar
+
+    /**
+     * 进入子菜单：隐藏 TabLayout，显示 sub-menu bar
+     */
+    private fun enterSubMenu(title: String, pageIndex: Int) {
+        subMenuPageIndex = pageIndex
+        viewBinding.subMenuTitle.text = title
+        viewBinding.tabLayout.visibility = GONE
+        viewBinding.subMenuBar.visibility = VISIBLE
+    }
+
+    /**
+     * 退出子菜单：隐藏 sub-menu bar，显示 TabLayout
+     */
+    private fun exitSubMenu() {
+        subMenuPageIndex = -1
+        viewBinding.subMenuBar.visibility = GONE
+        viewBinding.tabLayout.visibility = VISIBLE
+    }
+
+    /**
+     * 子菜单返回按钮点击：恢复一级列表并重建页面
+     */
+    private fun onSubMenuBack() {
+        val pageIndex = if (subMenuPageIndex >= 0) subMenuPageIndex else viewBinding.viewPager.currentItem
+        exitSubMenu()
+
+        // 重建页面列表以获取最新状态（toggle 等）
+        pageList = onPageListCreate()
+
+        // 恢复到当前页
+        if (pageIndex >= 0 && pageIndex < pageList.size) {
+            viewBinding.viewPager.setCurrentItem(pageIndex, false)
+            updateSliderForCurrentPage(pageIndex)
+        }
+    }
+
     // ViewHolder classes
     private class PageViewHolder(val binding: ShengwangBeautyControlPageBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -583,8 +634,32 @@ class ShengwangBeautyView : android.widget.FrameLayout {
 
                 // 重置项：刷新整个列表
                 if (itemInfo.type == BeautyItemType.RESET) {
-                    // 逻辑已经在 onItemClick 中处理（包括 refreshPageList），这里只需要确保 UI 响应
-                    // 由于 onItemClick 中调用了 refreshPageList，这里其实不需要做太多
+                    return@setOnClickListener
+                }
+
+                // 开关项：只刷新当前 adapter（onItemClick 中已改变配置并可能触发 refreshPageList）
+                if (itemInfo.type == BeautyItemType.TOGGLE) {
+                    return@setOnClickListener
+                }
+
+                // 子菜单入口项：保存当前列表，切换到子项列表
+                if (itemInfo.type == BeautyItemType.SUB_MENU) {
+                    val subItems = itemInfo.subItems
+                    if (!subItems.isNullOrEmpty()) {
+                        // 保存一级列表
+                        currentPage?.parentItemList = currentPage?.itemList
+                        // 替换为二级子项列表
+                        currentPage?.itemList = subItems
+                        updateItems(subItems)
+                        // 显示 sub-menu bar，隐藏 tab bar
+                        enterSubMenu(context.getString(itemInfo.name), pageIndex)
+                    }
+                    return@setOnClickListener
+                }
+
+                // 返回项：恢复一级列表
+                if (itemInfo.type == BeautyItemType.BACK) {
+                    onSubMenuBack()
                     return@setOnClickListener
                 }
 
@@ -599,6 +674,10 @@ class ShengwangBeautyView : android.widget.FrameLayout {
                     notifyItemChanged(previousSelectedPos)
                 }
                 notifyItemChanged(position)
+                // Also refresh toggle item (position 0) in case onItemClick updated it
+                if (position != 0 && items.isNotEmpty() && items[0].type == BeautyItemType.TOGGLE) {
+                    notifyItemChanged(0)
+                }
                 onItemClick.invoke(position)
             }
         }
