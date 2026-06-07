@@ -104,7 +104,7 @@ import AgoraRtcKit
         /// Smoothness intensity, range: [0.0, 1.0]
         public var smoothness: Float {
             get {
-                let value = parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "smoothness") ?? 0.7
+                let value = parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "smoothness") ?? 0.0
                 return value
             }
             set {
@@ -115,7 +115,7 @@ import AgoraRtcKit
         /// Whitening intensity, range: [0.0, 1.0]
         public var whitenNatural: Float {
             get {
-                let value = parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "lightness") ?? 0.7
+                let value = parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "lightness") ?? 0.0
                 return value
             }
             set {
@@ -127,7 +127,7 @@ import AgoraRtcKit
         /// Redness intensity, range: [0.0, 1.0]
         public var redness: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "redness") ?? 0.3
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "redness") ?? 0.0
             }
             set {
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "redness", floatValue: newValue)
@@ -137,7 +137,7 @@ import AgoraRtcKit
         /// Sharpness intensity, range: [0.0, 1.0]
         public var sharpness: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness") ?? 0.6
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness") ?? 0.0
             }
             set {
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "sharpness", floatValue: newValue)
@@ -167,7 +167,7 @@ import AgoraRtcKit
         /// Nasolabial fold removal intensity, range: [0.0, 1.0]
         public var nasolabialFold: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold") ?? 0.0
             }
             set {
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "nasolabial_fold", floatValue: newValue)
@@ -177,7 +177,7 @@ import AgoraRtcKit
         /// Eye brightening intensity, range: [0.0, 1.0]
         public var brightenEye: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye") ?? 0.0
             }
             set {
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "brighten_eye", floatValue: newValue)
@@ -187,7 +187,7 @@ import AgoraRtcKit
         /// Eye bag/dark circle removal intensity, range: [0.0, 1.0]
         public var eyePouch: Float {
             get {
-                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch") ?? 0.8
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch") ?? 0.0
             }
             set {
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "face_buffing_option", key: "eye_pouch", floatValue: newValue)
@@ -195,6 +195,29 @@ import AgoraRtcKit
         }
         
         // MARK: - Image Quality Parameters
+        
+        /// Internal backing store for quality enable (no side effects)
+        private var _qualityEnable: Bool = false
+        
+        public var qualityEnable: Bool {
+            get { return _qualityEnable }
+            set {
+                if _qualityEnable == newValue { return }
+                _qualityEnable = newValue
+                if (!_qualityEnable) {
+                    self.hue = 0.0
+                    self.saturation = 0.0
+                    self.brightness = 0.0
+                    self.temperature = 0.0
+                    self.contrastFactor = 0.0
+                }
+                sdk?.notifyBeautyStateChanged()
+            }
+        }
+        
+        internal func setQualityEnableInternal(_ value: Bool) {
+            _qualityEnable = value
+        }
         
         /// Color temperature intensity, range: [-1.0, 1.0]
         public var temperature: Float {
@@ -236,6 +259,16 @@ import AgoraRtcKit
             }
         }
         
+        /// Contrast intensity, range: [-1.0, 1.0]
+        public var contrastFactor: Float {
+            get {
+                return parentBeautyEffect?.getVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_factor") ?? 0.0
+            }
+            set {
+                parentBeautyEffect?.setVideoEffectFloatParam(option: "beauty_effect_option", key: "contrast_factor", floatValue: newValue)
+            }
+        }
+        
         // MARK: - Face Shape Parameters
         
         /// Enable/disable face shape adjustment
@@ -261,7 +294,7 @@ import AgoraRtcKit
         }
         
         /// Face shape style intensity, range: [0, 100]
-        public var faceShapeIntensity: Int32 {
+        public var faceShapeStyleIntensity: Int32 {
             get {
                 return parentBeautyEffect?.getVideoEffectIntParam(option: "face_shape_beauty_option", key: "intensity") ?? 0
             }
@@ -361,15 +394,15 @@ import AgoraRtcKit
             }
         }
         
-        /// Face length, range: [-100, 100], vertical face stretch: positive lengthen, negative shorten
-        public var faceLength: Int32 {
+        /// Face short, range: [-100, 0], shorten  face vertically
+        public var faceShort: Int32 {
             get {
-                return parentRtcEngine?.getFaceShapeAreaOptions(.faceLength)?.shapeIntensity ?? 0
+                return -(parentRtcEngine?.getFaceShapeAreaOptions(.faceLength)?.shapeIntensity ?? 0)
             }
             set {
                 let areaOption = AgoraFaceShapeAreaOptions()
                 areaOption.shapeArea = .faceLength
-                areaOption.shapeIntensity = newValue
+                areaOption.shapeIntensity = -newValue
                 parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
             }
         }
@@ -723,6 +756,140 @@ import AgoraRtcKit
             }
         }
         
+        // MARK: - Custom Makeup Parameters
+        /// Custom makeup: enable/disable all custom makeup effects
+        private var _customMakeupEnable: Bool = false
+        public var customMakeupEnable: Bool {
+            get { return parentBeautyEffect?.getVideoEffectBoolParam(option: "makeup_options", key: "enable_mu") ?? _customMakeupEnable }
+            set {
+              if _customMakeupEnable == newValue { return }
+              setCustomMakeupEnableInternal(newValue)
+              sdk?.notifyBeautyStateChanged()
+            }
+        }
+      
+        internal func setCustomMakeupEnableInternal(_ value: Bool) {
+            if _customMakeupEnable == value { return }
+            makeupName = value ? "" : nil
+            parentBeautyEffect?.setVideoEffectBoolParam(option: "makeup_options", key: "enable_mu", boolValue: value)
+            _customMakeupEnable = value
+        }
+        
+        /// Custom makeup: lipstick
+        public var customLipstickStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lipStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lipStyle", intValue: newValue)
+            }
+        }
+        public var customLipstickColor: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lipColor") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lipColor", intValue: newValue)
+            }
+        }
+        public var customLipstickStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "lipStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "lipStrength", floatValue: newValue)
+            }
+        }
+        
+        /// Custom makeup: blush
+        public var customBlushStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "blushStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "blushStyle", intValue: newValue)
+            }
+        }
+        public var customBlushColor: Int32 {
+          get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "blushColor") ?? 0 }
+          set {
+            parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "blushColor", intValue: newValue)
+          }
+        }
+        public var customBlushStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "blushStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "blushStrength", floatValue: newValue)
+            }
+        }
+        
+        /// Custom makeup: facial
+        public var customFacialStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "facialStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "facialStyle", intValue: newValue)
+            }
+        }
+        public var customFacialStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "facialStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "facialStrength", floatValue: newValue)
+            }
+        }
+        
+        /// Custom makeup: eyeshadow
+        public var customEyeshadowStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "shadowStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "shadowStyle", intValue: newValue)
+            }
+        }
+        public var customEyeshadowStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "shadowStrength", floatValue: newValue)
+            }
+        }
+        
+        public var customLashStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashStyle", intValue: newValue)
+            }
+        }
+        public var customLashColor: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "lashColor") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "lashColor", intValue: newValue)
+            }
+        }
+        public var customLashStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "lashStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "lashStrength", floatValue: newValue)
+            }
+        }
+        
+        /// Custom makeup: eyebrow
+        public var customEyebrowStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "browStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "browStyle", intValue: newValue)
+            }
+        }
+        public var customEyebrowStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "browStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "browStrength", floatValue: newValue)
+            }
+        }
+        
+        /// Custom makeup: pupil (美瞳)
+        public var customPupilStyle: Int32 {
+            get { return parentBeautyEffect?.getVideoEffectIntParam(option: "makeup_options", key: "pupilStyle") ?? 0 }
+            set {
+              parentBeautyEffect?.setVideoEffectIntParam(option: "makeup_options", key: "pupilStyle", intValue: newValue)
+            }
+        }
+        public var customPupilStrength: Float {
+            get { return parentBeautyEffect?.getVideoEffectFloatParam(option: "makeup_options", key: "pupilStrength") ?? 0.0 }
+            set {
+              parentBeautyEffect?.setVideoEffectFloatParam(option: "makeup_options", key: "pupilStrength", floatValue: newValue)
+            }
+        }
+        
         // MARK: - Filter Parameters
         
         /// Filter template name
@@ -873,6 +1040,9 @@ import AgoraRtcKit
             self.rtcEngine = nil
             return false
         }
+
+        // only for debug
+//        enableInnerLog(enable: true)
         
         // Create VideoEffectObject
         // iOS: agorakit.createVideoEffectObject(bundlePath:sourceType:)
@@ -893,6 +1063,18 @@ import AgoraRtcKit
         print("[BeautySDK] Beauty SDK initialized successfully")
         notifyBeautyStateChanged()
         return true
+    }
+
+    private func enableInnerLog(enable: Bool) {
+        let dict = ["logfile_enable" : enable] as [String : Any]
+        let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let str = String(data: data!, encoding: String.Encoding.utf8) ?? ""
+        self.rtcEngine?.setExtensionPropertyWithVendor(
+            "agora_video_filters_clear_vision",
+            extension: "clear_vision",
+            key: "debug_param",
+            value: str
+        )
     }
     
     /// Uninitialize beauty SDK

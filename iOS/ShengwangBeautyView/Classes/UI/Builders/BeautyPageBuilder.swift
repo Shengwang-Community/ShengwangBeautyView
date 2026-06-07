@@ -30,7 +30,12 @@ internal class BeautyPageBuilder: IPageBuilder {
                 icon: nil,
                 isSelected: false,
                 showSlider: false,
-                type: .toggle(isBeautyEnabled)
+                type: .toggle(isBeautyEnabled),
+                onItemClick: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.beautyConfig.beautyEnable = !self.beautyConfig.beautyEnable
+                    self.beautyConfig.faceShapeEnable = !self.beautyConfig.faceShapeEnable
+                }
             )
         )
         
@@ -49,9 +54,6 @@ internal class BeautyPageBuilder: IPageBuilder {
         
         // Face shape parameters
         addFaceShapeItems(&beautyItems)
-        
-        // Image quality parameters
-        addQualityItems(&beautyItems)
         
         return BeautyPageInfo(
             name: "beauty_group_beauty",
@@ -139,8 +141,8 @@ internal class BeautyPageBuilder: IPageBuilder {
         }
         
         // 6. Face length (lengthen face)
-        addFaceShapeItem(&items, name: "beauty_face_shape_face_length", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_face_length"), value: Float(beautyConfig.faceLength), valueRange: -100.0...100.0) { [weak self] value in
-            self?.beautyConfig.faceLength = Int32(value)
+        addFaceShapeItem(&items, name: "beauty_face_shape_face_length", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_face_length"), value: Float(beautyConfig.faceShort), valueRange: 0.0...100.0) { [weak self] value in
+            self?.beautyConfig.faceShort = Int32(value)
         }
         
         // 7. Face width (narrow face)
@@ -263,29 +265,6 @@ internal class BeautyPageBuilder: IPageBuilder {
         }
     }
     
-    /// Add image quality parameters
-    private func addQualityItems(_ items: inout [BeautyItemInfo]) {
-        // Color temperature
-        addQualityItem(&items, name: "beauty_effect_temperature", icon: UIImage.beautyIcon(named: "beauty_ic_effect_temperature"), value: beautyConfig.temperature) { [weak self] value in
-            self?.beautyConfig.temperature = value
-        }
-        
-        // Hue
-        addQualityItem(&items, name: "beauty_effect_hue", icon: UIImage.beautyIcon(named: "beauty_ic_effect_hue"), value: beautyConfig.hue) { [weak self] value in
-            self?.beautyConfig.hue = value
-        }
-        
-        // Saturation
-        addQualityItem(&items, name: "beauty_effect_saturation", icon: UIImage.beautyIcon(named: "beauty_ic_effect_saturation"), value: beautyConfig.saturation) { [weak self] value in
-            self?.beautyConfig.saturation = value
-        }
-        
-        // Brightness
-        addQualityItem(&items, name: "beauty_effect_brightness", icon: UIImage.beautyIcon(named: "beauty_ic_effect_brightness"), value: beautyConfig.brightness) { [weak self] value in
-            self?.beautyConfig.brightness = value
-        }
-    }
-    
     // MARK: - Helper Methods
     
     private func addSkinBeautyItem(
@@ -328,22 +307,4 @@ internal class BeautyPageBuilder: IPageBuilder {
         )
     }
     
-    private func addQualityItem(
-        _ items: inout [BeautyItemInfo],
-        name: String,
-        icon: UIImage?,
-        value: Float,
-        valueRange: ClosedRange<Float> = -1.0...1.0,
-        onValueChanged: @escaping (Float) -> Void
-    ) {
-        items.append(
-            BeautyItemInfo(
-                name: name,
-                icon: icon,
-                value: value,
-                valueRange: valueRange,
-                onValueChanged: onValueChanged
-            )
-        )
-    }
 }
