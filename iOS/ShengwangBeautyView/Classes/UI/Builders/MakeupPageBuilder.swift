@@ -80,12 +80,12 @@ internal class MakeupPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: beautyConfig.makeupIntensity,
+                value: beautyConfig.makeupIntensity * 100.0,
                 isSelected: beautyConfig.makeupName == makeupName,
-                valueRange: 0.0...1.0,
+                valueRange: 0.0...100.0,
                 // User drags slider: update intensity value (will sync update cache)
-                onValueChanged: { [weak self] value in
-                    self?.beautyConfig.makeupIntensity = value
+                onValueChanged: { [weak self] uiVal in
+                    self?.beautyConfig.makeupIntensity = uiVal / 100.0
                 },
                 // User clicks to switch makeup
                 onItemClick: { [weak self] itemInfo in
@@ -104,7 +104,7 @@ internal class MakeupPageBuilder: IPageBuilder {
                     }
                     
                     // 4. Update UI displayed intensity value to ensure UI matches SDK state
-                    itemInfo.value = self.beautyConfig.makeupIntensity
+                    itemInfo.value = self.beautyConfig.makeupIntensity * 100.0
                 }
             )
         )

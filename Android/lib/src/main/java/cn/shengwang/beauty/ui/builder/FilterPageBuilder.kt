@@ -337,12 +337,12 @@ internal class FilterPageBuilder(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                beautyConfig.filterStrength,
+                beautyConfig.filterStrength * 100f,
                 isSelected = beautyConfig.filterName == filterName,
-                valueRange = 0f..1.0f,
+                valueRange = 0f..100f,
                 // 用户拖动滑块时，更新强度值（会同步更新缓存）
-                onValueChanged = { value ->
-                    beautyConfig.filterStrength = value
+                onValueChanged = { uiVal ->
+                    beautyConfig.filterStrength = uiVal / 100f
                 },
                 // 用户点击切换滤镜时
                 onItemClick = { itemInfo ->
@@ -359,7 +359,7 @@ internal class FilterPageBuilder(
                     }
                     
                     // 4. 更新 UI 显示的强度值，确保与 SDK 状态一致
-                    itemInfo.value = beautyConfig.filterStrength
+                    itemInfo.value = beautyConfig.filterStrength * 100f
                 }
             )
         )

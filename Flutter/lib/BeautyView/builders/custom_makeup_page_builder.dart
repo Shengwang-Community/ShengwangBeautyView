@@ -56,16 +56,16 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubLipstick(String name, String icon, int style, int color) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customLipstickStrength,
+      value: beautyConfig.customLipstickStrength * 100.0,
       isSelected: beautyConfig.customLipstickStyle == style,
-      minValue: 0.0, maxValue: 1.0,
+      minValue: 0.0, maxValue: 100.0,
       itemStyle: style, itemColor: color,
-      onValueChanged: (v) => beautyConfig.customLipstickStrength = v,
+      onValueChanged: (uiVal) => beautyConfig.customLipstickStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customLipstickStyle = item.itemStyle;
         beautyConfig.customLipstickColor = item.itemColor;
-        item.value = beautyConfig.customLipstickStrength;
+        item.value = beautyConfig.customLipstickStrength * 100.0;
       },
     );
   }
@@ -83,16 +83,16 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubBlush(String name, String icon, int style, int color) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customBlushStrength,
+      value: beautyConfig.customBlushStrength * 100.0,
       isSelected: beautyConfig.customBlushStyle == style,
-      minValue: 0.0, maxValue: 1.0,
+      minValue: 0.0, maxValue: 100.0,
       itemStyle: style, itemColor: color,
-      onValueChanged: (v) => beautyConfig.customBlushStrength = v,
+      onValueChanged: (uiVal) => beautyConfig.customBlushStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customBlushStyle = item.itemStyle;
         beautyConfig.customBlushColor = item.itemColor;
-        item.value = beautyConfig.customBlushStrength;
+        item.value = beautyConfig.customBlushStrength * 100.0;
       },
     );
   }
@@ -110,14 +110,14 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubFacial(String name, String icon, int style) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customFacialStrength,
+      value: beautyConfig.customFacialStrength * 100.0,
       isSelected: beautyConfig.customFacialStyle == style,
-      minValue: 0.0, maxValue: 1.0, itemStyle: style,
-      onValueChanged: (v) => beautyConfig.customFacialStrength = v,
+      minValue: 0.0, maxValue: 100.0, itemStyle: style,
+      onValueChanged: (uiVal) => beautyConfig.customFacialStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customFacialStyle = item.itemStyle;
-        item.value = beautyConfig.customFacialStrength;
+        item.value = beautyConfig.customFacialStrength * 100.0;
       },
     );
   }
@@ -135,14 +135,14 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubShadow(String name, String icon, int style) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customEyeshadowStrength,
+      value: beautyConfig.customEyeshadowStrength * 100.0,
       isSelected: beautyConfig.customEyeshadowStyle == style,
-      minValue: 0.0, maxValue: 1.0, itemStyle: style,
-      onValueChanged: (v) => beautyConfig.customEyeshadowStrength = v,
+      minValue: 0.0, maxValue: 100.0, itemStyle: style,
+      onValueChanged: (uiVal) => beautyConfig.customEyeshadowStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customEyeshadowStyle = item.itemStyle;
-        item.value = beautyConfig.customEyeshadowStrength;
+        item.value = beautyConfig.customEyeshadowStrength * 100.0;
       },
     );
   }
@@ -161,14 +161,14 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubEyebrow(String name, String icon, int style) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customEyebrowStrength,
+      value: beautyConfig.customEyebrowStrength * 100.0,
       isSelected: beautyConfig.customEyebrowStyle == style,
-      minValue: 0.0, maxValue: 1.0, itemStyle: style,
-      onValueChanged: (v) => beautyConfig.customEyebrowStrength = v,
+      minValue: 0.0, maxValue: 100.0, itemStyle: style,
+      onValueChanged: (uiVal) => beautyConfig.customEyebrowStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customEyebrowStyle = item.itemStyle;
-        item.value = beautyConfig.customEyebrowStrength;
+        item.value = beautyConfig.customEyebrowStrength * 100.0;
       },
     );
   }
@@ -187,16 +187,16 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubLash(String name, String icon, int style, int color) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customLashStrength,
+      value: beautyConfig.customLashStrength * 100.0,
       isSelected: beautyConfig.customLashStyle == style,
-      minValue: 0.0, maxValue: 1.0,
+      minValue: 0.0, maxValue: 100.0,
       itemStyle: style, itemColor: color,
-      onValueChanged: (v) => beautyConfig.customLashStrength = v,
+      onValueChanged: (uiVal) => beautyConfig.customLashStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customLashStyle = item.itemStyle;
         beautyConfig.customLashColor = item.itemColor;
-        item.value = beautyConfig.customLashStrength;
+        item.value = beautyConfig.customLashStrength * 100.0;
       },
     );
   }
@@ -214,14 +214,14 @@ class CustomMakeupPageBuilder implements IPageBuilder {
   BeautyItemInfo _buildSubPupil(String name, String icon, int style) {
     return BeautyItemInfo(
       name: name, iconAsset: '$_iconBase$icon',
-      value: beautyConfig.customPupilStrength,
+      value: beautyConfig.customPupilStrength * 100.0,
       isSelected: beautyConfig.customPupilStyle == style,
-      minValue: 0.0, maxValue: 1.0, itemStyle: style,
-      onValueChanged: (v) => beautyConfig.customPupilStrength = v,
+      minValue: 0.0, maxValue: 100.0, itemStyle: style,
+      onValueChanged: (uiVal) => beautyConfig.customPupilStrength = uiVal / 100.0,
       onItemClick: (item) async {
         beautyConfig.setCustomMakeupEnableInternal(true);
         beautyConfig.customPupilStyle = item.itemStyle;
-        item.value = beautyConfig.customPupilStrength;
+        item.value = beautyConfig.customPupilStrength * 100.0;
       },
     );
   }

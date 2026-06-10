@@ -105,12 +105,12 @@ internal class FilterPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: beautyConfig.filterStrength,
+                value: beautyConfig.filterStrength * 100.0,
                 isSelected: beautyConfig.filterName == filterName,
-                valueRange: 0.0...1.0,
+                valueRange: 0.0...100.0,
                 // User drags slider: update strength value (will sync update cache)
-                onValueChanged: { [weak self] value in
-                    self?.beautyConfig.filterStrength = value
+                onValueChanged: { [weak self] uiVal in
+                    self?.beautyConfig.filterStrength = uiVal / 100.0
                 },
                 // User clicks to switch filter
                 onItemClick: { [weak self] itemInfo in
@@ -129,7 +129,7 @@ internal class FilterPageBuilder: IPageBuilder {
                     }
                     
                     // 4. Update UI displayed strength value to ensure UI matches SDK state
-                    itemInfo.value = self.beautyConfig.filterStrength
+                    itemInfo.value = self.beautyConfig.filterStrength * 100.0
                 }
             )
         )

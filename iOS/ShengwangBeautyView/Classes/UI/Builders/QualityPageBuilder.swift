@@ -77,9 +77,11 @@ internal class QualityPageBuilder: IPageBuilder {
             BeautyItemInfo(
                 name: name,
                 icon: icon,
-                value: value,
-                valueRange: valueRange,
-                onValueChanged: onValueChanged,
+                value: value * 50.0,  // -1.0~1.0 → -50~50
+                valueRange: -50.0...50.0,
+                onValueChanged: { uiVal in
+                    onValueChanged(uiVal / 50.0)  // -50~50 → -1.0~1.0
+                },
                 onItemClick: { [weak self] itemInfo in
                     guard let self = self else { return }
                     self.beautyConfig.setQualityEnableInternal(true)

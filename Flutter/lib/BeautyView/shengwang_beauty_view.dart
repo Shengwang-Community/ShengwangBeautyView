@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'models/beauty_page_info.dart';
 import 'builders/beauty_page_builder.dart';
-import 'builders/custom_makeup_page_builder.dart';
+import 'builders/makeup_page_builder.dart';
 import 'builders/quality_page_builder.dart';
 import 'builders/filter_page_builder.dart';
 import 'builders/sticker_page_builder.dart';
@@ -40,7 +40,7 @@ class _ShengwangBeautyViewState extends State<ShengwangBeautyView> {
 
   late final BeautyPageBuilder _beautyBuilder;
   late final QualityPageBuilder _qualityBuilder;
-  late final CustomMakeupPageBuilder _customMakeupBuilder;
+  late final MakeupPageBuilder _makeupBuilder;
   late final FilterPageBuilder _filterBuilder;
   late final StickerPageBuilder _stickerBuilder;
 
@@ -49,7 +49,7 @@ class _ShengwangBeautyViewState extends State<ShengwangBeautyView> {
     super.initState();
     _beautyBuilder = BeautyPageBuilder(beautyConfig: widget.beautyConfig);
     _qualityBuilder = QualityPageBuilder(beautyConfig: widget.beautyConfig);
-    _customMakeupBuilder = CustomMakeupPageBuilder(beautyConfig: widget.beautyConfig);
+    _makeupBuilder = MakeupPageBuilder(beautyConfig: widget.beautyConfig);
     _filterBuilder = FilterPageBuilder(beautyConfig: widget.beautyConfig);
     _stickerBuilder = StickerPageBuilder(beautyConfig: widget.beautyConfig);
 
@@ -77,7 +77,8 @@ class _ShengwangBeautyViewState extends State<ShengwangBeautyView> {
     return [
       await _beautyBuilder.buildPage(),
       await _qualityBuilder.buildPage(),
-      await _customMakeupBuilder.buildPage(),
+      // Style Makeup（风格妆）— 按素材包 config.json 决定是否显示
+      await _makeupBuilder.buildPage(),
       await _filterBuilder.buildPage(),
       await _stickerBuilder.buildPage(),
     ];

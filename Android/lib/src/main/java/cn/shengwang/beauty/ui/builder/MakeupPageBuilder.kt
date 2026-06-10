@@ -140,12 +140,12 @@ internal class MakeupPageBuilder(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                beautyConfig.makeupIntensity,
+                beautyConfig.makeupIntensity * 100f,
                 isSelected = beautyConfig.makeupName == makeupName,
-                valueRange = 0f..1.0f,
+                valueRange = 0f..100f,
                 // 用户拖动滑块时，更新强度值（会同步更新缓存）
-                onValueChanged = { value ->
-                    beautyConfig.makeupIntensity = value
+                onValueChanged = { uiVal ->
+                    beautyConfig.makeupIntensity = uiVal / 100f
                 },
                 // 用户点击切换模板时
                 onItemClick = { itemInfo ->
@@ -162,7 +162,7 @@ internal class MakeupPageBuilder(
                     }
                     
                     // 4. 更新 UI 显示的强度值，确保与 SDK 状态一致
-                    itemInfo.value = beautyConfig.makeupIntensity
+                    itemInfo.value = beautyConfig.makeupIntensity * 100f
                 }
             )
         )

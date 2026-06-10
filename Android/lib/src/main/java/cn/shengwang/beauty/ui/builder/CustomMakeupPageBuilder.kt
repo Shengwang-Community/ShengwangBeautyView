@@ -63,101 +63,101 @@ internal class CustomMakeupPageBuilder(
     private fun buildSubLipstickItem(nameRes: Int, iconRes: Int, style: Int, color: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customLipstickStrength,
+            value = beautyConfig.customLipstickStrength * 100f,
             isSelected = beautyConfig.customLipstickStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style, itemColor = color,
-            onValueChanged = { value -> beautyConfig.customLipstickStrength = value },
+            valueRange = 0f..100f, itemStyle = style, itemColor = color,
+            onValueChanged = { uiVal -> beautyConfig.customLipstickStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customLipstickStyle = itemInfo.itemStyle
                 beautyConfig.customLipstickColor = itemInfo.itemColor
-                itemInfo.value = beautyConfig.customLipstickStrength
+                itemInfo.value = beautyConfig.customLipstickStrength * 100f
             }
         )
 
     private fun buildSubBlushItem(nameRes: Int, iconRes: Int, style: Int, color: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customBlushStrength,
+            value = beautyConfig.customBlushStrength * 100f,
             isSelected = beautyConfig.customBlushStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style, itemColor = color,
-            onValueChanged = { value -> beautyConfig.customBlushStrength = value },
+            valueRange = 0f..100f, itemStyle = style, itemColor = color,
+            onValueChanged = { uiVal -> beautyConfig.customBlushStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customBlushStyle = itemInfo.itemStyle
                 beautyConfig.customBlushColor = itemInfo.itemColor
-                itemInfo.value = beautyConfig.customBlushStrength
+                itemInfo.value = beautyConfig.customBlushStrength * 100f
             }
         )
 
     private fun buildSubFacialItem(nameRes: Int, iconRes: Int, style: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customFacialStrength,
+            value = beautyConfig.customFacialStrength * 100f,
             isSelected = beautyConfig.customFacialStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style,
-            onValueChanged = { value -> beautyConfig.customFacialStrength = value },
+            valueRange = 0f..100f, itemStyle = style,
+            onValueChanged = { uiVal -> beautyConfig.customFacialStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customFacialStyle = itemInfo.itemStyle
-                itemInfo.value = beautyConfig.customFacialStrength
+                itemInfo.value = beautyConfig.customFacialStrength * 100f
             }
         )
 
     private fun buildSubShadowItem(nameRes: Int, iconRes: Int, style: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customEyeshadowStrength,
+            value = beautyConfig.customEyeshadowStrength * 100f,
             isSelected = beautyConfig.customEyeshadowStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style,
-            onValueChanged = { value -> beautyConfig.customEyeshadowStrength = value },
+            valueRange = 0f..100f, itemStyle = style,
+            onValueChanged = { uiVal -> beautyConfig.customEyeshadowStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customEyeshadowStyle = itemInfo.itemStyle
-                itemInfo.value = beautyConfig.customEyeshadowStrength
+                itemInfo.value = beautyConfig.customEyeshadowStrength * 100f
             }
         )
 
     private fun buildSubEyebrowItem(nameRes: Int, iconRes: Int, style: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customEyebrowStrength,
+            value = beautyConfig.customEyebrowStrength * 100f,
             isSelected = beautyConfig.customEyebrowStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style,
-            onValueChanged = { value -> beautyConfig.customEyebrowStrength = value },
+            valueRange = 0f..100f, itemStyle = style,
+            onValueChanged = { uiVal -> beautyConfig.customEyebrowStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customEyebrowStyle = itemInfo.itemStyle
-                itemInfo.value = beautyConfig.customEyebrowStrength
+                itemInfo.value = beautyConfig.customEyebrowStrength * 100f
             }
         )
 
     private fun buildSubLashItem(nameRes: Int, iconRes: Int, style: Int, color: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customLashStrength,
+            value = beautyConfig.customLashStrength * 100f,
             isSelected = beautyConfig.customLashStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style, itemColor = color,
-            onValueChanged = { value -> beautyConfig.customLashStrength = value },
+            valueRange = 0f..100f, itemStyle = style, itemColor = color,
+            onValueChanged = { uiVal -> beautyConfig.customLashStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customLashStyle = itemInfo.itemStyle
                 beautyConfig.customLashColor = itemInfo.itemColor
-                itemInfo.value = beautyConfig.customLashStrength
+                itemInfo.value = beautyConfig.customLashStrength * 100f
             }
         )
 
     private fun buildSubPupilItem(nameRes: Int, iconRes: Int, style: Int) =
         BeautyItemInfo(
             name = nameRes, icon = iconRes,
-            value = beautyConfig.customPupilStrength,
+            value = beautyConfig.customPupilStrength * 100f,
             isSelected = beautyConfig.customPupilStyle == style,
-            valueRange = 0f..1.0f, itemStyle = style,
-            onValueChanged = { value -> beautyConfig.customPupilStrength = value },
+            valueRange = 0f..100f, itemStyle = style,
+            onValueChanged = { uiVal -> beautyConfig.customPupilStrength = uiVal / 100f },
             onItemClick = { itemInfo ->
                 beautyConfig.setCustomMakeupEnableInternal(true)
                 beautyConfig.customPupilStyle = itemInfo.itemStyle
-                itemInfo.value = beautyConfig.customPupilStrength
+                itemInfo.value = beautyConfig.customPupilStrength * 100f
             }
         )
 

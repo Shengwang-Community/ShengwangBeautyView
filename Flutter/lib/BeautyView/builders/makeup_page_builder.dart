@@ -46,17 +46,19 @@ class MakeupPageBuilder implements IPageBuilder {
   }
 
   void _add(List<BeautyItemInfo> items, String name, String icon, String makeupName, double intensity) {
+    final uiValue = beautyConfig.makeupName == makeupName ? intensity * 100.0 : 0.0;
     items.add(BeautyItemInfo(
       name: name,
       iconAsset: '$_iconBase$icon.png',
-      value: beautyConfig.makeupName == makeupName ? intensity : 0.0,
+      value: uiValue,
       isSelected: beautyConfig.makeupName == makeupName,
       minValue: 0.0,
-      maxValue: 1.0,
-      onValueChanged: (v) => beautyConfig.makeupIntensity = v,
+      maxValue: 100.0,
+      onValueChanged: (uiVal) => beautyConfig.makeupIntensity = uiVal / 100.0,
       onItemClick: (itemInfo) async {
         beautyConfig.makeupName = makeupName;
-        itemInfo.value = await beautyConfig.getMakeupIntensityAsync();
+        final sdkValue = await beautyConfig.getMakeupIntensityAsync();
+        itemInfo.value = sdkValue * 100.0;
       },
     ));
   }

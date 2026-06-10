@@ -127,19 +127,18 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customLipstickStrength,
+            value: beautyConfig.customLipstickStrength * 100.0,
             isSelected: beautyConfig.customLipstickStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customLipstickStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customLipstickStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customLipstickStyle = itemInfo.subItemStyle
                 self.beautyConfig.customLipstickColor = itemInfo.subItemColor
-                // 所有style共享强度，防止UI跳变
-                itemInfo.value = self.beautyConfig.customLipstickStrength
+                itemInfo.value = self.beautyConfig.customLipstickStrength * 100.0
             },
             itemStyle: style,
             itemColor: color
@@ -157,18 +156,18 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customBlushStrength,
+            value: beautyConfig.customBlushStrength * 100.0,
             isSelected: beautyConfig.customBlushStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customBlushStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customBlushStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customBlushStyle = itemInfo.subItemStyle
                 self.beautyConfig.customBlushColor = itemInfo.subItemColor
-                itemInfo.value = self.beautyConfig.customBlushStrength
+                itemInfo.value = self.beautyConfig.customBlushStrength * 100.0
             },
             itemStyle: style,
             itemColor: color
@@ -185,17 +184,17 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customFacialStrength,
+            value: beautyConfig.customFacialStrength * 100.0,
             isSelected: beautyConfig.customFacialStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customFacialStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customFacialStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customFacialStyle = itemInfo.subItemStyle
-                itemInfo.value = self.beautyConfig.customFacialStrength
+                itemInfo.value = self.beautyConfig.customFacialStrength * 100.0
             },
             itemStyle: style
         )
@@ -211,17 +210,17 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customEyeshadowStrength,
+            value: beautyConfig.customEyeshadowStrength * 100.0,
             isSelected: beautyConfig.customEyeshadowStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customEyeshadowStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customEyeshadowStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customEyeshadowStyle = itemInfo.subItemStyle
-                itemInfo.value = self.beautyConfig.customEyeshadowStrength
+                itemInfo.value = self.beautyConfig.customEyeshadowStrength * 100.0
             },
             itemStyle: style
         )
@@ -237,17 +236,17 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customEyebrowStrength,
+            value: beautyConfig.customEyebrowStrength * 100.0,
             isSelected: beautyConfig.customEyebrowStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customEyebrowStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customEyebrowStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customEyebrowStyle = itemInfo.subItemStyle
-                itemInfo.value = self.beautyConfig.customEyebrowStrength
+                itemInfo.value = self.beautyConfig.customEyebrowStrength * 100.0
             },
             itemStyle: style
         )
@@ -262,18 +261,18 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customLashStrength,
+            value: beautyConfig.customLashStrength * 100.0,
             isSelected: beautyConfig.customLashStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customLashStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customLashStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customLashStyle = itemInfo.subItemStyle
                 self.beautyConfig.customLashColor = itemInfo.subItemColor
-                itemInfo.value = self.beautyConfig.customLashStrength
+                itemInfo.value = self.beautyConfig.customLashStrength * 100.0
             },
             itemStyle: style,
             itemColor: color
@@ -288,17 +287,17 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
         return BeautyItemInfo(
             name: name,
             icon: icon,
-            value: beautyConfig.customPupilStrength,
+            value: beautyConfig.customPupilStrength * 100.0,
             isSelected: beautyConfig.customPupilStyle == style,
-            valueRange: 0.0...1.0,
-            onValueChanged: { [weak self] value in
-                self?.beautyConfig.customPupilStrength = value
+            valueRange: 0.0...100.0,
+            onValueChanged: { [weak self] uiVal in
+                self?.beautyConfig.customPupilStrength = uiVal / 100.0
             },
             onItemClick: { [weak self] itemInfo in
                 guard let self = self else { return }
                 self.beautyConfig.setCustomMakeupEnableInternal(true)
                 self.beautyConfig.customPupilStyle = itemInfo.subItemStyle
-                itemInfo.value = self.beautyConfig.customPupilStrength
+                itemInfo.value = self.beautyConfig.customPupilStrength * 100.0
             },
             itemStyle: style
         )

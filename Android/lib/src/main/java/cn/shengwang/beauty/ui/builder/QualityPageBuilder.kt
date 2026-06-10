@@ -68,9 +68,11 @@ internal class QualityPageBuilder(
             BeautyItemInfo(
                 nameRes,
                 iconRes,
-                currentValue,
-                valueRange = -1.0f..1.0f,
-                onValueChanged = onValueChanged,
+                currentValue * 50f,  // -1.0~1.0 → -50~50
+                valueRange = -50f..50f,
+                onValueChanged = { uiVal ->
+                    onValueChanged(uiVal / 50f)  // -50~50 → -1.0~1.0
+                },
                 onItemClick = { _ ->
                     beautyConfig.setQualityEnableInternal(true)
                     // Update toggle item so cell renders as "on"

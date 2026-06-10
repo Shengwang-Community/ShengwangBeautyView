@@ -240,10 +240,10 @@ import UIKit
         
         pages.append(beautyBuilder.buildPage())
         pages.append(qualityBuilder.buildPage())
-        // Style Makeup
-//        pages.append(makeupBuilder.buildPage())
-        // Custom Makeup
-        pages.append(customMakeupBuilder.buildPage())
+        // Style Makeup — 风格妆，按素材包 config.json 决定是否显示
+        pages.append(makeupBuilder.buildPage())
+        // Custom Makeup — 自定义美妆（Makeup-Custom），需素材包含此模板，内部调参项不需要按模板裁剪
+//        pages.append(customMakeupBuilder.buildPage())
         pages.append(filterBuilder.buildPage())
         pages.append(stickerBuilder.buildPage())
         

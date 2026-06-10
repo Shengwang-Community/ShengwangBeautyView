@@ -53,6 +53,7 @@ class QualityPageBuilder implements IPageBuilder {
     );
   }
 
+  /// UI 显示换算规则：SDK 值范围 -1.0~1.0 → UI 显示 -50~50（整数）
   void _addQualityItem(
     List<BeautyItemInfo> items,
     String name,
@@ -64,10 +65,12 @@ class QualityPageBuilder implements IPageBuilder {
     items.add(BeautyItemInfo(
       name: name,
       iconAsset: '$_iconBase$icon.png',
-      value: value,
-      minValue: -1.0,
-      maxValue: 1.0,
-      onValueChanged: onChanged,
+      value: value * 50.0,  // -1.0~1.0 → -50~50
+      minValue: -50.0,
+      maxValue: 50.0,
+      onValueChanged: (uiVal) {
+        onChanged(uiVal / 50.0);  // -50~50 → -1.0~1.0
+      },
       onItemClick: (itemInfo) async {
         beautyConfig.setQualityEnableInternal(true);
         toggleItem.type = const BeautyItemTypeToggle(true);

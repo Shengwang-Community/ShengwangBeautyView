@@ -73,17 +73,19 @@ class FilterPageBuilder implements IPageBuilder {
   }
 
   void _add(List<BeautyItemInfo> items, String name, String icon, String filterName, double strength) {
+    final uiValue = beautyConfig.filterName == filterName ? strength * 100.0 : 0.0;
     items.add(BeautyItemInfo(
       name: name,
       iconAsset: '$_iconBase$icon.png',
-      value: beautyConfig.filterName == filterName ? strength : 0.0,
+      value: uiValue,
       isSelected: beautyConfig.filterName == filterName,
       minValue: 0.0,
-      maxValue: 1.0,
-      onValueChanged: (v) => beautyConfig.filterStrength = v,
+      maxValue: 100.0,
+      onValueChanged: (uiVal) => beautyConfig.filterStrength = uiVal / 100.0,
       onItemClick: (itemInfo) async {
         beautyConfig.filterName = filterName;
-        itemInfo.value = await beautyConfig.getFilterStrengthAsync();
+        final sdkValue = await beautyConfig.getFilterStrengthAsync();
+        itemInfo.value = sdkValue * 100.0;
       },
     ));
   }

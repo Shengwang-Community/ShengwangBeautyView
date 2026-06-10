@@ -90,6 +90,9 @@ class BeautyPageBuilder implements IPageBuilder {
         onChanged: (v) => beautyConfig.nasolabialFold = v);
   }
 
+  /// UI 显示换算规则：
+  /// - SDK 值范围 0.0~1.0 → UI 显示 0~100（整数）
+  /// - SDK 值范围 -1.0~1.0 → UI 显示 -50~50（整数）
   void _addSkin(
     List<BeautyItemInfo> items,
     String name,
@@ -100,14 +103,21 @@ class BeautyPageBuilder implements IPageBuilder {
     double maxValue = 1.0,
     required void Function(double) onChanged,
   }) {
+    final isBipolar = minValue < 0;
+    final uiMin = isBipolar ? -50.0 : 0.0;
+    final uiMax = isBipolar ? 50.0 : 100.0;
+    final uiValue = isBipolar ? value * 50.0 : value * 100.0;
     items.add(BeautyItemInfo(
       name: name,
       iconAsset: '$_iconBase$icon.png',
-      value: value,
+      value: uiValue,
       isSelected: isSelected,
-      minValue: minValue,
-      maxValue: maxValue,
-      onValueChanged: onChanged,
+      minValue: uiMin,
+      maxValue: uiMax,
+      onValueChanged: (uiVal) {
+        final sdkValue = isBipolar ? uiVal / 50.0 : uiVal / 100.0;
+        onChanged(sdkValue);
+      },
     ));
   }
 
@@ -235,6 +245,9 @@ class BeautyPageBuilder implements IPageBuilder {
         onChanged: (v) => beautyConfig.eyebrowPosition = v.toInt());
   }
 
+  /// UI 显示换算规则：
+  /// - SDK 值范围 0~100 → UI 显示 0~100（整数，不变）
+  /// - SDK 值范围 -100~100 → UI 显示 -50~50（整数），回调时 ×2 还原
   void _addFace(
     List<BeautyItemInfo> items,
     String name,
@@ -244,13 +257,20 @@ class BeautyPageBuilder implements IPageBuilder {
     double maxValue = 100.0,
     required void Function(double) onChanged,
   }) {
+    final isBipolar = minValue < 0;
+    final uiMin = isBipolar ? -50.0 : minValue;
+    final uiMax = isBipolar ? 50.0 : maxValue;
+    final uiValue = isBipolar ? value / 2.0 : value;
     items.add(BeautyItemInfo(
       name: name,
       iconAsset: '$_iconBase$icon.png',
-      value: value,
-      minValue: minValue,
-      maxValue: maxValue,
-      onValueChanged: onChanged,
+      value: uiValue,
+      minValue: uiMin,
+      maxValue: uiMax,
+      onValueChanged: (uiVal) {
+        final sdkValue = isBipolar ? uiVal * 2.0 : uiVal;
+        onChanged(sdkValue);
+      },
     ));
   }
 

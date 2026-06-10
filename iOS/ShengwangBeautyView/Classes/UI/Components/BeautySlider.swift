@@ -48,8 +48,9 @@ public class BeautySlider: UIView {
     public var onValueChanged: ((Float) -> Void)?
     
     /// Whether the value range is integer (for formatting)
+    /// All beauty slider ranges now use integer display (0~100, -50~50, -100~100, etc.)
     private var isIntegerRange: Bool {
-        return maximumValue > 1.0
+        return maximumValue > 1.0 || minimumValue < -1.0
     }
     
     /// Last callback timestamp for throttling
@@ -214,22 +215,14 @@ public class BeautySlider: UIView {
         maximumValue = itemInfo.valueRange.upperBound
         
         // Set value (without triggering callback)
-        if itemInfo.valueRange.upperBound > 1.0 {
-            slider.value = Float(Int(itemInfo.value))
-        } else {
-            slider.value = itemInfo.value
-        }
+        slider.value = Float(Int(itemInfo.value))
         updateValueLabel()
         updateSliderLabelPosition()
         
         // Set callback
         onValueChanged = { value in
             // Update itemInfo.value and call callback (updates SDK config)
-            if itemInfo.valueRange.upperBound > 1.0 {
-                itemInfo.value = Float(Int(value))
-            } else {
-                itemInfo.value = value
-            }
+            itemInfo.value = Float(Int(value))
             itemInfo.onValueChanged?(value)
         }
     }

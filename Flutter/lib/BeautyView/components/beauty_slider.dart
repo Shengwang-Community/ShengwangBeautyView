@@ -21,7 +21,8 @@ class _BeautySliderState extends State<BeautySlider> {
   DateTime _lastCallbackTime = DateTime.fromMillisecondsSinceEpoch(0);
   static const _throttleMs = 50;
 
-  bool get _isIntegerRange => widget.itemInfo.maxValue > 1.0;
+  bool get _isIntegerRange =>
+      widget.itemInfo.maxValue > 1.0 || widget.itemInfo.minValue < -1.0;
 
   @override
   void initState() {
@@ -46,11 +47,7 @@ class _BeautySliderState extends State<BeautySlider> {
   }
 
   String get _labelText {
-    if (_isIntegerRange) {
-      return _value.toInt().toString();
-    }
-    final floored = (_value * 10) / 10;
-    return floored.toStringAsFixed(1);
+    return _value.toInt().toString();
   }
 
   void _onChanged(double v) {
@@ -63,13 +60,13 @@ class _BeautySliderState extends State<BeautySlider> {
   }
 
   void _onChangeEnd(double v) {
-    final finalValue = _isIntegerRange ? v.roundToDouble() : v;
+    final finalValue = v.roundToDouble();
     setState(() => _value = finalValue);
     _fireCallback(finalValue);
   }
 
   void _fireCallback(double v) {
-    final val = _isIntegerRange ? v.roundToDouble() : v;
+    final val = v.roundToDouble();
     widget.itemInfo.value = val;
     widget.itemInfo.onValueChanged?.call(val);
   }
