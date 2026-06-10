@@ -495,6 +495,127 @@ class AgoraBeautyConfig extends BeautyConfig {
     }
   }
 
+  // ── Quality enable ───────────────────────────────────────────────────────────
+  bool _qualityEnable = false;
+
+  @override
+  bool get qualityEnable => _qualityEnable;
+  @override
+  set qualityEnable(bool v) {
+    if (_qualityEnable == v) return;
+    _qualityEnable = v;
+    if (!v) {
+      temperature = 0.0;
+      hue = 0.0;
+      saturation = 0.0;
+      brightness = 0.0;
+    }
+    sdk._notifyStateChanged();
+  }
+  @override
+  void setQualityEnableInternal(bool v) {
+    _qualityEnable = v;
+  }
+
+  // ── Custom Makeup ────────────────────────────────────────────────────────────
+
+  @override
+  bool get customMakeupEnable {
+    return _customMakeupEnable;
+  }
+  bool _customMakeupEnable = false;
+
+  @override
+  set customMakeupEnable(bool v) {
+    _customMakeupEnable = v;
+    _effect?.setVideoEffectBoolParam(option: 'makeup_options', key: 'enable_mu', param: v);
+    makeupName = v ? '' : null;
+    sdk._notifyStateChanged();
+  }
+
+  @override
+  void setCustomMakeupEnableInternal(bool v) {
+    if (_customMakeupEnable == v) return;
+    _customMakeupEnable = v;
+    _effect?.setVideoEffectBoolParam(option: 'makeup_options', key: 'enable_mu', param: v);
+    makeupName = v ? '' : null;
+  }
+
+  // Lipstick
+  int _customLipstickStyle = 0;
+  @override int get customLipstickStyle => _customLipstickStyle;
+  @override set customLipstickStyle(int v) { _customLipstickStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'lipStyle', param: v); }
+
+  int _customLipstickColor = 0;
+  @override int get customLipstickColor => _customLipstickColor;
+  @override set customLipstickColor(int v) { _customLipstickColor = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'lipColor', param: v); }
+
+  double _customLipstickStrength = 0.0;
+  @override double get customLipstickStrength => _customLipstickStrength;
+  @override set customLipstickStrength(double v) { _customLipstickStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'lipStrength', param: v); }
+
+  // Blush
+  int _customBlushStyle = 0;
+  @override int get customBlushStyle => _customBlushStyle;
+  @override set customBlushStyle(int v) { _customBlushStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'blushStyle', param: v); }
+
+  int _customBlushColor = 0;
+  @override int get customBlushColor => _customBlushColor;
+  @override set customBlushColor(int v) { _customBlushColor = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'blushColor', param: v); }
+
+  double _customBlushStrength = 0.0;
+  @override double get customBlushStrength => _customBlushStrength;
+  @override set customBlushStrength(double v) { _customBlushStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'blushStrength', param: v); }
+
+  // Facial (contour)
+  int _customFacialStyle = 0;
+  @override int get customFacialStyle => _customFacialStyle;
+  @override set customFacialStyle(int v) { _customFacialStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'facialStyle', param: v); }
+
+  double _customFacialStrength = 0.0;
+  @override double get customFacialStrength => _customFacialStrength;
+  @override set customFacialStrength(double v) { _customFacialStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'facialStrength', param: v); }
+
+  // Eyeshadow
+  int _customEyeshadowStyle = 0;
+  @override int get customEyeshadowStyle => _customEyeshadowStyle;
+  @override set customEyeshadowStyle(int v) { _customEyeshadowStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'shadowStyle', param: v); }
+
+  double _customEyeshadowStrength = 0.0;
+  @override double get customEyeshadowStrength => _customEyeshadowStrength;
+  @override set customEyeshadowStrength(double v) { _customEyeshadowStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'shadowStrength', param: v); }
+
+  // Eyebrow
+  int _customEyebrowStyle = 0;
+  @override int get customEyebrowStyle => _customEyebrowStyle;
+  @override set customEyebrowStyle(int v) { _customEyebrowStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'browStyle', param: v); }
+
+  double _customEyebrowStrength = 0.0;
+  @override double get customEyebrowStrength => _customEyebrowStrength;
+  @override set customEyebrowStrength(double v) { _customEyebrowStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'browStrength', param: v); }
+
+  // Lash
+  int _customLashStyle = 0;
+  @override int get customLashStyle => _customLashStyle;
+  @override set customLashStyle(int v) { _customLashStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'lashStyle', param: v); }
+
+  int _customLashColor = 0;
+  @override int get customLashColor => _customLashColor;
+  @override set customLashColor(int v) { _customLashColor = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'lashColor', param: v); }
+
+  double _customLashStrength = 0.0;
+  @override double get customLashStrength => _customLashStrength;
+  @override set customLashStrength(double v) { _customLashStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'lashStrength', param: v); }
+
+  // Pupil
+  int _customPupilStyle = 0;
+  @override int get customPupilStyle => _customPupilStyle;
+  @override set customPupilStyle(int v) { _customPupilStyle = v; _effect?.setVideoEffectIntParam(option: 'makeup_options', key: 'pupilStyle', param: v); }
+
+  double _customPupilStrength = 0.0;
+  @override double get customPupilStrength => _customPupilStrength;
+  @override set customPupilStrength(double v) { _customPupilStrength = v; _effect?.setVideoEffectFloatParam(option: 'makeup_options', key: 'pupilStrength', param: v); }
+
   // ── Reset / Save ─────────────────────────────────────────────────────────────
 
   @override

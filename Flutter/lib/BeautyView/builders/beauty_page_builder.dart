@@ -24,6 +24,10 @@ class BeautyPageBuilder implements IPageBuilder {
       isSelected: false,
       showSlider: false,
       type: BeautyItemTypeToggle(isEnabled),
+      onItemClick: (_) async {
+        beautyConfig.beautyEnable = !isEnabled;
+        beautyConfig.faceShapeEnable = !isEnabled;
+      },
     ));
 
     // 2. Reset
@@ -36,7 +40,6 @@ class BeautyPageBuilder implements IPageBuilder {
 
     await _addSkinBeautyItems(items);
     await _addFaceShapeItems(items);
-    await _addQualityItems(items);
 
     return BeautyPageInfo(
       name: 'beauty_group_beauty',
@@ -251,45 +254,8 @@ class BeautyPageBuilder implements IPageBuilder {
     ));
   }
 
-  // MARK: - Image quality
-
-  Future<void> _addQualityItems(List<BeautyItemInfo> items) async {
-    _addQuality(items, 'beauty_effect_temperature',
-        'beauty_ic_effect_temperature', await beautyConfig.getTemperatureAsync(),
-        onChanged: (v) => beautyConfig.temperature = v);
-
-    _addQuality(items, 'beauty_effect_hue', 'beauty_ic_effect_hue',
-        await beautyConfig.getHueAsync(),
-        onChanged: (v) => beautyConfig.hue = v);
-
-    _addQuality(items, 'beauty_effect_saturation',
-        'beauty_ic_effect_saturation', await beautyConfig.getSaturationAsync(),
-        onChanged: (v) => beautyConfig.saturation = v);
-
-    _addQuality(items, 'beauty_effect_brightness',
-        'beauty_ic_effect_brightness', await beautyConfig.getBrightnessAsync(),
-        onChanged: (v) => beautyConfig.brightness = v);
-  }
-
-  void _addQuality(
-    List<BeautyItemInfo> items,
-    String name,
-    String icon,
-    double value, {
-    double minValue = -1.0,
-    double maxValue = 1.0,
-    required void Function(double) onChanged,
-  }) {
-    items.add(BeautyItemInfo(
-      name: name,
-      iconAsset: '$_iconBase$icon.png',
-      value: value,
-      minValue: minValue,
-      maxValue: maxValue,
-      onValueChanged: onChanged,
-    ));
-  }
 }
+
 
 // ---------------------------------------------------------------------------
 // BeautyConfig — abstract interface, mirrors ShengwangBeautySDK.BeautyConfig
@@ -407,6 +373,57 @@ abstract class BeautyConfig {
   // Sticker
   String? get stickerName;
   set stickerName(String? v);
+
+  // Quality enable
+  bool get qualityEnable;
+  set qualityEnable(bool v);
+  void setQualityEnableInternal(bool v);
+
+  // Custom Makeup
+  bool get customMakeupEnable;
+  set customMakeupEnable(bool v);
+  void setCustomMakeupEnableInternal(bool v);
+
+  int get customLipstickStyle;
+  set customLipstickStyle(int v);
+  int get customLipstickColor;
+  set customLipstickColor(int v);
+  double get customLipstickStrength;
+  set customLipstickStrength(double v);
+
+  int get customBlushStyle;
+  set customBlushStyle(int v);
+  int get customBlushColor;
+  set customBlushColor(int v);
+  double get customBlushStrength;
+  set customBlushStrength(double v);
+
+  int get customFacialStyle;
+  set customFacialStyle(int v);
+  double get customFacialStrength;
+  set customFacialStrength(double v);
+
+  int get customEyeshadowStyle;
+  set customEyeshadowStyle(int v);
+  double get customEyeshadowStrength;
+  set customEyeshadowStrength(double v);
+
+  int get customEyebrowStyle;
+  set customEyebrowStyle(int v);
+  double get customEyebrowStrength;
+  set customEyebrowStrength(double v);
+
+  int get customLashStyle;
+  set customLashStyle(int v);
+  int get customLashColor;
+  set customLashColor(int v);
+  double get customLashStrength;
+  set customLashStrength(double v);
+
+  int get customPupilStyle;
+  set customPupilStyle(int v);
+  double get customPupilStrength;
+  set customPupilStrength(double v);
 
   // Reset
   void resetBeauty([BeautyModule? module]);

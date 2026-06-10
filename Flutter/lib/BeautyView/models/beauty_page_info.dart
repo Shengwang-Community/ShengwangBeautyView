@@ -1,8 +1,6 @@
 // beauty_page_info.dart
-// Mirrors iOS BeautyPageInfo.swift + BeautyModule + BeautyItemType
 
 /// Beauty module type
-/// Corresponds to Agora RTC SDK's VIDEO_EFFECT_NODE_ID
 enum BeautyModule {
   beauty,       // value: 1
   styleMakeup,  // value: 2
@@ -32,20 +30,27 @@ class BeautyItemTypeNone extends BeautyItemType {
   const BeautyItemTypeNone();
 }
 
+class BeautyItemTypeSubMenu extends BeautyItemType {
+  const BeautyItemTypeSubMenu();
+}
+
+class BeautyItemTypeBack extends BeautyItemType {
+  const BeautyItemTypeBack();
+}
+
 /// Beauty page information
 class BeautyPageInfo {
-  /// Page name (localization key)
   final String name;
-  /// Item list
   List<BeautyItemInfo> itemList;
-  /// Whether selected (for Tab switching)
+  /// Parent item list — saved when drilling into a sub-menu, restored on back
+  List<BeautyItemInfo>? parentItemList;
   bool isSelected;
-  /// Page type
   final BeautyModule type;
 
   BeautyPageInfo({
     required this.name,
     required this.itemList,
+    this.parentItemList,
     this.isSelected = false,
     this.type = BeautyModule.beauty,
   });
@@ -53,25 +58,22 @@ class BeautyPageInfo {
 
 /// Beauty item information
 class BeautyItemInfo {
-  /// Item name (localization key)
-  final String name;
-  /// Item icon asset path
-  final String? iconAsset;
-  /// Current value
+  String name;
+  String? iconAsset;
   double value;
-  /// Whether selected
   bool isSelected;
-  /// Value range (for slider)
   final double minValue;
   final double maxValue;
-  /// Value change callback (triggered when slider is released)
   void Function(double value)? onValueChanged;
-  /// Whether to show slider
   final bool showSlider;
-  /// Item type
-  final BeautyItemType type;
-  /// Click callback
+  BeautyItemType type;
   Future<void> Function(BeautyItemInfo item)? onItemClick;
+  /// Sub-items for hierarchical menus
+  final List<BeautyItemInfo>? subItems;
+  /// Sub-item style (for custom makeup SDK style param)
+  final int itemStyle;
+  /// Sub-item color (for custom makeup SDK color param)
+  final int itemColor;
 
   BeautyItemInfo({
     required this.name,
@@ -84,5 +86,8 @@ class BeautyItemInfo {
     this.showSlider = true,
     this.type = const BeautyItemTypeNormal(),
     this.onItemClick,
+    this.subItems,
+    this.itemStyle = 0,
+    this.itemColor = 0,
   });
 }
