@@ -155,6 +155,8 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         attrs,
         defStyleAttr
     ) {
+        // 自动为 ShengwangBeautyManager 提供 appContext（用于 SharedPreferences 持久化）
+        ShengwangBeautyManager.setAppContext(context.applicationContext)
         initView(localizedContext(context))
     }
 

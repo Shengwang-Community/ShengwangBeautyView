@@ -984,7 +984,38 @@ import AgoraRtcKit
         /// Save beauty parameters
         /// - Parameter nodeId: Node ID (corresponds to BeautyModule)
         internal func saveBeauty(_ nodeId: BeautyModule = .beauty) {
+            // Persist selected template names to UserDefaults
+            let defaults = UserDefaults.standard
+            let prefix = "com.shengwang.beauty."
+            
+            if nodeId == .styleMakeup && makeupName != nil {
+                defaults.set(makeupName, forKey: prefix + "makeupName")
+            }
+            if nodeId == .filter && filterName != nil {
+                defaults.set(filterName, forKey: prefix + "filterName")
+            }
+            if (nodeId == .beauty || nodeId == .sticker) && stickerName != nil {
+                defaults.set(stickerName, forKey: prefix + "stickerName")
+            }
+            
             parentBeautyEffect?.performVideoEffectAction(nodeId: nodeId.rawValue, actionId: AgoraVideoEffectAction.save)
+        }
+        
+        /// Restore previously saved template names from UserDefaults
+        /// Call this after initBeautySDK succeeds to auto-load last used templates
+        internal func restoreSavedTemplates() {
+            let defaults = UserDefaults.standard
+            let prefix = "com.shengwang.beauty."
+            
+            if let savedFilter = defaults.string(forKey: prefix + "filterName") {
+                filterName = savedFilter
+            }
+            if let savedSticker = defaults.string(forKey: prefix + "stickerName") {
+                stickerName = savedSticker
+            }
+            if let savedMakeup = defaults.string(forKey: prefix + "makeupName") {
+                makeupName = savedMakeup
+            }
         }
     }
     
@@ -1059,6 +1090,9 @@ import AgoraRtcKit
         
         // Enable beauty by default
         enable(true)
+        
+        // Restore previously saved template selections (filter, sticker, makeup)
+        beautyConfig.restoreSavedTemplates()
         
         print("[BeautySDK] Beauty SDK initialized successfully")
         notifyBeautyStateChanged()

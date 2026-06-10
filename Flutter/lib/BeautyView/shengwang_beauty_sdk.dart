@@ -1,7 +1,10 @@
 // shengwang_beauty_sdk.dart
 // Flutter equivalent of iOS ShengwangBeautySDK.swift
 
+import 'dart:convert';
+import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:path_provider/path_provider.dart';
 import 'builders/beauty_page_builder.dart';
 import 'models/beauty_page_info.dart';
 
@@ -60,6 +63,10 @@ class ShengwangBeautySDK {
     }
 
     _enable(true);
+
+    // Restore previously saved template selections (filter, sticker, makeup)
+    await beautyConfig._restoreSavedTemplates();
+
     print('[BeautySDK] Initialized successfully');
 
     _notifyStateChanged();
@@ -639,7 +646,52 @@ class AgoraBeautyConfig extends BeautyConfig {
       _effect?.performVideoEffectAction(
           nodeId: _moduleToNodeId(m), actionId: VideoEffectAction.save);
     }
+    // Persist selected template names
+    _persistTemplateNames(module);
     sdk._notifyStateChanged();
+  }
+
+  /// Persist template names to local file
+  Future<void> _persistTemplateNames([BeautyModule? module]) async {
+    try {
+      final file = await _getPrefsFile();
+      // Always write all current template names (avoid partial read/merge corruption)
+      final data = <String, dynamic>{
+        'filterName': _filterName,
+        'stickerName': _stickerName,
+        'makeupName': _makeupName,
+      };
+      await file.writeAsString(jsonEncode(data));
+    } catch (e) {
+      print('[BeautySDK] Failed to persist template names: $e');
+    }
+  }
+
+  /// Restore saved template names from local file
+  Future<void> _restoreSavedTemplates() async {
+    try {
+      final file = await _getPrefsFile();
+      if (!await file.exists()) return;
+      final content = await file.readAsString();
+      if (content.isEmpty) return;
+      final data = jsonDecode(content) as Map<String, dynamic>;
+      if (data['filterName'] is String) {
+        filterName = data['filterName'] as String;
+      }
+      if (data['stickerName'] is String) {
+        stickerName = data['stickerName'] as String;
+      }
+      if (data['makeupName'] is String) {
+        makeupName = data['makeupName'] as String;
+      }
+    } catch (e) {
+      print('[BeautySDK] Failed to restore template names: $e');
+    }
+  }
+
+  Future<File> _getPrefsFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/shengwang_beauty_prefs.json');
   }
 
   int _moduleToNodeId(BeautyModule m) {

@@ -24,6 +24,16 @@ object ShengwangBeautyManager {
     private var makeupEnable = false
     private var stickerEnable = false
 
+    // 应用上下文，用于 SharedPreferences 持久化
+    private var appContext: android.content.Context? = null
+
+    /// 设置应用上下文（由 ShengwangBeautyView 构造时自动调用，或外部手动设置）
+    fun setAppContext(context: android.content.Context) {
+        if (appContext == null) {
+            appContext = context.applicationContext
+        }
+    }
+
     // 状态监听器
     var beautyStateListener: (() -> Unit)? = null
 
@@ -56,8 +66,11 @@ object ShengwangBeautyManager {
         return beautyEffect != null && rtcEngine != null
     }
 
-    fun initBeautySDK(materialPath: String, rtcEngine: RtcEngine): Boolean {
+    fun initBeautySDK(materialPath: String, rtcEngine: RtcEngine, context: android.content.Context? = null): Boolean {
         this.rtcEngine = rtcEngine
+        if (context != null) {
+            this.appContext = context.applicationContext
+        }
         // Enable extension (may already be enabled, but it's safe to call again)
         val ret = rtcEngine.enableExtension(
             "agora_video_filters_clear_vision", "clear_vision", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE
@@ -78,6 +91,9 @@ object ShengwangBeautyManager {
 
         // Enable beauty by default
         enable(true)
+
+        // Restore previously saved template selections (filter, sticker, makeup)
+        beautyConfig.restoreSavedTemplates()
 
         Log.d(TAG, "Beauty manager initialized successfully")
         notifyBeautyStateChanged()
@@ -1040,7 +1056,32 @@ object ShengwangBeautyManager {
 
         // 保存美颜节点
         internal fun saveBeauty(nodeId: IVideoEffectObject.VIDEO_EFFECT_NODE_ID = IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY) {
+            // 持久化当前选中的模板名到 SharedPreferences
+            appContext?.let { ctx ->
+                val prefs = ctx.getSharedPreferences("shengwang_beauty", android.content.Context.MODE_PRIVATE)
+                val editor = prefs.edit()
+                if (nodeId == IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STYLE_MAKEUP && makeupName != null) {
+                    editor.putString("makeupName", makeupName)
+                }
+                if (nodeId == IVideoEffectObject.VIDEO_EFFECT_NODE_ID.FILTER && filterName != null) {
+                    editor.putString("filterName", filterName)
+                }
+                if ((nodeId == IVideoEffectObject.VIDEO_EFFECT_NODE_ID.BEAUTY || nodeId == IVideoEffectObject.VIDEO_EFFECT_NODE_ID.STICKER) && stickerName != null) {
+                    editor.putString("stickerName", stickerName)
+                }
+                editor.apply()
+            }
             parentBeautyEffect?.performVideoEffectAction(nodeId.value, IVideoEffectObject.VIDEO_EFFECT_ACTION.SAVE)
+        }
+
+        // 恢复之前保存的模板名
+        internal fun restoreSavedTemplates() {
+            appContext?.let { ctx ->
+                val prefs = ctx.getSharedPreferences("shengwang_beauty", android.content.Context.MODE_PRIVATE)
+                prefs.getString("filterName", null)?.let { filterName = it }
+                prefs.getString("stickerName", null)?.let { stickerName = it }
+                prefs.getString("makeupName", null)?.let { makeupName = it }
+            }
         }
     }
 }
