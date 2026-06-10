@@ -25,10 +25,10 @@ Demo 工程是最佳参考，用户遇到不确定的集成问题时，优先对
 
 ## 知识库
 
-- 常见问题解答：#[[file:.kiro/skills/beauty-integration-qa/qa.md]]
-- 集成操作指南（含完整 API 和参数）：#[[file:.kiro/skills/beauty-integration-qa/integration-guide.md]]
-- 模板列表与映射关系：#[[file:.kiro/skills/beauty-integration-qa/template-list.md]]
-- 低端机性能优化指南：#[[file:.kiro/skills/beauty-integration-qa/performance-guide.md]]
+- 常见问题解答：#[[file:.skills/beauty-integration-qa/qa.md]]
+- 集成操作指南（含完整 API 和参数）：#[[file:.skills/beauty-integration-qa/integration-guide.md]]
+- 模板列表与映射关系：#[[file:.skills/beauty-integration-qa/template-list.md]]
+- 低端机性能优化指南：#[[file:.skills/beauty-integration-qa/performance-guide.md]]
 - 素材包配置文件（真实模板名来源）：#[[file:iOS/BeautyView/Example/AgoraBeautyMaterial.bundle/beauty_material_encrypted/config.json]]
 
 ## Agent 行为规范

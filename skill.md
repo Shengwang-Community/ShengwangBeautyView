@@ -65,3 +65,49 @@ agora_rtc_engine:
 ## Flutter
 
 #[[file:Flutter/README.md]]
+
+---
+
+## 按素材包适配 UI
+
+**常见提问**：「请开始按素材包适配UI」、「美颜素材包已更新，请开始适配UI」
+
+### 判断逻辑
+
+- 用户不说"自定义美妆"时，默认按**风格妆**（`MakeupPageBuilder`）走
+- 只有用户明确说"我要自定义美妆"时，才走**自定义美妆**（`CustomMakeupPageBuilder`）
+- 用户只说"美妆"或"风格妆"，统一按风格妆处理
+
+#### 素材包校验
+
+- **风格妆**：检查 `user_interface_option` 中是否存在 `Makeup-` 前缀（但不含 `Makeup-Custom`）的模板。如果一个都没有，告知用户素材包打包不正确，缺少风格妆模板。
+- **自定义美妆**：检查 `user_interface_option` 中是否存在 `Makeup-Custom`，且 `makeup_config` 是否配置为 `Makeup-Custom`。如果不满足，告知用户素材包打包不正确，缺少自定义美妆配置。
+
+### 操作步骤
+
+1. **读取素材包的 `config.json`**，确认实际可用模板列表。
+   - 素材包路径规则见 `.skills/beauty-integration-qa/template-list.md`
+   - Android：解压 `Android/app/src/main/assets/AgoraBeautyMaterial.zip`，读取 `beauty_material_functional/config.json`（或 `beauty_material_encrypted/config.json`）
+   - iOS：直接读取 `iOS/BeautyView/Example/AgoraBeautyMaterial.bundle/beauty_material_functional/config.json`（或 encrypted 目录）
+   - 取 `user_interface_option` 的所有 key 作为实际可用模板
+
+2. **对比各 PageBuilder 的 UI 项**，按模板名前缀分类：
+   - `Makeup-`（非 Custom）→ `MakeupPageBuilder`（Android + iOS + Flutter）— 风格妆
+   - `Makeup-Custom` → `CustomMakeupPageBuilder`（Android + iOS + Flutter）— 自定义美妆
+   - `Filter-` → `FilterPageBuilder`（Android + iOS + Flutter）
+   - `Sticker-` → `StickerPageBuilder`（Android + iOS + Flutter）
+   - `Beauty-` → 美颜 tab 不受影响（参数项不依赖模板名）
+
+3. **注释掉素材包里不存在的 UI 项**，保留存在的，注释格式：
+   - Android（Kotlin）：`// 注释原因 — 素材包不含此模板，已注释` + 用 `//` 注释掉调用代码
+   - iOS（Swift）：`// 注释原因 — not in material package, commented out` + 用 `//` 注释掉调用代码
+   - Flutter（Dart）：`// 注释原因 — not in material package, commented out` + 用 `//` 注释掉调用代码
+
+### 注意事项
+
+- 风格妆与自定义美妆是独立的两种能力，对应不同的 PageBuilder，按用户需求选择其一或两者都启用
+- `CustomMakeupPageBuilder`（自定义美妆）内部全是调参项（唇妆/腮红/修容/眼影等），不需要像风格妆/滤镜/贴纸那样按模板名裁剪 UI 选项
+- 贴纸的 `-Lite` 静态版（如 `Sticker-Piggy-Lite`）在代码里没有单独 UI 项，只需保留对应动态版的 item 即可
+- 某类型模板全部不存在时，整个 tab 可以删除（但通常只注释 item，不删 tab）
+- Android、iOS 和 Flutter 需同步修改，三端 config.json 内容应一致（仅 Beauty-Anchor 路径不同）
+- 修改完后用 `getDiagnostics` 验证无编译错误

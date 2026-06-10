@@ -56,11 +56,15 @@
 1. 读取 `user_interface_option` 的所有 key，得到实际可用模板列表
 2. 按模板名前缀判断类型：
    - `Beauty-` 开头 → 美颜 tab
-   - `Makeup-` 开头 → 风格妆 tab
+   - `Makeup-Custom` → 自定义美妆 tab（默认加载，不需要按素材包裁剪 UI 选项）
+   - `Makeup-` 开头（非 Custom）→ 风格妆 tab
    - `Sticker-` 开头 → 贴纸 tab
    - `Filter-` 开头 → 滤镜 tab
-3. 某类型的模板全部不存在于 `user_interface_option` → 整个 tab 删除
+3. 某类型的模板全部不存在于 `user_interface_option` → 整个 tab 删除（自定义美妆除外，见下方校验规则）
 4. 某类型只保留了部分 → 只保留 config.json 中出现的 item，其余删除
+5. Android、iOS 和 Flutter 需同步修改
+6. **风格妆校验**：如果用户要风格妆，但 `user_interface_option` 中没有任何 `Makeup-` 前缀（排除 `Makeup-Custom`）的模板 → 告知用户素材包打包不正确，缺少风格妆模板
+7. **自定义美妆校验**：如果用户明确要自定义美妆，但 `user_interface_option` 中没有 `Makeup-Custom`，或 `makeup_config` 未设置为 `Makeup-Custom` → 告知用户素材包打包不正确
 5. 美颜 tab 的特殊处理：
    - `user_interface_option` 中没有任何 `Beauty-*` → 美颜 tab 删除
    - 有一个 `Beauty-*` → 直接使用该模板
@@ -96,6 +100,22 @@
 | `Beauty-Show` | 模板-秀场 |
 
 > 美颜模板决定各参数的初始默认值，通常选一个作为默认即可，不需要让用户切换。
+
+---
+
+## 自定义美妆模板（Custom Makeup）
+
+| 模板名 | 说明 |
+|--------|------|
+| `Makeup-Custom` | 自定义美妆（需在 config.json 的 `user_interface_option` 中存在，且 `makeup_config` 配置为 `Makeup-Custom`） |
+
+> **判断逻辑**：
+> - 用户不说"自定义美妆"时，默认按风格妆走，不涉及此模板
+> - 用户明确要"自定义美妆"时，需检查 config.json：
+>   1. `user_interface_option` 中是否有 `Makeup-Custom` key
+>   2. `makeup_config` 是否设置为 `Makeup-Custom`
+>   - 任一条件不满足 → 告知用户素材包打包不正确
+> - 自定义美妆对应 `CustomMakeupPageBuilder`，内部全是逐项调参（唇妆/腮红/修容/眼影/眉毛/睫毛/美瞳），不需要像风格妆那样按模板名裁剪 UI 选项
 
 ---
 
