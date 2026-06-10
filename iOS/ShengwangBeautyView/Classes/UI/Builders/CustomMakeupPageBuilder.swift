@@ -319,31 +319,31 @@ internal class CustomMakeupPageBuilder: IPageBuilder {
                 self?.beautyConfig.customLipstickStyle = 0
               }
             ),
-            // 樱桃
-            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_cherry",
+            // 元气橘
+            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_vibrant_orange",
                                    icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_001"),
                                    style: 1,
-                                   color: 0),
-            // 亮泽
-            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_glossy",
-                                   icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_003"),
-                                   style: 3,
-                                   color: 7),
-            // 雾面
-            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_matte",
-                                   icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_004"),
-                                   style: 4,
                                    color: 9),
-            // 咬唇
-            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_bitten",
+            // 丝绒红
+            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_velvet_red",
+                                   icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_003"),
+                                   style: 1,
+                                   color: 6),
+            // 梅子
+            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_plum",
+                                   icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_004"),
+                                   style: 1,
+                                   color: 3),
+            // 少女粉
+            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_pink",
                                    icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_005"),
-                                   style: 5,
-                                   color: 0),
-            // 晕染
-            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_ombre",
+                                   style: 1,
+                                   color: 5),
+            // 西柚色
+            buildSubLipStickItem(name: "beauty_custom_makeup_lipstick_grapefruit",
                                    icon: UIImage.beautyIcon(named: "beauty_ic_makeup_lipstick_006"),
-                                   style: 6,
-                                   color: 0),
+                                   style: 1,
+                                   color: 8),
         ]
     }
     

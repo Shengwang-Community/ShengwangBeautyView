@@ -125,11 +125,11 @@
 "beauty_custom_makeup_pupil" = "Pupil";
 "beauty_custom_makeup_lash" = "Eyelash";
 /* Custom Makeup - Lipstick */
-"beauty_custom_makeup_lipstick_cherry" = "Cherry";
-"beauty_custom_makeup_lipstick_glossy" = "Glossy";
-"beauty_custom_makeup_lipstick_matte" = "Matte";
-"beauty_custom_makeup_lipstick_bitten" = "Bitten";
-"beauty_custom_makeup_lipstick_ombre" = "Ombre";
+"beauty_custom_makeup_lipstick_vibrant_orange" = "Orange";
+"beauty_custom_makeup_lipstick_velvet_red" = "Velvet";
+"beauty_custom_makeup_lipstick_plum" = "Plum";
+"beauty_custom_makeup_lipstick_pink" = "Pink";
+"beauty_custom_makeup_lipstick_grapefruit" = "Grapefruit";
 /* Custom Makeup - Blush */
 "beauty_custom_makeup_blush_powder" = "Powder";
 "beauty_custom_makeup_blush_peach" = "Peach";

@@ -119,11 +119,11 @@
     <string name="beauty_custom_makeup_eyebrow">Eyebrow</string>
     <string name="beauty_custom_makeup_lash">Lash</string>
     <string name="beauty_custom_makeup_pupil">Pupil</string>
-    <string name="beauty_custom_makeup_lipstick_cherry">Cherry</string>
-    <string name="beauty_custom_makeup_lipstick_glossy">Glossy</string>
-    <string name="beauty_custom_makeup_lipstick_matte">Matte</string>
-    <string name="beauty_custom_makeup_lipstick_bitten">Bitten</string>
-    <string name="beauty_custom_makeup_lipstick_ombre">Ombre</string>
+    <string name="beauty_custom_makeup_lipstick_vibrant_orange">Orange</string>
+    <string name="beauty_custom_makeup_lipstick_velvet_red">Velvet</string>
+    <string name="beauty_custom_makeup_lipstick_plum">Plum</string>
+    <string name="beauty_custom_makeup_lipstick_pink">Pink</string>
+    <string name="beauty_custom_makeup_lipstick_grapefruit">Grapefruit</string>
     <string name="beauty_custom_makeup_blush_powder">Powder</string>
     <string name="beauty_custom_makeup_blush_peach">Peach</string>
     <string name="beauty_custom_makeup_blush_tipsy">Tipsy</string>

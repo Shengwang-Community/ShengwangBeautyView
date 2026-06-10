@@ -125,11 +125,11 @@
 "beauty_custom_makeup_pupil" = "美瞳";
 "beauty_custom_makeup_lash" = "睫毛";
 /* Custom Makeup - Lipstick */
-"beauty_custom_makeup_lipstick_cherry" = "樱桃";
-"beauty_custom_makeup_lipstick_glossy" = "亮泽";
-"beauty_custom_makeup_lipstick_matte" = "雾面";
-"beauty_custom_makeup_lipstick_bitten" = "咬唇";
-"beauty_custom_makeup_lipstick_ombre" = "晕染";
+"beauty_custom_makeup_lipstick_vibrant_orange" = "元气橘";
+"beauty_custom_makeup_lipstick_velvet_red" = "丝绒红";
+"beauty_custom_makeup_lipstick_plum" = "梅子";
+"beauty_custom_makeup_lipstick_pink" = "少女粉";
+"beauty_custom_makeup_lipstick_grapefruit" = "西柚色";
 /* Custom Makeup - Blush */
 "beauty_custom_makeup_blush_powder" = "粉黛";
 "beauty_custom_makeup_blush_peach" = "蜜桃";

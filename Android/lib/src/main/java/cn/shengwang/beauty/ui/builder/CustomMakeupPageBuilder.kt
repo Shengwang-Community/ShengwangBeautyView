@@ -165,11 +165,11 @@ internal class CustomMakeupPageBuilder(
 
     private fun buildLipstickItems() = listOf(
         BeautyItemInfo(R.string.beauty_effect_none, R.drawable.beauty_ic_none, isSelected = beautyConfig.customLipstickStyle == 0, showSlider = false, type = BeautyItemType.NONE, onItemClick = { beautyConfig.customLipstickStyle = 0 }),
-        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_cherry, R.drawable.beauty_ic_makeup_lipstick_001, style = 1, color = 0),
-        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_glossy, R.drawable.beauty_ic_makeup_lipstick_003, style = 3, color = 7),
-        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_matte, R.drawable.beauty_ic_makeup_lipstick_004, style = 4, color = 9),
-        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_bitten, R.drawable.beauty_ic_makeup_lipstick_005, style = 5, color = 0),
-        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_ombre, R.drawable.beauty_ic_makeup_lipstick_006, style = 6, color = 0)
+        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_vibrant_orange, R.drawable.beauty_ic_makeup_lipstick_001, style = 1, color = 9),
+        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_velvet_red, R.drawable.beauty_ic_makeup_lipstick_003, style = 1, color = 6),
+        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_plum, R.drawable.beauty_ic_makeup_lipstick_004, style = 1, color = 3),
+        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_pink, R.drawable.beauty_ic_makeup_lipstick_005, style = 1, color = 5),
+        buildSubLipstickItem(R.string.beauty_custom_makeup_lipstick_grapefruit, R.drawable.beauty_ic_makeup_lipstick_006, style = 1, color = 8)
     )
 
     private fun buildBlushItems() = listOf(

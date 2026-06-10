@@ -119,11 +119,11 @@
     <string name="beauty_custom_makeup_eyebrow">修眉</string>
     <string name="beauty_custom_makeup_lash">睫毛</string>
     <string name="beauty_custom_makeup_pupil">美瞳</string>
-    <string name="beauty_custom_makeup_lipstick_cherry">樱桃</string>
-    <string name="beauty_custom_makeup_lipstick_glossy">亮泽</string>
-    <string name="beauty_custom_makeup_lipstick_matte">雾面</string>
-    <string name="beauty_custom_makeup_lipstick_bitten">咬唇</string>
-    <string name="beauty_custom_makeup_lipstick_ombre">晕染</string>
+    <string name="beauty_custom_makeup_lipstick_vibrant_orange">元气橘</string>
+    <string name="beauty_custom_makeup_lipstick_velvet_red">丝绒红</string>
+    <string name="beauty_custom_makeup_lipstick_plum">梅子</string>
+    <string name="beauty_custom_makeup_lipstick_pink">少女粉</string>
+    <string name="beauty_custom_makeup_lipstick_grapefruit">西柚色</string>
     <string name="beauty_custom_makeup_blush_powder">粉黛</string>
     <string name="beauty_custom_makeup_blush_peach">蜜桃</string>
     <string name="beauty_custom_makeup_blush_tipsy">微醺</string>
