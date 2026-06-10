@@ -42,7 +42,7 @@ object FilterNames {
     const val COTTON = "Filter-Cotton"           // 棉绒
     const val SODA = "Filter-Soda"               // 苏打
     const val MOONLIGHT = "Filter-Moonlight"             // 月白
-    const val WHITE_TEA = "Filter-WhiteTea"             // 白茶
+    const val WHITE_TEA = "Filter-Whitetea"             // 白茶
     const val TRANQUIL = "Filter-Tranquil"             // 沉谧
     const val INSTA_STYLE = "Filter-Ins"               // ins风
     const val STREET = "Filter-Street"             // 老街
