@@ -13,6 +13,10 @@ import Foundation
 /// Beauty feature example view controller
 /// Demonstrates how to initialize and use beauty features
 class ExampleViewController: UIViewController {
+  
+    private let beautyProviderName = "agora_video_filters_clear_vision"
+    private let beautyExtensionName = "clear_vision"
+    private let fdEventKey = "FDInfo"
     
     // MARK: - Properties
     
@@ -170,6 +174,7 @@ class ExampleViewController: UIViewController {
         }
         let config = AgoraRtcEngineConfig()
         config.appId = appId
+        config.eventDelegate = self
         let rtcEngine = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
         rtcEngine.enableVideo()
         self.rtcEngine = rtcEngine
@@ -287,6 +292,35 @@ extension ExampleViewController: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
         print("⚠️ RTC Error code: \(errorCode.rawValue), msg: \(AgoraRtcEngineKit.getErrorDescription(errorCode.rawValue))")
+    }
+}
+
+extension ExampleViewController: AgoraMediaFilterEventDelegate {
+    func onEventWithContext(_ context: AgoraExtensionContext, key: String?, value: String?) {
+      guard context.providerName == beautyProviderName,
+            context.extensionName == beautyExtensionName,
+            let value,
+            !value.isEmpty else {
+        return
+      }
+      if (key == fdEventKey) {
+        // Parse face detection info from JSON value
+        if let data = value.data(using: .utf8),
+        let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+          let status = json["status"] as? Int ?? 0
+          var faceInfos: [(score: Double, box: String)] = []
+          var index = 0
+          while let score = json["fd_score\(index)"] as? Double,
+                let box = json["fd_box\(index)"] as? String {
+            faceInfos.append((score: score, box: box))
+            index += 1
+          }
+          print("[BeautySDK] FD status: \(status), detected \(faceInfos.count) face(s)")
+          for (i, info) in faceInfos.enumerated() {
+            print("[BeautySDK]   face\(i): score=\(info.score), box=\(info.box)")
+          }
+        }
+      }
     }
 }
 
