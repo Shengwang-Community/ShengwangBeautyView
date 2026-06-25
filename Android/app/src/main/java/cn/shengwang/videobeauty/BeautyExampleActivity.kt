@@ -17,6 +17,9 @@ import cn.shengwang.videobeauty.databinding.ActivityBeautyExampleBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.video.VideoCanvas
 import io.agora.rtc2.video.VideoEncoderConfiguration
+import io.agora.rtc2.IMediaExtensionObserver
+import io.agora.rtc2.ExtensionContext
+import org.json.JSONObject
 
 /**
  * 美颜功能使用示例 Activity
@@ -37,6 +40,10 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
     companion object {
         const val EXTRA_CHANNEL_NAME = "channel_name"
         const val EXTRA_MATERIAL_PATH = "material_path"
+
+        private const val BEAUTY_PROVIDER_NAME = "agora_video_filters_clear_vision"
+        private const val BEAUTY_EXTENSION_NAME = "clear_vision"
+        private const val FD_EVENT_KEY = "FDInfo"
     }
 
     override fun getViewBinding(): ActivityBeautyExampleBinding = ActivityBeautyExampleBinding.inflate(layoutInflater)
@@ -160,8 +167,46 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
                 Log.d(TAG, "onLeaveChannel")
             }
         }
+        config.mExtensionObserver = object : IMediaExtensionObserver {
+            override fun onEventWithContext(extContext: ExtensionContext, key: String?, value: String?) {
+                // 处理fd event
+                if (extContext.providerName != BEAUTY_PROVIDER_NAME ||
+                    extContext.extensionName != BEAUTY_EXTENSION_NAME ||
+                    value.isNullOrEmpty()
+                ) {
+                    return
+                }
+                if (key == FD_EVENT_KEY) {
+                    handleFaceDetectionEvent(value)
+                }
+            }
+        }
         return (RtcEngine.create(config) as RtcEngineEx).apply {
             enableVideo()
+        }
+    }
+
+    /**
+     * 解析人脸检测信息 (FD event)
+     */
+    private fun handleFaceDetectionEvent(value: String) {
+        try {
+            val json = JSONObject(value)
+            val status = json.optInt("status", 0)
+            val faceInfos = mutableListOf<Pair<Double, String>>()
+            var index = 0
+            while (json.has("fd_score$index") && json.has("fd_box$index")) {
+                val score = json.optDouble("fd_score$index", 0.0)
+                val box = json.optString("fd_box$index", "")
+                faceInfos.add(score to box)
+                index++
+            }
+            Log.d(TAG, "[BeautySDK] FD status: $status, detected ${faceInfos.size} face(s)")
+            faceInfos.forEachIndexed { i, info ->
+                Log.d(TAG, "[BeautySDK]   face$i: score=${info.first}, box=${info.second}")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse FD event: ${e.message}")
         }
     }
 

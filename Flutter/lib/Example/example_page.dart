@@ -6,6 +6,8 @@
 //   - BeautyControlBar pinned to right center
 //   - ShengwangBeautyView panel slides in from bottom
 
+import 'dart:convert';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import '../agora.config.dart' as config;
@@ -39,6 +41,11 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
+  // ── FD event ───────────────────────────────────────────────────────────────
+  static const String _beautyProviderName = 'agora_video_filters_clear_vision';
+  static const String _beautyExtensionName = 'clear_vision';
+  static const String _fdEventKey = 'FDInfo';
+
   // ── RTC ──────────────────────────────────────────────────────────────────
   late final RtcEngine _engine;
   late final RtcEngineEventHandler _rtcEngineEventHandler;
@@ -111,6 +118,15 @@ class _ExamplePageState extends State<ExamplePage> {
       onExtensionEventWithContext: (ExtensionContext context, String key, String value) {
         debugPrint(
             '[onExtensionEvent] provider: ${context.providerName}, extName: ${context.extensionName}');
+        // 处理fd event
+        if (context.providerName != _beautyProviderName ||
+            context.extensionName != _beautyExtensionName ||
+            value.isEmpty) {
+          return;
+        }
+        if (key == _fdEventKey) {
+          _handleFaceDetectionEvent(value);
+        }
       },
       onExtensionStoppedWithContext: (ExtensionContext context) {
         debugPrint(
@@ -143,6 +159,30 @@ class _ExamplePageState extends State<ExamplePage> {
     _engine.unregisterEventHandler(_rtcEngineEventHandler);
     await _engine.leaveChannel();
     await _engine.release();
+  }
+
+  /// 解析人脸检测信息 (FD event)
+  void _handleFaceDetectionEvent(String value) {
+    try {
+      final json = jsonDecode(value) as Map<String, dynamic>;
+      final status = (json['status'] as num?)?.toInt() ?? 0;
+      final faceInfos = <({double score, String box})>[];
+      var index = 0;
+      while (json['fd_score$index'] != null && json['fd_box$index'] != null) {
+        final score = (json['fd_score$index'] as num).toDouble();
+        final box = json['fd_box$index'] as String;
+        faceInfos.add((score: score, box: box));
+        index++;
+      }
+      debugPrint(
+          '[BeautySDK] FD status: $status, detected ${faceInfos.length} face(s)');
+      for (var i = 0; i < faceInfos.length; i++) {
+        debugPrint(
+            '[BeautySDK]   face$i: score=${faceInfos[i].score}, box=${faceInfos[i].box}');
+      }
+    } catch (e) {
+      debugPrint('[BeautySDK] Failed to parse FD event: $e');
+    }
   }
 
   // ── Actions ───────────────────────────────────────────────────────────────
