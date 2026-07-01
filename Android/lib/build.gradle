@@ -53,8 +53,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     
     // Agora RTC SDK - compileOnly，客户需要自己添加
-    compileOnly 'io.agora.rtc:full-rtc-basic:4.5.3'
-    compileOnly 'io.agora.rtc:clear-vision:4.5.3'
+    compileOnly 'io.agora.rtc:agora-special-full:4.5.3.2'
     
     // Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
