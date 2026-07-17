@@ -972,6 +972,20 @@ import AgoraRtcKit
                 parentBeautyEffect?.setVideoEffectFloatParam(option: "sticker_effect_option", key: "strength", floatValue: newValue)
             }
         }
+
+        /// Registers downloaded filter and sticker template directories with the beauty engine.
+        /// - Parameter templatePaths: A map from template name (for example, `Filter-Peach`)
+        ///   to its extracted template directory path.
+        internal func dynamicLoadDownloadRes(_ templatePaths: [String: String]) {
+            for (templateName, templatePath) in templatePaths
+                where !templateName.isEmpty && !templatePath.isEmpty {
+                parentBeautyEffect?.setVideoEffectStringParam(
+                    option: "user_interface_option",
+                    key: templateName,
+                    stringValue: templatePath
+                )
+            }
+        }
         
         // MARK: - Reset and Save
         
@@ -1048,6 +1062,19 @@ import AgoraRtcKit
         }
         
         return initBeautySDKInternal(materialPath: materialPath, rtcEngine: rtcEngine)
+    }
+
+    /// Registers downloaded filter and sticker template directories with the beauty engine.
+    ///
+    /// Call this after `initBeautySDK` and after the resource package has been downloaded
+    /// and extracted. The keys must match the template names used by the beauty UI.
+    /// - Parameter templatePaths: A map from template name to its extracted directory path.
+    public func dynamicLoadDownloadRes(_ templatePaths: [String: String]) {
+        guard beautyEffect != nil else {
+            print("[BeautySDK] dynamicLoadDownloadRes must be called after initBeautySDK")
+            return
+        }
+        beautyConfig.dynamicLoadDownloadRes(templatePaths)
     }
     
     /// Internal method to initialize beauty SDK with material path

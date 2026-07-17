@@ -134,6 +134,58 @@ class BeautyExampleActivity : BaseActivity<ActivityBeautyExampleBinding>() {
         if (success) {
             // 初始化成功后，默认开启美颜
             ShengwangBeautyManager.enable(true)
+            val downloadedTemplateRelativePaths = mapOf(
+                "Filter-Peach" to "filter_baitao/",
+                "Filter-Bright" to "filter_baici/",
+                "Filter-Ink" to "filter_cangmo/",
+                "Filter-Soda" to "filter_suda/",
+                "Filter-Film" to "filter_jiaopian/",
+                "Filter-Dreamy" to "filter_menghuan/",
+                "Filter-Cotton" to "filter_mianrong/",
+                "Filter-Sunny" to "filter_jiqin/",
+                "Filter-Moonlight" to "filter_yuebai/",
+                "Filter-Comic" to "filter_manhua/",
+                "Filter-Cream" to "filter_naiyou/",
+                "Filter-Gilt" to "filter_liujin/",
+                "Filter-Summer" to "filter_ningxia/",
+                "Filter-Gentleman" to "filter_shenshi/",
+                "Filter-Daily" to "filter_richang/",
+                "Filter-Urban" to "filter_dushi/",
+                "Filter-Serene" to "filter_chenwen/",
+                "Filter-Vanilla" to "filter_xiangcao/",
+                "Filter-Glow" to "filter_liuguang/",
+                "Filter-Latte" to "filter_natie/",
+                "Filter-Snow" to "filter_chuxue/",
+                "Filter-Blush" to "filter_fenxia/",
+                "Filter-Tipsy" to "filter_weixun/",
+                "Filter-Rouge" to "filter_yanzhi/",
+                "Filter-Nostalgia" to "filter_huaijiu/",
+                "Filter-Caramel" to "filter_jiaotang/",
+                "Filter-Lavender" to "filter_xunyicao/",
+                "Filter-Misty" to "filter_yinyun/",
+                "Filter-Colorful" to "filter_qise/",
+                "Filter-Salty" to "filter_yanqishui/",
+                "Filter-Tranquil" to "filter_chenmi/",
+                "Filter-Ins" to "filter_ins/",
+                "Filter-Puff" to "filter_paofu/",
+                "Filter-Texture" to "filter_zhigan/",
+                "Filter-Collection" to "filter_sicang/",
+                "Filter-Whitetea" to "filter_baicha/",
+                "Filter-Street" to "filter_laojie/",
+                "Sticker-Christmas" to "sticker_christmas/",
+                "Sticker-Squid" to "sticker_squid/",
+                "Sticker-Piggy" to "sticker_piggy/",
+                "Sticker-Longcat" to "sticker_longcat/",
+                "Sticker-Hairhoop" to "sticker_hairhoop/",
+                "Sticker-Relax" to "sticker_relaxtime/",
+                "Sticker-Cartooncat" to "sticker_cartooncat/",
+                "Sticker-Butterfly" to "sticker_butterfly/",
+                "Sticker-Brush" to "sticker_brush/",
+                "Sticker-Glass" to "sticker_cyberglass/",
+                "Sticker-Tiara" to "sticker_neontiara/",
+                "Sticker-Love" to "sticker_loveglass/"
+            )
+            ShengwangBeautyManager.dynamicLoadDownloadRes(downloadedTemplateRelativePaths)
             Log.d(TAG, "Beauty manager initialized successfully")
         } else {
             Log.e(TAG, "Failed to initialize beauty manager")

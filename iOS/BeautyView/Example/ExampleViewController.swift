@@ -187,6 +187,59 @@ class ExampleViewController: UIViewController {
         
         ShengwangBeautySDK.shared.initBeautySDK(rtcEngine: rtcEngine, materialBundlePath: beautyMaterialPath)
         ShengwangBeautySDK.shared.enable(enable)
+
+        let downloadedTemplateRelativePaths = [
+            "Filter-Peach": "filter_baitao/",
+            "Filter-Bright": "filter_baici/",
+            "Filter-Ink": "filter_cangmo/",
+            "Filter-Soda": "filter_suda/",
+            "Filter-Film": "filter_jiaopian/",
+            "Filter-Dreamy": "filter_menghuan/",
+            "Filter-Cotton": "filter_mianrong/",
+            "Filter-Sunny": "filter_jiqin/",
+            "Filter-Moonlight": "filter_yuebai/",
+            "Filter-Comic": "filter_manhua/",
+            "Filter-Cream": "filter_naiyou/",
+            "Filter-Gilt": "filter_liujin/",
+            "Filter-Summer": "filter_ningxia/",
+            "Filter-Gentleman": "filter_shenshi/",
+            "Filter-Daily": "filter_richang/",
+            "Filter-Urban": "filter_dushi/",
+            "Filter-Serene": "filter_chenwen/",
+            "Filter-Vanilla": "filter_xiangcao/",
+            "Filter-Glow": "filter_liuguang/",
+            "Filter-Latte": "filter_natie/",
+            "Filter-Snow": "filter_chuxue/",
+            "Filter-Blush": "filter_fenxia/",
+            "Filter-Tipsy": "filter_weixun/",
+            "Filter-Rouge": "filter_yanzhi/",
+            "Filter-Nostalgia": "filter_huaijiu/",
+            "Filter-Caramel": "filter_jiaotang/",
+            "Filter-Lavender": "filter_xunyicao/",
+            "Filter-Misty": "filter_yinyun/",
+            "Filter-Colorful": "filter_qise/",
+            "Filter-Salty": "filter_yanqishui/",
+            "Filter-Tranquil": "filter_chenmi/",
+            "Filter-Ins": "filter_ins/",
+            "Filter-Puff": "filter_paofu/",
+            "Filter-Texture": "filter_zhigan/",
+            "Filter-Collection": "filter_sicang/",
+            "Filter-Whitetea": "filter_baicha/",
+            "Filter-Street": "filter_laojie/",
+            "Sticker-Christmas": "sticker_christmas/",
+            "Sticker-Squid": "sticker_squid/",
+            "Sticker-Piggy": "sticker_piggy/",
+            "Sticker-Longcat": "sticker_longcat/",
+            "Sticker-Hairhoop": "sticker_hairhoop/",
+            "Sticker-Relax": "sticker_relaxtime/",
+            "Sticker-Cartooncat": "sticker_cartooncat/",
+            "Sticker-Butterfly": "sticker_butterfly/",
+            "Sticker-Brush": "sticker_brush/",
+            "Sticker-Glass": "sticker_cyberglass/",
+            "Sticker-Tiara": "sticker_neontiara/",
+            "Sticker-Love": "sticker_loveglass/"
+        ]
+        ShengwangBeautySDK.shared.dynamicLoadDownloadRes(downloadedTemplateRelativePaths)
         
         let canvas = AgoraRtcVideoCanvas()
         canvas.view = self.videoView

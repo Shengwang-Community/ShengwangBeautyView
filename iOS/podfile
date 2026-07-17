@@ -6,7 +6,7 @@ target 'BeautyView' do
   use_frameworks!
 
   # Pods for BeautyView
-  pod 'AgoraRtcEngine_iOS', '4.5.3', :subspecs => ['RtcBasic', 'ClearVision']
+  pod 'AgoraRtcEngine_Special_iOS', '4.5.2.210'
 
   pod 'ShengwangBeautyView', :path => './ShengwangBeautyView'
   

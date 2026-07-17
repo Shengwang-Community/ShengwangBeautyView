@@ -100,6 +100,20 @@ object ShengwangBeautyManager {
         return true
     }
 
+    /**
+     * Registers downloaded filter and sticker template directories with the beauty engine.
+     *
+     * Call this after [initBeautySDK]. The keys must match the template names used by the
+     * beauty UI, and the values are the corresponding template directory paths.
+     */
+    fun dynamicLoadDownloadRes(templatePaths: Map<String, String>) {
+        if (beautyEffect == null) {
+            Log.e(TAG, "dynamicLoadDownloadRes must be called after initBeautySDK")
+            return
+        }
+        beautyConfig.dynamicLoadDownloadRes(templatePaths)
+    }
+
     fun unInitBeautySDK() {
         try {
             // 先禁用所有效果（统一移除所有效果节点并更新内部标志）
@@ -1047,6 +1061,21 @@ object ShengwangBeautyManager {
                 field = value
                 parentBeautyEffect?.setVideoEffectFloatParam("sticker_effect_option", "strength", value)
             }
+
+        /**
+         * Registers downloaded filter and sticker template directories with the beauty engine.
+         */
+        internal fun dynamicLoadDownloadRes(templatePaths: Map<String, String>) {
+            templatePaths
+                .filter { (templateName, templatePath) -> templateName.isNotEmpty() && templatePath.isNotEmpty() }
+                .forEach { (templateName, templatePath) ->
+                    parentBeautyEffect?.setVideoEffectStringParam(
+                        "user_interface_option",
+                        templateName,
+                        templatePath
+                    )
+                }
+        }
         // =================================== 贴纸 end ==========================
 
         // 重置美肤参数
