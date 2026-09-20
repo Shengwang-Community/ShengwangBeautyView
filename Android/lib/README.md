@@ -55,9 +55,12 @@ dependencies {
 // 1. 初始化 Agora RTC Engine（客户自己实现）
 val rtcEngine = RtcEngine.create(context, appId, rtcEventHandler)
 
-// 2. 准备美颜资源文件路径（⚠️ 重要：必须先拷贝资源文件，详见下方重要提示）
-val cacheDir = context.getExternalCacheDir()?.absolutePath ?: return
-val materialPath = "$cacheDir/AgoraBeautyMaterial/beauty_material_functional"
+// 2. 准备美颜资源文件路径（必须先完成资源校验和解压）
+//    将资源保存在 filesDir，不要使用 cacheDir 或 externalCacheDir。
+val materialPath = File(
+    context.filesDir,
+    "AgoraBeautyMaterial/beauty_material_functional"
+).absolutePath
 
 // 3. 初始化美颜管理器
 val success = ShengwangBeautyManager.initBeautySDK(materialPath, rtcEngine)
@@ -175,7 +178,7 @@ val success = ShengwangBeautyManager.initBeautySDK(materialPath, rtcEngine)
 初始化美颜管理器，返回 `true` 表示成功，`false` 表示失败。
 
 **参数说明：**
-- `materialPath`: 美颜资源文件目录路径（⚠️ 必须确保资源文件已拷贝到该目录，详见上方重要提示）
+- `materialPath`: 美颜资源文件目录路径（必须确保资源文件已校验并解压到该目录）
 - `rtcEngine`: Agora RTC Engine 实例
 
 **销毁美颜管理器**
@@ -233,12 +236,9 @@ beautyView.saveBeauty(BeautyModule.STICKER)
 保存操作会将当前调整的参数保存到本地，下次 `addOrUpdate` 加载节点时会自动调用之前保存的参数。
 
 **资源更新场景：**
-如果需要更新美颜资源文件（例如升级 SDK 版本），需要：
-1. 清除应用的 SharedPreferences 数据（移除 `material_copied` 标记）
-2. 或者卸载重装应用
-3. 然后重新复制资源文件
+资源准备逻辑应在每次初始化前检查素材目录和 `beauty_material_functional/config.json`，并将随素材包发布的版本/hash 与上次成功解压后保存的值比较。版本变化时只更新根 `config.json` 和模板目录：`filter_*`/`sticker_*` 完整替换，其他模板只覆盖不删除，已有 `save.json` 会自然保留。
 
-这样可以确保资源文件更新，同时不影响已保存的美颜配置（如果配置格式兼容）。
+`filesDir` 只会在卸载应用或“清除数据”时删除。遇到这些情况仍需自动恢复资源，不能要求用户重新安装应用。
 
 #### BeautyModule（模块类型）
 

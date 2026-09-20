@@ -24,10 +24,12 @@ Demo 展示如何快速集成声网美颜功能。
 ### 2. 资源校验机制
 
 应用启动时会自动进行资源校验：
-- 直接计算 assets 中 ZIP 包的 MD5 值（无需额外维护 MD5 文件）
-- 与本地保存的 MD5 对比（上次成功加载时保存在 SharedPreferences 中）
-- MD5 不匹配时自动更新 `filter_xxx` 和 `sticker_xxx` 目录
-- **性能**：50MB 文件约 100-150ms
+- 从随素材包一起发布的 `assets/zip.md5` 读取素材版本
+- 与上次成功解压后保存在 SharedPreferences 中的 MD5 对比
+- `AgoraBeautyMaterial` 目录或 `beauty_material_functional/config.json` 缺失时自动重新解压
+- MD5 变化时只更新根 `config.json` 和模板目录：`filter_*`/`sticker_*` 完整替换，其他模板只覆盖不删除，已有 `save.json` 会保留
+
+解压后的素材保存在应用内部 `filesDir`，不使用 `cacheDir` 或 `externalCacheDir`。缓存目录可能被系统或厂商清理；`filesDir` 仍会在卸载应用或“清除数据”时删除，应用应保留重新解压兜底。
 
 ### 3. 配置 Agora SDK 依赖
 
@@ -78,7 +80,7 @@ app/agora-sdk/
 3. **配置 SDK 依赖**：选择 Maven 或本地 SDK 方式（见上方说明）
 
 4. **运行项目**：
-   - 首次启动会自动解压美颜资源到缓存目录
+   - 首次启动会自动解压美颜资源到应用内部文件目录
    - 输入频道名称加入频道
    - 点击美颜按钮调节美颜参数
 
