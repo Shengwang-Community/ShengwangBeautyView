@@ -41,31 +41,6 @@ object FileUtil {
     }.getOrDefault(-1L)
 
     /**
-     * 计算 assets 文件的 MD5 值
-     * 性能参考：300-500 MB/s，50MB 文件约 100-150ms
-     * @param context 上下文
-     * @param path assets 文件路径
-     * @return MD5 字符串（32位小写），失败返回 null
-     */
-    fun calculateAssetMd5(context: Context, path: String): String? = runCatching {
-        val startTime = System.currentTimeMillis()
-        val md = java.security.MessageDigest.getInstance("MD5")
-        var totalBytes = 0L
-        context.assets.open(path).use { input ->
-            val buffer = ByteArray(BUFFER_SIZE)
-            generateSequence { input.read(buffer).takeIf { it != -1 } }
-                .forEach { 
-                    md.update(buffer, 0, it)
-                    totalBytes += it
-                }
-        }
-        val result = md.digest().joinToString("") { "%02x".format(it) }
-        val elapsed = System.currentTimeMillis() - startTime
-        Log.d(TAG, "calculateAssetMd5: $path, size=${totalBytes / 1024}KB, time=${elapsed}ms, md5=$result")
-        result
-    }.onFailure { Log.e(TAG, "calculateAssetMd5: ${it.message}") }.getOrNull()
-
-    /**
      * 从 assets 目录拷贝文件到目标路径
      * @param context 上下文
      * @param assetsPath assets 中的文件路径
@@ -107,14 +82,14 @@ object FileUtil {
      * @param zipPath ZIP 文件路径
      * @param destPath 解压目标目录
      * @param callback 进度回调（可选）
-     * @param filterOnly 是否只解压 filter_xxx 和 sticker_xxx 文件夹（用于增量更新）
+     * @param templatesOnly 是否只解压根 config.json 和模板目录
      * @return 解压成功返回 true，失败返回 false
      */
     fun unzipWithProgress(
         zipPath: String,
         destPath: String,
         callback: ProgressCallback? = null,
-        filterOnly: Boolean = false
+        templatesOnly: Boolean = false
     ): Boolean {
         val total = runCatching { ZipFile(zipPath).use { it.size() } }.getOrDefault(0)
         if (total == 0) return false
@@ -129,8 +104,8 @@ object FileUtil {
                 generateSequence { zis.nextEntry }.forEach { entry ->
                     val name = entry.name
                     
-                    // 更新模式：只处理 filter_xxx 和 sticker_xxx
-                    if (filterOnly && !isFilterOrSticker(name)) {
+                    // 模板更新还需要同步根 config.json。
+                    if (templatesOnly && !isTemplateOrConfig(name)) {
                         zis.closeEntry()
                         count++
                         return@forEach
@@ -161,14 +136,17 @@ object FileUtil {
         }.onFailure { Log.e(TAG, "unzipWithProgress: ${it.message}") }.getOrDefault(false)
     }
 
-    /**
-     * 判断文件名是否为 filter 或 sticker 资源
-     * @param name 文件路径名称
-     * @return 如果是 filter_xxx 或 sticker_xxx 返回 true
-     */
-    private fun isFilterOrSticker(name: String): Boolean {
+    private fun isTemplateOrConfig(name: String): Boolean {
         val parts = name.split("/")
-        return parts.size >= 2 && (parts[1].startsWith("filter_") || parts[1].startsWith("sticker_"))
+        if (parts.size == 2 && parts[0] == "beauty_material_functional" && parts[1] == "config.json") {
+            return true
+        }
+        return parts.size >= 2 && parts[0] == "beauty_material_functional" &&
+            (parts[1].startsWith("filter_") ||
+                parts[1].startsWith("sticker_") ||
+                parts[1].startsWith("beauty_") ||
+                parts[1].startsWith("stylemakeup_") ||
+                parts[1].startsWith("custommakeup_"))
     }
 
     /**

@@ -88,60 +88,88 @@ class BeautyMainActivity : BaseActivity<ActivityBeautyMainBinding>() {
     }
 
     private fun prepareMaterial(): String? {
-        val cacheDir = cacheDir.absolutePath
-        val materialDir = "$cacheDir/$MATERIAL"
-        val functionalDir = "$materialDir/$FUNCTIONAL"
-        
-        val expectedMd5 = runCatching {
-            assets.open("zip.md5").bufferedReader().readText().trim()
-        }.getOrNull() ?: return copyAll(cacheDir, materialDir, null)
-        val savedMd5 = prefs.getString("md5", null)
-        val dirExists = File(functionalDir).isDirectory
+        // filesDir 不属于 cache，系统不会因为存储紧张主动回收其中的素材。
+        // 清除应用数据或卸载应用后仍会删除，因此每次使用前都要做完整性校验。
+        val materialDir = File(filesDir, MATERIAL)
+        migrateLegacyMaterial(materialDir)
 
-        Log.d(TAG, "MD5 检查 - expected: $expectedMd5, saved: $savedMd5, dirExists: $dirExists")
+        val expectedMd5 = runCatching {
+            assets.open("zip.md5").bufferedReader().use { it.readText().trim() }
+        }.getOrNull()?.takeIf { it.isNotEmpty() } ?: run {
+            Log.e(TAG, "无法读取美颜资源包 MD5")
+            return null
+        }
+        val savedMd5 = prefs.getString("md5", null)
+        val ready = isMaterialReady(materialDir)
+
+        Log.d(TAG, "素材检查 - path: ${materialDir.absolutePath}, expectedMd5: $expectedMd5, savedMd5: $savedMd5, ready: $ready")
 
         return when {
-            dirExists && savedMd5 == expectedMd5 -> {
+            ready && savedMd5 == expectedMd5 -> {
                 updateUI(100, "资源已就绪")
-                materialDir
+                materialDir.absolutePath
             }
-            dirExists && savedMd5 != null -> updateFilterAndSticker(cacheDir, materialDir, expectedMd5)
-            else -> copyAll(cacheDir, materialDir, expectedMd5)
+            ready && savedMd5 != null -> updateFilterAndSticker(materialDir, expectedMd5)
+            else -> copyAll(materialDir, expectedMd5)
         }
     }
 
-    private fun copyAll(cacheDir: String, materialDir: String, md5: String?): String? {
-        updateUI(0, "正在准备美颜资源...")
-        File(materialDir).takeIf { it.exists() }?.let { FileUtil.deleteRecursively(it) }
+    private fun isMaterialReady(materialDir: File): Boolean {
+        val functionalDir = File(materialDir, FUNCTIONAL)
+        val config = File(functionalDir, "config.json")
+        return materialDir.isDirectory && functionalDir.isDirectory && config.isFile
+    }
 
-        val result = FileUtil.copyAndUnzip(this, "$MATERIAL.zip", cacheDir) { p, m -> updateUI(p, m) }
-        if (result != null && md5 != null) {
-            prefs.edit { putString("md5", md5) }
+    private fun copyAll(materialDir: File, md5: String): String? {
+        updateUI(0, "正在准备美颜资源...")
+        val result = FileUtil.copyAndUnzip(this, "$MATERIAL.zip", filesDir.absolutePath) { p, m -> updateUI(p, m) }
+            ?: return null
+
+        if (!isMaterialReady(materialDir)) {
+            Log.e(TAG, "美颜资源解压后仍不完整: $result")
+            return null
         }
+        prefs.edit { putString("md5", md5) }
         return result
     }
 
-    private fun updateFilterAndSticker(cacheDir: String, materialDir: String, md5: String): String? {
+    private fun updateFilterAndSticker(materialDir: File, md5: String): String? {
         updateUI(5, "检测到资源更新...")
-        
-        // 删除旧的 filter 和 sticker
-        FileUtil.deleteByPrefix(File("$materialDir/$FUNCTIONAL"), "filter_", "sticker_")
-        updateUI(10, "正在拷贝资源...")
 
-        // 拷贝 zip
-        val zipPath = "$cacheDir/$MATERIAL.zip"
-        if (!FileUtil.copyFileFromAssets(this, "$MATERIAL.zip", zipPath) { p, _ -> updateUI(10 + p * 40 / 100, "正在拷贝...") }) {
+        val zipPath = File(filesDir, "$MATERIAL.zip").absolutePath
+        if (!FileUtil.copyFileFromAssets(this, "$MATERIAL.zip", zipPath) { p, _ ->
+                updateUI(10 + p * 40 / 100, "正在拷贝...")
+            }) {
             return null
         }
 
-        // 只解压 filter 和 sticker
-        updateUI(50, "正在解压更新...")
-        if (!FileUtil.unzipWithProgress(zipPath, materialDir, { p, _ -> updateUI(50 + p / 2, "正在解压...") }, true)) {
+        // filter/sticker 不保存用户调节参数，版本更新时整体替换。
+        val functionalDir = File(materialDir, FUNCTIONAL)
+        FileUtil.deleteByPrefix(functionalDir, "filter_", "sticker_")
+
+        val unzipped = FileUtil.unzipWithProgress(zipPath, materialDir.absolutePath, { p, _ ->
+                updateUI(50 + p / 2, "正在解压更新...")
+            }, templatesOnly = true)
+        if (!unzipped || !isMaterialReady(materialDir)) {
             return null
         }
 
         prefs.edit { putString("md5", md5) }
-        return materialDir
+        return materialDir.absolutePath
+    }
+
+    private fun migrateLegacyMaterial(materialDir: File) {
+        val legacyDir = File(cacheDir, MATERIAL)
+        if (materialDir.exists() || !legacyDir.exists()) return
+
+        runCatching {
+            materialDir.parentFile?.mkdirs()
+            if (!legacyDir.renameTo(materialDir)) {
+                legacyDir.copyRecursively(materialDir)
+            }
+        }.onFailure {
+            Log.e(TAG, "迁移旧美颜资源失败", it)
+        }
     }
 
     private fun updateUI(progress: Int, message: String) {
