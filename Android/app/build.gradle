@@ -88,6 +88,6 @@ dependencies {
     if (USE_LOCAL_SDK) {
         implementation fileTree(dir: "${localSdkPath}", include: ['*.jar', '*.aar'])
     } else {
-        implementation 'io.agora.rtc:agora-special-full:4.5.3.4'
+        implementation 'io.agora.rtc:agora-special-full:4.5.3.4.1'
     }
 }
