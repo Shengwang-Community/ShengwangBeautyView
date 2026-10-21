@@ -602,6 +602,19 @@ import AgoraRtcKit
             }
         }
         
+        /// Eye angle, range: [-100, 100], eye rotation
+        public var eyeAngle: Int32 {
+            get {
+                return parentRtcEngine?.getFaceShapeAreaOptions(.eyeAngle)?.shapeIntensity ?? 0
+            }
+            set {
+                let areaOption = AgoraFaceShapeAreaOptions()
+                areaOption.shapeArea = .eyeAngle
+                areaOption.shapeIntensity = newValue
+                parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
+            }
+        }
+        
         /// Mouth smile, range: [0, 100], smile intensity
         public var mouthSmile: Int32 {
             get {

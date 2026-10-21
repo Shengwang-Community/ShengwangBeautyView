@@ -35,7 +35,7 @@
     <string name="beauty_face_shape_chin">瘦下巴</string>
     <string name="beauty_face_shape_cheek">下颌线</string>
     <string name="beauty_face_shape_cheekbone">瘦颧骨</string>
-    <string name="beauty_face_shape_face_length">长脸</string>
+    <string name="beauty_face_shape_face_length">短脸</string>
     <string name="beauty_face_shape_face_width">窄脸</string>
     <string name="beauty_face_shape_fore_head">发际线</string>
     <string name="beauty_face_shape_head_scale">小头</string>
@@ -48,6 +48,7 @@
     <string name="beauty_face_shape_nose_general">鼻综合</string>
     <string name="beauty_face_shape_eye_scale">大眼</string>
     <string name="beauty_face_shape_eye_distance">眼距</string>
+    <string name="beauty_face_shape_eye_angle">眼角度</string>
     <string name="beauty_face_shape_eye_lid">眼睑下至</string>
     <string name="beauty_face_shape_inner_corner">内眼角</string>
     <string name="beauty_face_shape_outer_corner">外眼角</string>

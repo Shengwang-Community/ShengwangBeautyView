@@ -17,8 +17,7 @@ import cn.shengwang.beauty.databinding.ShengwangBeautyViewBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlPageBinding
 import cn.shengwang.beauty.databinding.ShengwangBeautyControlItemBinding
 import cn.shengwang.beauty.ui.builder.BeautyPageBuilder
-import cn.shengwang.beauty.ui.builder.MakeupPageBuilder
-import cn.shengwang.beauty.ui.builder.QualityPageBuilder
+import cn.shengwang.beauty.ui.builder.CustomMakeupPageBuilder
 import cn.shengwang.beauty.ui.model.BeautyPageInfo
 import cn.shengwang.beauty.ui.model.BeautyItemInfo
 import cn.shengwang.beauty.ui.builder.FilterPageBuilder
@@ -293,19 +292,15 @@ class ShengwangBeautyView : android.widget.FrameLayout {
         )
         pageList.add(beautyBuilder.buildPage())
 
-        // 2. 画质模块
-        val qualityBuilder = QualityPageBuilder(beautyConfig)
-        pageList.add(qualityBuilder.buildPage())
+        // 2. 自定义美妆模块 — 使用 Makeup-Custom 素材配置
+        val customMakeupBuilder = CustomMakeupPageBuilder(beautyConfig)
+        pageList.add(customMakeupBuilder.buildPage())
 
-        // 3. 风格妆模块 — 按素材包 config.json 决定是否显示
-        val makeupBuilder = MakeupPageBuilder(beautyConfig)
-        pageList.add(makeupBuilder.buildPage())
-
-        // 4. FILTER 模块（滤镜）
+        // 3. FILTER 模块（滤镜）
         val filterBuilder = FilterPageBuilder(beautyConfig)
         pageList.add(filterBuilder.buildPage())
 
-        // 5. STICKER 模块（贴纸）
+        // 4. STICKER 模块（贴纸）
         val stickerBuilder = StickerPageBuilder(beautyConfig)
         pageList.add(stickerBuilder.buildPage())
 

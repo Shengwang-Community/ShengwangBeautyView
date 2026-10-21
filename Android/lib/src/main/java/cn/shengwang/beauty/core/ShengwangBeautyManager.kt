@@ -541,6 +541,16 @@ object ShengwangBeautyManager {
                 val areaOption = FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_EYEOUTERCORNER, value);
                 parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
             }
+        
+        // 眼角度 对应修饰力度范围为 [-100,100]，眼旋转角度。正值为双眼向内旋转，负值为双眼向外旋转。
+        var eyeAngle = 0
+            get() = parentRtcEngine?.getFaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_EYEANGLE)?.shapeIntensity
+                ?: 0
+            set(value) {
+                field = value
+                val areaOption = FaceShapeAreaOptions(FaceShapeAreaOptions.FACE_SHAPE_AREA_EYEANGLE, value);
+                parentRtcEngine?.setFaceShapeAreaOptions(areaOption)
+            }
 
         // 长鼻 对应修饰力度范围为 [-100,100]，长鼻效果。正值为变长，负值为变短。
         var noseLength = 0

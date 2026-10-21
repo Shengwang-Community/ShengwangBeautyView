@@ -34,14 +34,6 @@ import UIKit
         BeautyPageBuilder(beautyConfig: beautyConfig)
     }()
     
-    private lazy var qualityBuilder: QualityPageBuilder = {
-        QualityPageBuilder(beautyConfig: beautyConfig)
-    }()
-    
-    private lazy var makeupBuilder: MakeupPageBuilder = {
-        MakeupPageBuilder(beautyConfig: beautyConfig)
-    }()
-    
     private lazy var customMakeupBuilder: CustomMakeupPageBuilder = {
         CustomMakeupPageBuilder(beautyConfig: beautyConfig)
     }()
@@ -239,11 +231,8 @@ import UIKit
         var pages: [BeautyPageInfo] = []
         
         pages.append(beautyBuilder.buildPage())
-        pages.append(qualityBuilder.buildPage())
-        // Style Makeup — 风格妆，按素材包 config.json 决定是否显示
-        pages.append(makeupBuilder.buildPage())
-        // Custom Makeup — 自定义美妆（Makeup-Custom），需素材包含此模板，内部调参项不需要按模板裁剪
-//        pages.append(customMakeupBuilder.buildPage())
+        // Custom Makeup — 自定义美妆（Makeup-Custom）
+        pages.append(customMakeupBuilder.buildPage())
         pages.append(filterBuilder.buildPage())
         pages.append(stickerBuilder.buildPage())
         

@@ -10,7 +10,7 @@ import cn.shengwang.beauty.ui.model.BeautyPageInfo
 
 /**
  * 美颜模块页面构建器
- * 负责构建美颜（美肤+美型+画质）模块的页面信息
+ * 负责构建美颜（美肤+美型）模块的页面信息
  *
  * 注意：此构建器为内部实现，不对外暴露
  */
@@ -235,15 +235,6 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.faceContour = value
         }
-        // v脸
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mandible,
-            R.drawable.beauty_ic_face_shape_mandible,
-            beautyConfig.mandible
-        ) { value ->
-            beautyConfig.mandible = value
-        }
         // 瘦下巴
         addFaceShapeItem(
             items,
@@ -320,33 +311,6 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.noseWidth = value
         }
-        // 山根
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_root,
-            R.drawable.beauty_ic_face_shape_nose_root,
-            beautyConfig.noseRoot
-        ) { value ->
-            beautyConfig.noseRoot = value
-        }
-        // 鼻梁
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_bridge,
-            R.drawable.beauty_ic_face_shape_nose_bridge,
-            beautyConfig.noseBridge
-        ) { value ->
-            beautyConfig.noseBridge = value
-        }
-        // 鼻尖
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_tip,
-            R.drawable.beauty_ic_face_shape_nose_tip,
-            beautyConfig.noseTip
-        ) { value ->
-            beautyConfig.noseTip = value
-        }
         // 鼻翼
         addFaceShapeItem(
             items,
@@ -366,17 +330,6 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.noseLength = value
         }
-        // 鼻综合
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_nose_general,
-            R.drawable.beauty_ic_face_shape_nose_general,
-            beautyConfig.noseGeneral,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.noseGeneral = value
-        }
-
         // 眼睛
         // 大眼
         addFaceShapeItem(
@@ -397,15 +350,17 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.eyeDistance = value
         }
-        // 眼睑下至
+        // 眼角度
         addFaceShapeItem(
             items,
-            R.string.beauty_face_shape_eye_lid,
-            R.drawable.beauty_ic_face_shape_eye_lid,
-            beautyConfig.eyeLid
+            R.string.beauty_face_shape_eye_angle,
+            R.drawable.beauty_ic_face_shape_eye_angle,
+            beautyConfig.eyeAngle,
+            valueRange = -100f..100f
         ) { value ->
-            beautyConfig.eyeLid = value
+            beautyConfig.eyeAngle = value
         }
+
         // 内眼角
         addFaceShapeItem(
             items,
@@ -426,45 +381,7 @@ internal class BeautyPageBuilder(
         ) { value ->
             beautyConfig.eyeOuterCorner = value
         }
-        // 眼移动
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_position,
-            R.drawable.beauty_ic_face_shape_eye_position,
-            beautyConfig.eyePosition,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyePosition = value
-        }
-        // 瞳孔
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eye_pupils,
-            R.drawable.beauty_ic_face_shape_eye_pupils,
-            beautyConfig.eyePupils
-        ) { value ->
-            beautyConfig.eyePupils = value
-        }
-
         // 嘴巴
-        // 微笑唇
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_smile,
-            R.drawable.beauty_ic_face_shape_mouth_smile,
-            beautyConfig.mouthSmile
-        ) { value ->
-            beautyConfig.mouthSmile = value
-        }
-        // 丰唇
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_mouth_lip,
-            R.drawable.beauty_ic_face_shape_mouth_lip,
-            beautyConfig.mouthLip
-        ) { value ->
-            beautyConfig.mouthLip = value
-        }
         // 嘴型
         addFaceShapeItem(
             items,
@@ -485,27 +402,6 @@ internal class BeautyPageBuilder(
             beautyConfig.mouthPosition = value
         }
 
-        // 眉毛
-        // 眉粗细
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eyebrow_thickness,
-            R.drawable.beauty_ic_face_shape_eyebrow_thickness,
-            beautyConfig.eyebrowThickness,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyebrowThickness = value
-        }
-        // 眉上下
-        addFaceShapeItem(
-            items,
-            R.string.beauty_face_shape_eyebrow_position,
-            R.drawable.beauty_ic_face_shape_eyebrow_position,
-            beautyConfig.eyebrowPosition,
-            valueRange = -100f..100f
-        ) { value ->
-            beautyConfig.eyebrowPosition = value
-        }
     }
 
     /**

@@ -404,6 +404,9 @@ class AgoraBeautyConfig extends BeautyConfig {
   @override Future<int> getEyeDistance() => _getFaceShape(FaceShapeArea.faceShapeAreaEyedistance);
   @override set eyeDistance(int v) => _setFaceShape(FaceShapeArea.faceShapeAreaEyedistance, v);
 
+  @override Future<int> getEyeAngle() => _getFaceShape(FaceShapeArea.faceShapeAreaEyeangle);
+  @override set eyeAngle(int v) => _setFaceShape(FaceShapeArea.faceShapeAreaEyeangle, v);
+
   @override Future<int> getEyeLid() => _getFaceShape(FaceShapeArea.faceShapeAreaLowereyelid);
   @override set eyeLid(int v) => _setFaceShape(FaceShapeArea.faceShapeAreaLowereyelid, v);
 

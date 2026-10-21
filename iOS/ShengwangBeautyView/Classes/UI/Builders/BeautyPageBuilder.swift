@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Beauty module page builder
-/// Responsible for building page information for beauty (skin beautification + face shape + image quality) module
+/// Responsible for building page information for the beauty (skin beautification + face shape) module
 internal class BeautyPageBuilder: IPageBuilder {
     
     private let beautyConfig: ShengwangBeautySDK.BeautyConfig
@@ -54,7 +54,7 @@ internal class BeautyPageBuilder: IPageBuilder {
         
         // Face shape parameters
         addFaceShapeItems(&beautyItems)
-        
+
         return BeautyPageInfo(
             name: "beauty_group_beauty",
             itemList: beautyItems,
@@ -112,19 +112,14 @@ internal class BeautyPageBuilder: IPageBuilder {
         }
     }
     
-    /// Add face shape parameters (all 32 items)
+    /// Add the requested face shape parameters
     private func addFaceShapeItems(_ items: inout [BeautyItemInfo]) {
         // Face contour group
         // 1. Face contour (slim face)
         addFaceShapeItem(&items, name: "beauty_face_shape_face_contour", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_face_contour"), value: Float(beautyConfig.faceContour), valueRange: 0.0...100.0) { [weak self] value in
             self?.beautyConfig.faceContour = Int32(value)
         }
-        
-        // 2. Mandible (V-shaped face)
-        addFaceShapeItem(&items, name: "beauty_face_shape_mandible", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_mandible"), value: Float(beautyConfig.mandible), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.mandible = Int32(value)
-        }
-        
+
         // 3. Chin (slim chin)
         addFaceShapeItem(&items, name: "beauty_face_shape_chin", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_chin"), value: Float(beautyConfig.chin), valueRange: -100.0...100.0) { [weak self] value in
             self?.beautyConfig.chin = Int32(value)
@@ -165,21 +160,8 @@ internal class BeautyPageBuilder: IPageBuilder {
         addFaceShapeItem(&items, name: "beauty_face_shape_nose_width", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_width"), value: Float(beautyConfig.noseWidth), valueRange: 0.0...100.0) { [weak self] value in
             self?.beautyConfig.noseWidth = Int32(value)
         }
+
         
-        // 11. Nose root (nose bridge root)
-        addFaceShapeItem(&items, name: "beauty_face_shape_nose_root", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_root"), value: Float(beautyConfig.noseRoot), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.noseRoot = Int32(value)
-        }
-        
-        // 12. Nose bridge (nose bridge)
-        addFaceShapeItem(&items, name: "beauty_face_shape_nose_bridge", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_bridge"), value: Float(beautyConfig.noseBridge), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.noseBridge = Int32(value)
-        }
-        
-        // 13. Nose tip (nose tip)
-        addFaceShapeItem(&items, name: "beauty_face_shape_nose_tip", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_tip"), value: Float(beautyConfig.noseTip), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.noseTip = Int32(value)
-        }
         
         // 14. Nose wing (nose wing)
         addFaceShapeItem(&items, name: "beauty_face_shape_nose_wing", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_wing"), value: Float(beautyConfig.noseWing), valueRange: 0.0...100.0) { [weak self] value in
@@ -190,12 +172,7 @@ internal class BeautyPageBuilder: IPageBuilder {
         addFaceShapeItem(&items, name: "beauty_face_shape_nose_length", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_length"), value: Float(beautyConfig.noseLength), valueRange: -100.0...100.0) { [weak self] value in
             self?.beautyConfig.noseLength = Int32(value)
         }
-        
-        // 16. Nose general (nose comprehensive)
-        addFaceShapeItem(&items, name: "beauty_face_shape_nose_general", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_nose_general"), value: Float(beautyConfig.noseGeneral), valueRange: -100.0...100.0) { [weak self] value in
-            self?.beautyConfig.noseGeneral = Int32(value)
-        }
-        
+
         // Eye group
         // 17. Eye scale (enlarge eyes)
         addFaceShapeItem(&items, name: "beauty_face_shape_eye_scale", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eye_scale"), value: Float(beautyConfig.eyeScale), valueRange: 0.0...100.0) { [weak self] value in
@@ -207,11 +184,11 @@ internal class BeautyPageBuilder: IPageBuilder {
             self?.beautyConfig.eyeDistance = Int32(value)
         }
         
-        // 19. Eye lid (lower eyelid)
-        addFaceShapeItem(&items, name: "beauty_face_shape_eye_lid", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eye_lid"), value: Float(beautyConfig.eyeLid), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.eyeLid = Int32(value)
+        // Eye Angle
+        addFaceShapeItem(&items, name: "beauty_face_shape_eye_angle", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eye_angle"), value: Float(beautyConfig.eyeAngle), valueRange: -100.0...100.0) { [weak self] value in
+            self?.beautyConfig.eyeAngle = Int32(value)
         }
-        
+
         // 20. Eye inner corner (inner eye corner)
         addFaceShapeItem(&items, name: "beauty_face_shape_inner_corner", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_inner_corner"), value: Float(beautyConfig.eyeInnerCorner), valueRange: -100.0...100.0) { [weak self] value in
             self?.beautyConfig.eyeInnerCorner = Int32(value)
@@ -221,28 +198,10 @@ internal class BeautyPageBuilder: IPageBuilder {
         addFaceShapeItem(&items, name: "beauty_face_shape_outer_corner", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_outer_corner"), value: Float(beautyConfig.eyeOuterCorner), valueRange: -100.0...100.0) { [weak self] value in
             self?.beautyConfig.eyeOuterCorner = Int32(value)
         }
-        
-        // 22. Eye position (eye position)
-        addFaceShapeItem(&items, name: "beauty_face_shape_eye_position", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eye_position"), value: Float(beautyConfig.eyePosition), valueRange: -100.0...100.0) { [weak self] value in
-            self?.beautyConfig.eyePosition = Int32(value)
-        }
-        
-        // 23. Eye pupils (eye pupils)
-        addFaceShapeItem(&items, name: "beauty_face_shape_eye_pupils", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eye_pupils"), value: Float(beautyConfig.eyePupils), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.eyePupils = Int32(value)
-        }
+
         
         // Mouth group
-        // 24. Mouth smile (smile lips)
-        addFaceShapeItem(&items, name: "beauty_face_shape_mouth_smile", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_mouth_smile"), value: Float(beautyConfig.mouthSmile), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.mouthSmile = Int32(value)
-        }
-        
-        // 25. Mouth lip (fuller lips)
-        addFaceShapeItem(&items, name: "beauty_face_shape_mouth_lip", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_mouth_lip"), value: Float(beautyConfig.mouthLip), valueRange: 0.0...100.0) { [weak self] value in
-            self?.beautyConfig.mouthLip = Int32(value)
-        }
-        
+
         // 26. Mouth scale (mouth shape)
         addFaceShapeItem(&items, name: "beauty_face_shape_mouth_scale", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_mouth_scale"), value: Float(beautyConfig.mouthScale), valueRange: -100.0...100.0) { [weak self] value in
             self?.beautyConfig.mouthScale = Int32(value)
@@ -252,17 +211,7 @@ internal class BeautyPageBuilder: IPageBuilder {
         addFaceShapeItem(&items, name: "beauty_face_shape_mouth_position", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_mouth_position"), value: Float(beautyConfig.mouthPosition), valueRange: 0.0...100.0) { [weak self] value in
             self?.beautyConfig.mouthPosition = Int32(value)
         }
-        
-        // Eyebrow group
-        // 28. Eyebrow thickness (eyebrow thickness)
-        addFaceShapeItem(&items, name: "beauty_face_shape_eyebrow_thickness", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eyebrow_thickness"), value: Float(beautyConfig.eyebrowThickness), valueRange: -100.0...100.0) { [weak self] value in
-            self?.beautyConfig.eyebrowThickness = Int32(value)
-        }
-        
-        // 29. Eyebrow position (eyebrow position)
-        addFaceShapeItem(&items, name: "beauty_face_shape_eyebrow_position", icon: UIImage.beautyIcon(named: "beauty_ic_face_shape_eyebrow_position"), value: Float(beautyConfig.eyebrowPosition), valueRange: -100.0...100.0) { [weak self] value in
-            self?.beautyConfig.eyebrowPosition = Int32(value)
-        }
+
     }
     
     // MARK: - Helper Methods

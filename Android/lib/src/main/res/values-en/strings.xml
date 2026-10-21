@@ -35,7 +35,7 @@
     <string name="beauty_face_shape_chin">Chin</string>
     <string name="beauty_face_shape_cheek">Jaw</string>
     <string name="beauty_face_shape_cheekbone">Cheek\nBones</string>
-    <string name="beauty_face_shape_face_length">Face\nLength</string>
+    <string name="beauty_face_shape_face_length">Face\nShort</string>
     <string name="beauty_face_shape_face_width">Face\nWidth</string>
     <string name="beauty_face_shape_fore_head">Hairline</string>
     <string name="beauty_face_shape_head_scale">Head\nSize</string>
@@ -48,6 +48,7 @@
     <string name="beauty_face_shape_nose_general">Nose\nSize</string>
     <string name="beauty_face_shape_eye_scale">Eye\nSize</string>
     <string name="beauty_face_shape_eye_distance">Eye\nDist</string>
+    <string name="beauty_face_shape_eye_angle">Eye\nAngle</string>
     <string name="beauty_face_shape_eye_lid">Lower\nEyelid</string>
     <string name="beauty_face_shape_inner_corner">Inner\nCorner</string>
     <string name="beauty_face_shape_outer_corner">Outer\nCorner</string>

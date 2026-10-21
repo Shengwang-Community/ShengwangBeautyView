@@ -6,7 +6,7 @@ import 'i_page_builder.dart';
 
 const String _iconBase = 'assets/Icons/';
 
-/// Beauty module page builder (skin + face shape + image quality)
+/// Beauty module page builder (skin + face shape)
 class BeautyPageBuilder implements IPageBuilder {
   final BeautyConfig beautyConfig;
 
@@ -127,11 +127,6 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_face_contour',
         'beauty_ic_face_shape_face_contour', (await beautyConfig.getFaceContour()).toDouble(),
         onChanged: (v) => beautyConfig.faceContour = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_mandible',
-        'beauty_ic_face_shape_mandible', (await beautyConfig.getMandible()).toDouble(),
-        onChanged: (v) => beautyConfig.mandible = v.toInt());
-
     _addFace(items, 'beauty_face_shape_chin', 'beauty_ic_face_shape_chin',
         (await beautyConfig.getChin()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.chin = v.toInt());
@@ -163,19 +158,6 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_nose_width',
         'beauty_ic_face_shape_nose_width', (await beautyConfig.getNoseWidth()).toDouble(),
         onChanged: (v) => beautyConfig.noseWidth = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_nose_root',
-        'beauty_ic_face_shape_nose_root', (await beautyConfig.getNoseRoot()).toDouble(),
-        onChanged: (v) => beautyConfig.noseRoot = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_nose_bridge',
-        'beauty_ic_face_shape_nose_bridge', (await beautyConfig.getNoseBridge()).toDouble(),
-        onChanged: (v) => beautyConfig.noseBridge = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_nose_tip',
-        'beauty_ic_face_shape_nose_tip', (await beautyConfig.getNoseTip()).toDouble(),
-        onChanged: (v) => beautyConfig.noseTip = v.toInt());
-
     _addFace(items, 'beauty_face_shape_nose_wing',
         'beauty_ic_face_shape_nose_wing', (await beautyConfig.getNoseWing()).toDouble(),
         onChanged: (v) => beautyConfig.noseWing = v.toInt());
@@ -183,11 +165,6 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_nose_length',
         'beauty_ic_face_shape_nose_length', (await beautyConfig.getNoseLength()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.noseLength = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_nose_general',
-        'beauty_ic_face_shape_nose_general', (await beautyConfig.getNoseGeneral()).toDouble(),
-        minValue: -100, onChanged: (v) => beautyConfig.noseGeneral = v.toInt());
-
     _addFace(items, 'beauty_face_shape_eye_scale',
         'beauty_ic_face_shape_eye_scale', (await beautyConfig.getEyeScale()).toDouble(),
         onChanged: (v) => beautyConfig.eyeScale = v.toInt());
@@ -195,11 +172,9 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_eye_distance',
         'beauty_ic_face_shape_eye_distance', (await beautyConfig.getEyeDistance()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.eyeDistance = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_eye_lid',
-        'beauty_ic_face_shape_eye_lid', (await beautyConfig.getEyeLid()).toDouble(),
-        onChanged: (v) => beautyConfig.eyeLid = v.toInt());
-
+    _addFace(items, 'beauty_face_shape_eye_angle',
+        'beauty_ic_face_shape_eye_angle', (await beautyConfig.getEyeAngle()).toDouble(),
+        minValue: -100, onChanged: (v) => beautyConfig.eyeAngle = v.toInt());
     _addFace(items, 'beauty_face_shape_inner_corner',
         'beauty_ic_face_shape_inner_corner', (await beautyConfig.getEyeInnerCorner()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.eyeInnerCorner = v.toInt());
@@ -207,23 +182,6 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_outer_corner',
         'beauty_ic_face_shape_outer_corner', (await beautyConfig.getEyeOuterCorner()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.eyeOuterCorner = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_eye_position',
-        'beauty_ic_face_shape_eye_position', (await beautyConfig.getEyePosition()).toDouble(),
-        minValue: -100, onChanged: (v) => beautyConfig.eyePosition = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_eye_pupils',
-        'beauty_ic_face_shape_eye_pupils', (await beautyConfig.getEyePupils()).toDouble(),
-        onChanged: (v) => beautyConfig.eyePupils = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_mouth_smile',
-        'beauty_ic_face_shape_mouth_smile', (await beautyConfig.getMouthSmile()).toDouble(),
-        onChanged: (v) => beautyConfig.mouthSmile = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_mouth_lip',
-        'beauty_ic_face_shape_mouth_lip', (await beautyConfig.getMouthLip()).toDouble(),
-        onChanged: (v) => beautyConfig.mouthLip = v.toInt());
-
     _addFace(items, 'beauty_face_shape_mouth_scale',
         'beauty_ic_face_shape_mouth_scale', (await beautyConfig.getMouthScale()).toDouble(),
         minValue: -100, onChanged: (v) => beautyConfig.mouthScale = v.toInt());
@@ -231,18 +189,6 @@ class BeautyPageBuilder implements IPageBuilder {
     _addFace(items, 'beauty_face_shape_mouth_position',
         'beauty_ic_face_shape_mouth_position', (await beautyConfig.getMouthPosition()).toDouble(),
         onChanged: (v) => beautyConfig.mouthPosition = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_eyebrow_thickness',
-        'beauty_ic_face_shape_eyebrow_thickness',
-        (await beautyConfig.getEyebrowThickness()).toDouble(),
-        minValue: -100,
-        onChanged: (v) => beautyConfig.eyebrowThickness = v.toInt());
-
-    _addFace(items, 'beauty_face_shape_eyebrow_position',
-        'beauty_ic_face_shape_eyebrow_position',
-        (await beautyConfig.getEyebrowPosition()).toDouble(),
-        minValue: -100,
-        onChanged: (v) => beautyConfig.eyebrowPosition = v.toInt());
   }
 
   /// UI 显示换算规则：
@@ -355,6 +301,8 @@ abstract class BeautyConfig {
   set eyeScale(int v);
   Future<int> getEyeDistance();
   set eyeDistance(int v);
+  Future<int> getEyeAngle();
+  set eyeAngle(int v);
   Future<int> getEyeLid();
   set eyeLid(int v);
   Future<int> getEyeInnerCorner();
