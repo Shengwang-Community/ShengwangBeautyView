@@ -1,0 +1,7 @@
+{
+  "modelVersion": "6.0.0",
+  "name": "shengwang-beauty-demo",
+  "version": "1.0.0",
+  "description": "声网高级美颜 HarmonyOS 示例",
+  "dependencies": {}
+}

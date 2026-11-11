@@ -1,0 +1,17 @@
+oh_modules/
+.hvigor/
+build/
+/.idea/
+/local.properties
+/build-profile.json5
+/libs/*.har
+/entry/src/main/resources/rawfile/*.zip
+/entry/src/main/ets/config/LocalConfig.ets
+/screenshots/
+*.hap
+*.hsp
+*.p12
+*.p7b
+*.cer
+*.log
+.DS_Store
